@@ -53,7 +53,7 @@ const retained = [
     <div class="max-w-3xl mx-auto">
 
       <!-- Header -->
-      <div class="mb-14">
+      <div class="mb-14 reveal">
         <p class="section-label mb-4">Account &amp; Data</p>
         <h1 class="font-serif text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
           Request deletion of your<br />account &amp; data
@@ -64,7 +64,7 @@ const retained = [
       </div>
 
       <!-- Applies to -->
-      <div class="glass-card rounded-2xl p-6 mb-10">
+      <div class="glass-card rounded-2xl p-6 mb-10 reveal">
         <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-3">Applies to</p>
         <div class="flex flex-wrap gap-2">
           {['Pakiza'].map(app => (
@@ -76,7 +76,7 @@ const retained = [
       </div>
 
       <!-- Steps -->
-      <div class="glass-card rounded-2xl p-8 md:p-10 mb-10">
+      <div class="glass-card rounded-2xl p-8 md:p-10 mb-10 reveal">
         <h2 class="font-serif text-2xl font-bold text-white mb-8">How to delete your account</h2>
         <div class="space-y-8">
 
@@ -136,7 +136,7 @@ const retained = [
       <div class="grid md:grid-cols-2 gap-5 mb-10">
 
         <!-- Deleted -->
-        <div class="glass-card rounded-2xl p-7">
+        <div class="glass-card rounded-2xl p-7 reveal">
           <p class="text-slate-500 text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What Gets Deleted</p>
           <ul class="space-y-3">
             {deleted.map(item => (
@@ -153,7 +153,7 @@ const retained = [
         </div>
 
         <!-- Retained -->
-        <div class="glass-card rounded-2xl p-7">
+        <div class="glass-card rounded-2xl p-7 reveal reveal-d1">
           <p class="text-slate-500 text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What We Must Retain</p>
           <div class="space-y-5">
             {retained.map(item => (
@@ -170,7 +170,7 @@ const retained = [
       </div>
 
       <!-- Per-app data -->
-      <div class="glass-card rounded-2xl p-7 mb-10">
+      <div class="glass-card rounded-2xl p-7 mb-10 reveal">
         <h2 class="font-serif text-xl font-bold text-white mb-2">What data Pakiza stores</h2>
         <p class="text-slate-400 text-sm mb-6">A breakdown of the personal data collected by the app.</p>
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 border-t border-white/5">
@@ -190,7 +190,7 @@ const retained = [
       </div>
 
       <!-- Back links -->
-      <div class="flex flex-wrap gap-4 text-sm">
+      <div class="flex flex-wrap gap-4 text-sm reveal">
         <a href="/support" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>

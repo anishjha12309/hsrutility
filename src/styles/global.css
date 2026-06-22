@@ -20,15 +20,15 @@
   details summary::-webkit-details-marker { display: none; }
   details summary { list-style: none; }
 
-  /* Custom gold scrollbar — webkit only */
+  /* Subtle scrollbar — webkit only */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: rgba(201, 168, 76, 0.28);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(201, 168, 76, 0.52);
+    background: rgba(255, 255, 255, 0.22);
   }
 }
 

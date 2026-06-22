@@ -38,10 +38,10 @@ const navLinks = [
         Privacy
       </a>
 
-      <!-- Mobile hamburger -->
+      <!-- Mobile hamburger — 44px touch target -->
       <button
         id="menu-btn"
-        class="md:hidden w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+        class="md:hidden w-11 h-11 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
         aria-label="Toggle navigation menu"
         aria-expanded="false"
       >
@@ -55,60 +55,90 @@ const navLinks = [
     </div>
   </nav>
 
-  <!-- Mobile dropdown -->
-  <div id="mobile-menu" class="hidden md:hidden mt-2 max-w-4xl mx-auto">
-    <div class="glass-card rounded-2xl p-3 space-y-1">
-      {navLinks.map(link => (
+  <!-- Mobile dropdown — animated slide-down -->
+  <div id="mobile-menu" class="mt-2 max-w-4xl mx-auto">
+    <div class="overflow-hidden">
+      <div class="glass-card rounded-2xl p-3 space-y-1">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class="block text-slate-300 hover:text-white text-sm px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200"
+          >
+            {link.label}
+          </a>
+        ))}
         <a
-          href={link.href}
-          class="block text-slate-300 hover:text-white text-sm px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200"
+          href="/privacy"
+          class="block text-gold-400 text-sm px-4 py-3 rounded-xl hover:bg-gold-500/10 transition-all duration-200"
         >
-          {link.label}
+          Privacy
         </a>
-      ))}
-      <a
-        href="/privacy"
-        class="block text-gold-400 text-sm px-4 py-3 rounded-xl hover:bg-gold-500/10 transition-all duration-200"
-      >
-        Privacy
-      </a>
+      </div>
     </div>
   </div>
 </header>
 
-<script>
-  // ── Mobile menu toggle ──
-  const btn = document.getElementById('menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  const iconOpen = document.getElementById('icon-open');
-  const iconClose = document.getElementById('icon-close');
-
-  btn?.addEventListener('click', () => {
-    const isOpen = !menu?.classList.contains('hidden');
-    menu?.classList.toggle('hidden', isOpen);
-    iconOpen?.classList.toggle('hidden', !isOpen);
-    iconClose?.classList.toggle('hidden', isOpen);
-    btn?.setAttribute('aria-expanded', String(!isOpen));
-  });
-
-  menu?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      menu?.classList.add('hidden');
-      iconOpen?.classList.remove('hidden');
-      iconClose?.classList.add('hidden');
-      btn?.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  // ── Navbar darkens on scroll ──
-  const nav = document.getElementById('main-nav');
-
-  function updateNavOnScroll() {
-    nav?.classList.toggle('scrolled', window.scrollY > 24);
+<style>
+  #mobile-menu {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.22s ease;
+    pointer-events: none;
   }
 
-  window.addEventListener('scroll', updateNavOnScroll, { passive: true });
-  // Re-check after View Transition swaps (page may load mid-scroll)
-  document.addEventListener('astro:after-swap', updateNavOnScroll);
-  updateNavOnScroll();
+  #mobile-menu.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (min-width: 768px) {
+    #mobile-menu { display: none; }
+  }
+</style>
+
+<script>
+  function setupNavMenu() {
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+
+    if (!btn || !menu) return;
+
+    // Clone button to remove stale listeners from prior navigations
+    const freshBtn = btn.cloneNode(true) as HTMLButtonElement;
+    btn.parentNode?.replaceChild(freshBtn, btn);
+
+    freshBtn.addEventListener('click', () => {
+      const isOpen = menu.classList.contains('open');
+      menu.classList.toggle('open', !isOpen);
+      iconOpen?.classList.toggle('hidden', !isOpen);
+      iconClose?.classList.toggle('hidden', isOpen);
+      freshBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.remove('open');
+        iconOpen?.classList.remove('hidden');
+        iconClose?.classList.add('hidden');
+        freshBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // ── Navbar darkens on scroll ──
+    const nav = document.getElementById('main-nav');
+    function updateNavOnScroll() {
+      nav?.classList.toggle('scrolled', window.scrollY > 24);
+    }
+    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+    updateNavOnScroll();
+  }
+
+  setupNavMenu();
+  document.addEventListener('astro:after-swap', setupNavMenu);
 </script>
