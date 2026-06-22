@@ -1,0 +1,38 @@
+---
+const year = new Date().getFullYear();
+
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Apps', href: '/#apps' },
+  { label: 'Support', href: '/support' },
+  { label: 'Delete My Account', href: '/delete-account' },
+  { label: 'Privacy Policy', href: '/privacy' },
+];
+---
+
+<footer class="border-t border-white/5 mt-24">
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+
+      <!-- Brand -->
+      <a href="/" class="flex items-center gap-2.5 flex-shrink-0 group">
+        <div class="w-7 h-7 rounded-lg bg-gold-500 flex items-center justify-center group-hover:bg-gold-400 transition-colors">
+          <span class="font-serif font-bold text-navy-900 text-xs leading-none">H</span>
+        </div>
+        <span class="text-white font-semibold text-sm">HSR Utility</span>
+      </a>
+
+      <!-- Nav links -->
+      <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        {links.map(link => (
+          <a href={link.href} class="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Copyright -->
+      <p class="text-slate-600 text-sm flex-shrink-0">© {year} HSR Utility</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,227 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Home"
+  description="HSR Utility — Thoughtfully designed mobile apps for the Muslim community. Explore Pakiza: HD Islamic wallpapers, status images & ringtones."
+>
+  <Navbar />
+
+  <!-- ── HERO ── -->
+  <section class="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-20 overflow-hidden">
+
+    <!-- Background glows -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[700px] h-[700px] rounded-full bg-gold-500/[0.04] blur-[140px]"></div>
+      <div class="absolute top-1/3 right-[15%] w-[300px] h-[300px] rounded-full bg-indigo-700/[0.05] blur-[100px]"></div>
+      <div class="absolute bottom-1/4 left-[10%] w-[250px] h-[250px] rounded-full bg-gold-600/[0.03] blur-[80px]"></div>
+    </div>
+
+    <div class="relative z-10 text-center max-w-3xl mx-auto">
+
+      <!-- Badge — enters first -->
+      <div class="animate-fade-up delay-1 inline-flex items-center gap-2.5 glass-card rounded-full px-4 py-2 mb-10 text-sm text-slate-300">
+        <span class="w-2 h-2 rounded-full bg-gold-500 animate-pulse flex-shrink-0"></span>
+        Building for Android
+      </div>
+
+      <!-- Headline -->
+      <h1 class="animate-fade-up delay-2 font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] mb-6 tracking-tight">
+        Carry your faith<br />
+        <em class="text-gold-400 not-italic">beautifully.</em>
+      </h1>
+
+      <!-- Subtext -->
+      <p class="animate-fade-up delay-3 text-slate-400 text-lg md:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
+        HSR Utility creates thoughtfully designed mobile apps for Muslim communities — starting with Pakiza.
+      </p>
+
+      <!-- CTAs -->
+      <div class="animate-fade-up delay-4 flex flex-wrap items-center justify-center gap-4">
+        <a href="#apps" class="btn-gold">
+          Explore Pakiza
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+        <a href="/support" class="btn-ghost">Get in Touch</a>
+      </div>
+    </div>
+
+    <!-- Stats bar — enters last -->
+    <div class="animate-fade-up delay-5 relative z-10 mt-20 w-full max-w-sm mx-auto">
+      <div class="glass-card rounded-2xl grid grid-cols-3 divide-x divide-white/5">
+        <div class="py-6 text-center">
+          <p class="font-serif text-2xl font-bold text-white">1</p>
+          <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">App</p>
+        </div>
+        <div class="py-6 text-center">
+          <p class="font-serif text-2xl font-bold text-white">Android</p>
+          <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">Platform</p>
+        </div>
+        <div class="py-6 text-center">
+          <p class="font-serif text-2xl font-bold text-white">2026</p>
+          <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">Founded</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OUR APP ── -->
+  <section id="apps" class="py-24 px-6 scroll-mt-20">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Section header -->
+      <div class="reveal mb-14">
+        <p class="section-label mb-4">Our App</p>
+        <h2 class="section-heading mb-4">Pakiza — Pure by design.</h2>
+        <p class="section-subtext max-w-lg">
+          One app, crafted with care for the Muslim community worldwide — beautiful content always at hand.
+        </p>
+      </div>
+
+      <!-- Pakiza card -->
+      <div class="reveal glass-card card-lift rounded-3xl p-8 md:p-10">
+        <div class="flex flex-col sm:flex-row gap-8 items-start">
+
+          <!-- App icon placeholder -->
+          <div class="flex-shrink-0">
+            <div class="w-20 h-20 rounded-[22px] overflow-hidden shadow-2xl shadow-black/40">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                <rect width="80" height="80" fill="#1a1b35"/>
+                <circle cx="43" cy="38" r="21" fill="#c9a84c" opacity="0.95"/>
+                <circle cx="52" cy="29" r="16" fill="#1a1b35"/>
+                <circle cx="58" cy="47" r="3.5" fill="#c9a84c"/>
+                <circle cx="65" cy="36" r="2.5" fill="#c9a84c" opacity="0.75"/>
+                <circle cx="61" cy="54" r="1.8" fill="#c9a84c" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
+              <span class="text-amber-400 text-xs font-medium">Launching Soon</span>
+            </div>
+            <h3 class="font-serif text-2xl md:text-3xl font-bold text-white mb-3">
+              Pakiza: Islamic Wallpapers & More
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-6">
+              A beautifully curated collection of HD Islamic wallpapers, shareable status images, and ringtones & nasheeds — all in one thoughtfully crafted app, free to use.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {['HD Wallpapers', 'Status Images', 'Ringtones', 'Nasheeds', 'Free'].map(tag => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer row -->
+        <div class="mt-8 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <p class="text-slate-500 text-sm">Coming soon to Google Play Store</p>
+          <span class="inline-flex items-center gap-2 text-slate-500 text-sm border border-white/10 rounded-full px-4 py-2 select-none">
+            <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3.18 23.76c.33.18.7.24 1.06.18L17 16.56l-2.82-2.82L3.18 23.76zM.6 1.88C.22 2.22 0 2.78 0 3.5v17c0 .72.22 1.28.6 1.62l.08.08L9.76 12v-.22L.68 1.8.6 1.88zm20.08 8-2.96-1.7L14.88 12l2.84 2.84 2.96-1.7c.84-.48.84-1.28 0-1.76zM4.24.06l12.48 7.2-2.84 2.82L4.24.06z"/>
+            </svg>
+            Coming Soon
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Section header -->
+      <div class="reveal mb-14">
+        <p class="section-label mb-4">Why Pakiza</p>
+        <h2 class="section-heading mb-4">Built with purpose.</h2>
+        <p class="section-subtext max-w-md">
+          Every design decision serves the community — beautiful, intentional, and free.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- HD Quality -->
+        <div class="reveal glass-card card-lift rounded-2xl p-8">
+          <div class="w-11 h-11 rounded-xl bg-gold-500/10 flex items-center justify-center mb-6 transition-colors duration-300 group-hover:bg-gold-500/20">
+            <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">HD Quality</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Every wallpaper and status image is carefully selected and optimised for all screen sizes — crisp and vibrant.
+          </p>
+        </div>
+
+        <!-- Free Content -->
+        <div class="reveal reveal-d1 glass-card card-lift rounded-2xl p-8">
+          <div class="w-11 h-11 rounded-xl bg-gold-500/10 flex items-center justify-center mb-6">
+            <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">Free to Use</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Wallpapers, status images, ringtones, and nasheeds — core content is completely free, always.
+          </p>
+        </div>
+
+        <!-- Community First -->
+        <div class="reveal reveal-d2 glass-card card-lift rounded-2xl p-8">
+          <div class="w-11 h-11 rounded-xl bg-gold-500/10 flex items-center justify-center mb-6">
+            <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">Community First</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Curated specifically for the Muslim community — content that resonates, inspires, and uplifts every day.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT CTA ── -->
+  <section class="py-24 px-6">
+    <div class="max-w-3xl mx-auto reveal">
+      <div class="glass-card rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
+        <!-- Subtle glow behind -->
+        <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div class="w-64 h-64 rounded-full bg-gold-500/[0.06] blur-[80px]"></div>
+        </div>
+        <div class="relative z-10">
+          <p class="section-label mb-5">Get in Touch</p>
+          <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            We'd love to hear from you.
+          </h2>
+          <p class="text-slate-400 text-lg mb-8 max-w-md mx-auto">
+            Questions, feedback, or feature requests — we reply within 48 hours.
+          </p>
+          <a
+            href="mailto:support@hsrutility.com"
+            class="font-serif text-2xl md:text-3xl text-gold-400 hover:text-gold-300 transition-colors block mb-8 break-all"
+          >
+            support@hsrutility.com
+          </a>
+          <a href="/support" class="btn-ghost">
+            Visit Support Page
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

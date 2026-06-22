@@ -1,0 +1,209 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const steps = [
+  {
+    n: 1,
+    text: 'Send an email to ',
+    email: 'support@hsrutility.com',
+    suffix: ' with the subject line:',
+    subject: 'Delete my account — Pakiza',
+  },
+  {
+    n: 2,
+    text: 'Include the phone number or Google account email associated with your Pakiza account so we can locate and verify your data.',
+  },
+  {
+    n: 3,
+    text: 'We will process your request within 7 business days and send you a confirmation email once your account and data have been permanently deleted.',
+  },
+];
+
+const deleted = [
+  'Your account — phone number or Google account link',
+  'In-app favourites, saved wallpapers, and custom preferences',
+  'Analytics identifiers (Firebase Analytics)',
+  'Push notification tokens (FCM)',
+  'All locally cached app data, upon uninstalling the app',
+];
+
+const retained = [
+  {
+    label: 'Anonymised, aggregated analytics',
+    period: '14 months',
+    note: 'Already anonymous — cannot be linked back to you after deletion.',
+  },
+  {
+    label: 'Anonymised crash logs',
+    period: '90 days',
+    note: 'For error tracking only; contains no personal identifiers after account deletion.',
+  },
+];
+---
+
+<Layout
+  title="Delete My Account"
+  description="Request permanent deletion of your HSR Utility account and associated data from the Pakiza app."
+>
+  <Navbar />
+
+  <main class="pt-36 pb-24 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Header -->
+      <div class="mb-14">
+        <p class="section-label mb-4">Account &amp; Data</p>
+        <h1 class="font-serif text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
+          Request deletion of your<br />account &amp; data
+        </h1>
+        <p class="text-slate-400 text-lg max-w-xl">
+          You can permanently delete your account and all associated data from our apps at any time. This action is irreversible.
+        </p>
+      </div>
+
+      <!-- Applies to -->
+      <div class="glass-card rounded-2xl p-6 mb-10">
+        <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-3">Applies to</p>
+        <div class="flex flex-wrap gap-2">
+          {['Pakiza'].map(app => (
+            <span class="text-slate-300 text-sm px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03]">
+              {app}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="glass-card rounded-2xl p-8 md:p-10 mb-10">
+        <h2 class="font-serif text-2xl font-bold text-white mb-8">How to delete your account</h2>
+        <div class="space-y-8">
+
+          <!-- Step 1 -->
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">1</div>
+            <div class="pt-1">
+              <p class="text-slate-300 leading-relaxed">
+                Send an email to{' '}
+                <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 transition-colors font-medium">
+                  support@hsrutility.com
+                </a>{' '}
+                with the subject line:
+              </p>
+              <div class="mt-3 glass-card rounded-xl px-5 py-3 font-mono text-sm text-slate-200 select-all">
+                Delete my account — Pakiza
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">2</div>
+            <div class="pt-1">
+              <p class="text-slate-300 leading-relaxed">
+                Include the <strong class="text-white">phone number</strong> or <strong class="text-white">Google account email</strong> associated with your Pakiza account so we can locate and verify your data.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">3</div>
+            <div class="pt-1">
+              <p class="text-slate-300 leading-relaxed">
+                We will process your request within <strong class="text-white">7 business days</strong> and send a confirmation email once your account and data have been permanently deleted.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-white/5">
+          <a
+            href="mailto:support@hsrutility.com?subject=Delete%20my%20account%20%E2%80%94%20Pakiza"
+            class="btn-gold"
+          >
+            Email to Delete
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- What gets deleted & retained -->
+      <div class="grid md:grid-cols-2 gap-5 mb-10">
+
+        <!-- Deleted -->
+        <div class="glass-card rounded-2xl p-7">
+          <p class="text-slate-500 text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What Gets Deleted</p>
+          <ul class="space-y-3">
+            {deleted.map(item => (
+              <li class="flex gap-3 text-sm text-slate-300">
+                <span class="text-green-400 flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Retained -->
+        <div class="glass-card rounded-2xl p-7">
+          <p class="text-slate-500 text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What We Must Retain</p>
+          <div class="space-y-5">
+            {retained.map(item => (
+              <div>
+                <div class="flex items-center justify-between gap-3 mb-1">
+                  <p class="text-white font-medium text-sm">{item.label}</p>
+                  <span class="text-[10px] font-semibold bg-white/5 border border-white/10 rounded-full px-2.5 py-1 text-slate-400 flex-shrink-0">{item.period}</span>
+                </div>
+                <p class="text-slate-500 text-xs leading-relaxed">{item.note}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-app data -->
+      <div class="glass-card rounded-2xl p-7 mb-10">
+        <h2 class="font-serif text-xl font-bold text-white mb-2">What data Pakiza stores</h2>
+        <p class="text-slate-400 text-sm mb-6">A breakdown of the personal data collected by the app.</p>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 border-t border-white/5">
+          <div>
+            <p class="text-white font-semibold mb-1">Pakiza</p>
+            <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+              Phone number or Google account info (authentication), saved favourites, in-app preferences, analytics identifiers, push notification token.
+            </p>
+          </div>
+          <a
+            href="mailto:support@hsrutility.com?subject=Delete%20my%20account%20%E2%80%94%20Pakiza"
+            class="flex-shrink-0 border border-white/20 text-white text-xs font-semibold tracking-wider uppercase px-5 py-2.5 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-200"
+          >
+            Email to Delete
+          </a>
+        </div>
+      </div>
+
+      <!-- Back links -->
+      <div class="flex flex-wrap gap-4 text-sm">
+        <a href="/support" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Back to Support
+        </a>
+        <a href="/privacy" class="text-slate-400 hover:text-white transition-colors">
+          Privacy Policy
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

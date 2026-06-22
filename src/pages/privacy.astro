@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const lastUpdated = 'June 2026';
+---
+
+<Layout
+  title="Privacy Policy"
+  description="HSR Utility Privacy Policy — How we collect, use, and protect your data in our apps."
+>
+  <Navbar />
+
+  <main class="pt-36 pb-24 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Header -->
+      <div class="mb-14">
+        <p class="section-label mb-4">Legal</p>
+        <h1 class="font-serif text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          Privacy <em class="text-gold-400 not-italic">Policy</em>
+        </h1>
+        <p class="text-slate-400">
+          Last updated: <span class="text-slate-300">{lastUpdated}</span>
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div class="space-y-10 text-slate-400 leading-relaxed">
+
+        <div class="glass-card rounded-2xl p-6 md:p-8">
+          <p>
+            This Privacy Policy describes how <strong class="text-white">HSR Utility</strong> ("we", "us", or "our") collects, uses, and protects information when you use our mobile application <strong class="text-white">Pakiza</strong> ("the App"). By using the App, you agree to the practices described in this policy.
+          </p>
+        </div>
+
+        <!-- Section 1 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">1. Information We Collect</h2>
+          <div class="space-y-5">
+            <div>
+              <h3 class="text-white font-semibold mb-2">Account Information</h3>
+              <p>When you create an account, we collect your <strong class="text-slate-200">phone number</strong> (used for authentication via Firebase Phone Auth) or basic profile information if you sign in with Google (name, email address, profile photo).</p>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-2">App Data</h3>
+              <p>We store data you generate within the App, including saved favourites, in-app preferences, and custom settings. This is stored securely in Firebase and linked to your account.</p>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-2">Usage & Analytics Data</h3>
+              <p>We use Firebase Analytics to understand how users interact with the App. This includes information such as your device type, operating system version, language, app version, and which features you use. This data is aggregated and does not directly identify you.</p>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-2">Push Notification Tokens</h3>
+              <p>If you enable push notifications, we store a Firebase Cloud Messaging (FCM) token associated with your account. This is used solely to send you relevant in-app notifications and is deleted when you delete your account or disable notifications.</p>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-2">Crash Reports</h3>
+              <p>We use Firebase Crashlytics to receive anonymised crash reports to identify and fix bugs. These reports contain device state at the time of a crash but do not include personally identifiable information.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">2. How We Use Your Information</h2>
+          <ul class="space-y-3 list-none">
+            {[
+              'To provide, maintain, and improve the App and its features.',
+              'To authenticate your identity and manage your account securely.',
+              'To sync your favourites and preferences across devices (when signed in).',
+              'To send push notifications relevant to the App (only if you have enabled them).',
+              'To understand usage patterns and improve content curation.',
+              'To diagnose technical issues and fix bugs.',
+            ].map(item => (
+              <li class="flex gap-3">
+                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Section 3 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">3. Third-Party Services</h2>
+          <p class="mb-5">We use the following third-party services to operate the App. Each has its own privacy policy governing how they handle data:</p>
+          <div class="space-y-4">
+            {[
+              { name: 'Google Firebase', purpose: 'Authentication, database, analytics, crash reporting, and push notifications.', url: 'https://firebase.google.com/support/privacy' },
+              { name: 'Google Play Services', purpose: 'Required for app distribution and core Android functionality.' , url: 'https://policies.google.com/privacy' },
+            ].map(service => (
+              <div class="glass-card rounded-xl p-5">
+                <p class="text-white font-semibold mb-1">{service.name}</p>
+                <p class="text-sm mb-2">{service.purpose}</p>
+                <p class="text-xs text-slate-500">{service.url}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">4. Data Storage & Security</h2>
+          <p>Your data is stored on Google Firebase infrastructure. We implement industry-standard security measures including encrypted connections (HTTPS/TLS) and Firebase Security Rules to restrict unauthorised access. No security measure is 100% guaranteed, but we take reasonable steps to protect your information.</p>
+        </section>
+
+        <!-- Section 5 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">5. Data Retention</h2>
+          <div class="grid gap-4 sm:grid-cols-3">
+            {[
+              { label: 'Account & App Data', period: 'Until deleted', note: 'Deleted promptly upon a valid account deletion request.' },
+              { label: 'Anonymised Analytics', period: '14 months', note: 'Already anonymised — cannot be linked to you after account deletion.' },
+              { label: 'Crash Logs', period: '90 days', note: 'Contains no personal identifiers after account deletion.' },
+            ].map(item => (
+              <div class="glass-card rounded-xl p-5 text-center">
+                <p class="text-gold-400 font-bold text-lg mb-1">{item.period}</p>
+                <p class="text-white text-sm font-medium mb-2">{item.label}</p>
+                <p class="text-slate-500 text-xs leading-relaxed">{item.note}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Section 6 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">6. Your Rights</h2>
+          <p class="mb-4">You have the right to:</p>
+          <ul class="space-y-3">
+            {[
+              'Access the personal data we hold about you.',
+              'Request correction of inaccurate data.',
+              'Request permanent deletion of your account and associated data.',
+              'Withdraw consent for push notifications at any time via your device settings.',
+            ].map(right => (
+              <li class="flex gap-3">
+                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
+                <span>{right}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-5">
+            To exercise any of these rights, please visit our{' '}
+            <a href="/delete-account" class="text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors">
+              account deletion page
+            </a>{' '}
+            or contact us at <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors">support@hsrutility.com</a>.
+          </p>
+        </section>
+
+        <!-- Section 7 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">7. Children's Privacy</h2>
+          <p>The App is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us and we will delete it promptly.</p>
+        </section>
+
+        <!-- Section 8 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">8. Changes to This Policy</h2>
+          <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. We encourage you to review this policy periodically. Continued use of the App after changes constitutes acceptance of the updated policy.</p>
+        </section>
+
+        <!-- Section 9 -->
+        <section>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">9. Contact Us</h2>
+          <div class="glass-card rounded-2xl p-6 md:p-8">
+            <p class="mb-4">If you have questions or concerns about this Privacy Policy, please contact us:</p>
+            <div class="space-y-2">
+              <p><span class="text-slate-300 font-medium">Email:</span> <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 transition-colors">support@hsrutility.com</a></p>
+              <p><span class="text-slate-300 font-medium">Brand:</span> HSR Utility</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

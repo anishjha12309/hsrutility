@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-navy-900 text-white antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(201, 168, 76, 0.25);
+    color: #fff;
+  }
+
+  /* Remove default details marker (legacy FAQ, kept for safety) */
+  details summary::-webkit-details-marker { display: none; }
+  details summary { list-style: none; }
+
+  /* Custom gold scrollbar — webkit only */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.28);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 168, 76, 0.52);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(26, 27, 53, 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  /* More translucent at top, subtly darkens on scroll via .scrolled class */
+  .glass-nav {
+    background: rgba(11, 12, 26, 0.42);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(201, 168, 76, 0.13);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .glass-nav.scrolled {
+    background: rgba(11, 12, 26, 0.74);
+    border-color: rgba(201, 168, 76, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  }
+
+  .btn-gold {
+    @apply bg-gold-500 text-navy-900 font-semibold px-6 py-3 rounded-full transition-all duration-200 hover:bg-gold-400 hover:shadow-[0_0_28px_rgba(201,168,76,0.35)] active:scale-95 inline-flex items-center gap-2;
+  }
+
+  .btn-ghost {
+    @apply border border-white/20 text-white px-6 py-3 rounded-full transition-all duration-200 hover:border-white/40 hover:bg-white/5 active:scale-95 inline-flex items-center gap-2;
+  }
+
+  .section-label {
+    @apply text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase;
+  }
+
+  .section-heading {
+    @apply font-serif text-4xl md:text-5xl font-bold text-white leading-tight;
+  }
+
+  .section-subtext {
+    @apply text-slate-400 text-lg leading-relaxed;
+  }
+
+  .tag {
+    @apply text-slate-400 text-xs px-3 py-1.5 rounded-full border border-white/10;
+  }
+
+  /* Card hover lift — add to interactive cards, not structural glass-cards */
+  .card-lift {
+    transition:
+      transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1),
+      box-shadow 0.28s ease,
+      border-color 0.28s ease;
+  }
+
+  .card-lift:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      0 16px 48px rgba(201, 168, 76, 0.07),
+      0 4px 24px rgba(0, 0, 0, 0.35);
+    border-color: rgba(201, 168, 76, 0.22);
+  }
+
+  /* FAQ smooth accordion */
+  .faq-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .faq-content.open {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-icon {
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+  }
+
+  .faq-trigger.open .faq-icon {
+    transform: rotate(45deg);
+    color: #c9a84c;
+  }
+}
+
+/* ── Hero entrance: fade up from below ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.delay-1 { animation-delay: 60ms; }
+.delay-2 { animation-delay: 160ms; }
+.delay-3 { animation-delay: 270ms; }
+.delay-4 { animation-delay: 380ms; }
+.delay-5 { animation-delay: 500ms; }
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger helpers for sibling reveals */
+.reveal-d1 { transition-delay: 90ms; }
+.reveal-d2 { transition-delay: 180ms; }
+.reveal-d3 { transition-delay: 270ms; }
