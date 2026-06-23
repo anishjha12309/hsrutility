@@ -1,13 +1,9 @@
 ---
-const pathname = Astro.url.pathname;
-
 const navLinks = [
-  { label: 'Home', href: '/', active: pathname === '/' },
-  { label: 'Apps', href: '/#apps', active: pathname === '/' },
-  { label: 'Support', href: '/support', active: pathname.startsWith('/support') },
+  { label: 'Home', href: '/' },
+  { label: 'Apps', href: '/#apps' },
+  { label: 'Support', href: '/support' },
 ];
-
-const privacyActive = pathname.startsWith('/privacy');
 ---
 
 <header class="fixed top-4 left-0 right-0 z-50 px-4">
@@ -26,7 +22,7 @@ const privacyActive = pathname.startsWith('/privacy');
       {navLinks.map(link => (
         <a
           href={link.href}
-          class={`text-sm px-4 py-2 rounded-full transition-all duration-200 ${link.active ? 'text-white bg-white/8' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+          class="text-slate-300 hover:text-white text-sm px-4 py-2 rounded-full hover:bg-white/5 transition-all duration-200"
         >
           {link.label}
         </a>
@@ -37,7 +33,7 @@ const privacyActive = pathname.startsWith('/privacy');
     <div class="flex items-center gap-3">
       <a
         href="/privacy"
-        class={`hidden md:block border text-gold-400 text-sm px-5 py-2 rounded-full transition-all duration-200 ${privacyActive ? 'border-gold-500/60 bg-gold-500/10' : 'border-gold-500/40 hover:bg-gold-500/10 hover:border-gold-500/60'}`}
+        class="hidden md:block border border-gold-500/40 text-gold-400 text-sm px-5 py-2 rounded-full hover:bg-gold-500/10 hover:border-gold-500/60 transition-all duration-200"
       >
         Privacy
       </a>
@@ -66,14 +62,14 @@ const privacyActive = pathname.startsWith('/privacy');
         {navLinks.map(link => (
           <a
             href={link.href}
-            class={`block text-sm px-4 py-3 rounded-xl transition-all duration-200 ${link.active ? 'text-white bg-white/8' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+            class="block text-slate-300 hover:text-white text-sm px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200"
           >
             {link.label}
           </a>
         ))}
         <a
           href="/privacy"
-          class={`block text-gold-400 text-sm px-4 py-3 rounded-xl transition-all duration-200 ${privacyActive ? 'bg-gold-500/10' : 'hover:bg-gold-500/10'}`}
+          class="block text-gold-400 text-sm px-4 py-3 rounded-xl hover:bg-gold-500/10 transition-all duration-200"
         >
           Privacy
         </a>
