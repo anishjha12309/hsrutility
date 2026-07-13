@@ -1,0 +1,78 @@
+# robots.txt — HSR Utility (https://hsrutility.com)
+#
+# Policy: this is a public marketing site. Everything on it exists to be found.
+# There is nothing to protect, so the default is "allow", and the AI crawlers that
+# send traffic/citations back to us are named explicitly rather than left to the
+# wildcard group.
+#
+# Note on precedence: a crawler obeys the MOST SPECIFIC group matching its own
+# user-agent, and ignores `*` entirely once it finds one. So each bot named below
+# must restate its own Allow/Disallow — that is not redundancy, it is required.
+
+# ── Everything else (Googlebot, Bingbot, Applebot, …) ──
+User-agent: *
+Allow: /
+
+# NB: a `Content-Signal:` line (Cloudflare's opt-in AI-usage extension) was tried here
+# and removed. It is not part of RFC 9309, so validators — including Lighthouse — report
+# it as an unknown directive and fail the robots.txt audit. Google's parser would simply
+# ignore it, so it costs a clean SEO score to buy a signal almost nothing reads. If this
+# site ever moves behind Cloudflare, reconsider.
+
+# ── AI answer engines — these cite sources and drive referral traffic. ALLOW. ──
+
+# OpenAI (ChatGPT). OAI-SearchBot builds the search index that produces citations;
+# ChatGPT-User fetches on demand when a user asks about a URL. GPTBot is the
+# training crawler — allowed here for brand recall in future models.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+# Anthropic (Claude). Split into three distinct bots as of Feb 2026.
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Perplexity — heaviest citer of the lot (~2x ChatGPT's citations per answer).
+User-agent: PerplexityBot
+Allow: /
+
+# Google Gemini / AI Overviews grounding + training.
+# NB: this is a directive on Googlebot, not a separate crawler. Disallowing it would
+# NOT remove us from Google Search — but we want the AI surfaces, so: allow.
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence / Siri.
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta AI.
+User-agent: meta-externalagent
+Allow: /
+
+# Amazon (Alexa/Rufus).
+User-agent: Amazonbot
+Allow: /
+
+# ── Bulk scrapers with no citation or traffic value back to us. ──
+# These feed downstream datasets without attribution. Blocking costs us no
+# discoverability — neither surfaces links to this site.
+# To trade that for maximum training reach instead, flip both to `Allow: /`.
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://hsrutility.com/sitemap-index.xml

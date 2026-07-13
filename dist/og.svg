@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="HSR Utility — Pakiza: HD Islamic wallpapers, status images and nasheed ringtones">
+  <defs>
+    <radialGradient id="glowGold" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowIndigo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4c4fa8" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#4c4fa8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hairline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="1200" height="630" fill="#12132a"/>
+
+  <!-- Ambient glows (mirrors the site's hero) -->
+  <ellipse cx="930" cy="200" rx="430" ry="370" fill="url(#glowGold)"/>
+  <ellipse cx="150" cy="580" rx="380" ry="320" fill="url(#glowIndigo)"/>
+
+  <!-- Brand row -->
+  <g transform="translate(80, 64)">
+    <rect width="52" height="52" rx="13" fill="#c9a84c"/>
+    <text x="26" y="37" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="30" fill="#12132a">H</text>
+    <text x="70" y="35" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="600" font-size="23" fill="#ffffff">HSR Utility</text>
+  </g>
+
+  <!-- Status pill -->
+  <g transform="translate(80, 168)">
+    <rect width="216" height="40" rx="20" fill="#c9a84c" fill-opacity="0.09" stroke="#c9a84c" stroke-opacity="0.35" stroke-width="1.5"/>
+    <circle cx="24" cy="20" r="4.5" fill="#c9a84c"/>
+    <text x="42" y="26" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="500" font-size="15" fill="#cbd5e1">Building for Android</text>
+  </g>
+
+  <!-- Headline -->
+  <text x="80" y="310" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="68" fill="#ffffff">Carry your faith</text>
+  <text x="80" y="390" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="68" fill="#d4b45f">beautifully.</text>
+
+  <!-- Hairline -->
+  <rect x="80" y="428" width="300" height="2" fill="url(#hairline)"/>
+
+  <!-- Keyword line -->
+  <text x="80" y="478" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">Pakiza — HD Islamic wallpapers, status images</text>
+  <text x="80" y="510" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">&amp; nasheed ringtones. Free on Android.</text>
+
+  <!-- Domain -->
+  <text x="80" y="570" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="500" font-size="17" fill="#64748b">hsrutility.com</text>
+
+  <!-- Pakiza app icon (same mark as the site's app card) -->
+  <g transform="translate(838, 186)">
+    <rect width="276" height="276" rx="62" fill="#1a1b35" stroke="#c9a84c" stroke-opacity="0.18" stroke-width="2"/>
+    <g transform="scale(3.45)">
+      <circle cx="43" cy="38" r="21" fill="#c9a84c" opacity="0.95"/>
+      <circle cx="52" cy="29" r="16" fill="#1a1b35"/>
+      <circle cx="58" cy="47" r="3.5" fill="#c9a84c"/>
+      <circle cx="65" cy="36" r="2.5" fill="#c9a84c" opacity="0.75"/>
+      <circle cx="61" cy="54" r="1.8" fill="#c9a84c" opacity="0.5"/>
+    </g>
+  </g>
+</svg>

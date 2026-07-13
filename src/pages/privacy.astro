@@ -2,13 +2,34 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import {
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from '../lib/schema';
 
 const lastUpdated = 'June 2026';
+
+const description =
+  "Pakiza's privacy policy: what data HSR Utility collects, how it's used and protected, and how to request account deletion at any time.";
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy' }]),
+  webPageSchema({
+    path: Astro.url.pathname,
+    name: 'Pakiza Privacy Policy | HSR Utility',
+    description,
+  }),
+];
 ---
 
 <Layout
-  title="Privacy Policy"
-  description="HSR Utility Privacy Policy — How we collect, use, and protect your data in our apps."
+  title="Pakiza Privacy Policy"
+  description={description}
+  structuredData={structuredData}
 >
   <Navbar />
 
@@ -94,7 +115,7 @@ const lastUpdated = 'June 2026';
               <div class="glass-card rounded-xl p-5">
                 <p class="text-white font-semibold mb-1">{service.name}</p>
                 <p class="text-sm mb-2">{service.purpose}</p>
-                <p class="text-xs text-slate-500">{service.url}</p>
+                <p class="text-xs text-muted">{service.url}</p>
               </div>
             ))}
           </div>
@@ -118,7 +139,7 @@ const lastUpdated = 'June 2026';
               <div class="glass-card rounded-xl p-5 text-center">
                 <p class="text-gold-400 font-bold text-lg mb-1">{item.period}</p>
                 <p class="text-white text-sm font-medium mb-2">{item.label}</p>
-                <p class="text-slate-500 text-xs leading-relaxed">{item.note}</p>
+                <p class="text-muted text-xs leading-relaxed">{item.note}</p>
               </div>
             ))}
           </div>

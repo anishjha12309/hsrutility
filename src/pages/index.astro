@@ -2,14 +2,36 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import {
+  organizationSchema,
+  websiteSchema,
+  pakizaAppSchema,
+  webPageSchema,
+} from '../lib/schema';
+
+const description =
+  'Free HD Islamic wallpapers, status images, and nasheed ringtones for Android — all in one beautifully designed app, Pakiza, by HSR Utility.';
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  pakizaAppSchema,
+  webPageSchema({
+    path: Astro.url.pathname,
+    name: 'Pakiza – Islamic Wallpapers & Nasheeds App | HSR Utility',
+    description,
+  }),
+];
 ---
 
 <Layout
-  title="Home"
-  description="HSR Utility — Thoughtfully designed mobile apps for the Muslim community. Explore Pakiza: HD Islamic wallpapers, status images & ringtones."
+  title="Pakiza – Islamic Wallpapers & Nasheeds App"
+  description={description}
+  structuredData={structuredData}
 >
   <Navbar />
 
+  <main>
   <!-- ── HERO ── -->
   <section class="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-20 overflow-hidden">
 
@@ -56,15 +78,15 @@ import Footer from '../components/Footer.astro';
       <div class="glass-card rounded-2xl grid grid-cols-3 divide-x divide-white/5">
         <div class="py-6 text-center">
           <p class="font-serif text-2xl font-bold text-white">1</p>
-          <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">App</p>
+          <p class="text-muted text-[10px] uppercase tracking-widest mt-1">App</p>
         </div>
         <div class="py-6 text-center">
           <p class="font-serif text-2xl font-bold text-white">Android</p>
-          <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">Platform</p>
+          <p class="text-muted text-[10px] uppercase tracking-widest mt-1">Platform</p>
         </div>
         <div class="py-6 text-center">
           <p class="font-serif text-2xl font-bold text-white">2026</p>
-          <p class="text-slate-500 text-[10px] uppercase tracking-widest mt-1">Founded</p>
+          <p class="text-muted text-[10px] uppercase tracking-widest mt-1">Founded</p>
         </div>
       </div>
     </div>
@@ -123,8 +145,8 @@ import Footer from '../components/Footer.astro';
 
         <!-- Footer row -->
         <div class="mt-8 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p class="text-slate-500 text-sm">Coming soon to Google Play Store</p>
-          <span class="inline-flex items-center gap-2 text-slate-500 text-sm border border-white/10 rounded-full px-4 py-2 select-none">
+          <p class="text-muted text-sm">Coming soon to Google Play Store</p>
+          <span class="inline-flex items-center gap-2 text-muted text-sm border border-white/10 rounded-full px-4 py-2 select-none">
             <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
               <path d="M3.18 23.76c.33.18.7.24 1.06.18L17 16.56l-2.82-2.82L3.18 23.76zM.6 1.88C.22 2.22 0 2.78 0 3.5v17c0 .72.22 1.28.6 1.62l.08.08L9.76 12v-.22L.68 1.8.6 1.88zm20.08 8-2.96-1.7L14.88 12l2.84 2.84 2.96-1.7c.84-.48.84-1.28 0-1.76zM4.24.06l12.48 7.2-2.84 2.82L4.24.06z"/>
             </svg>
@@ -222,6 +244,7 @@ import Footer from '../components/Footer.astro';
       </div>
     </div>
   </section>
+  </main>
 
   <Footer />
 </Layout>

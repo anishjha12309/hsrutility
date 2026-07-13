@@ -1,1 +1,4 @@
 node_modules
+
+# Browser-automation tooling residue (screenshots/traces), not project source
+.playwright-mcp/

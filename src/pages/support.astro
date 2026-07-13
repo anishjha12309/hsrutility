@@ -2,6 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import {
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema,
+  webPageSchema,
+  faqPageSchema,
+} from '../lib/schema';
 
 const faqs = [
   {
@@ -30,11 +37,28 @@ const faqs = [
     a: 'Pakiza supports Android 7.0 (Nougat) and above. We recommend keeping your device updated for the best experience.',
   },
 ];
+
+const description =
+  'Answers to common Pakiza questions on wallpapers, ringtones, and account help — plus how to contact HSR Utility support. We reply within 48 hours.';
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Support' }]),
+  webPageSchema({
+    path: Astro.url.pathname,
+    name: 'Pakiza Support & FAQ | HSR Utility',
+    description,
+  }),
+  // Mirrors the visible Q&A above, verbatim — same array, so they cannot drift.
+  faqPageSchema(faqs),
+];
 ---
 
 <Layout
-  title="Support"
-  description="HSR Utility Support — Find answers to common questions about Pakiza, or get in touch with our team."
+  title="Pakiza Support & FAQ"
+  description={description}
+  structuredData={structuredData}
 >
   <Navbar />
 
@@ -124,7 +148,7 @@ const faqs = [
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
           </a>
-          <p class="text-slate-500 text-sm mt-6">
+          <p class="text-muted text-sm mt-6">
             <span class="text-slate-400 font-medium">support@hsrutility.com</span>
           </p>
         </div>

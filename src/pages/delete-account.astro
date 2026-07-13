@@ -2,6 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import {
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from '../lib/schema';
 
 const steps = [
   {
@@ -41,11 +47,26 @@ const retained = [
     note: 'For error tracking only; contains no personal identifiers after account deletion.',
   },
 ];
+
+const description =
+  'Step-by-step instructions to permanently delete your Pakiza account and data. Email support@hsrutility.com — requests are processed within 7 business days.';
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Delete My Account' }]),
+  webPageSchema({
+    path: Astro.url.pathname,
+    name: 'Delete Pakiza Account & Data | HSR Utility',
+    description,
+  }),
+];
 ---
 
 <Layout
-  title="Delete My Account"
-  description="Request permanent deletion of your HSR Utility account and associated data from the Pakiza app."
+  title="Delete Pakiza Account & Data"
+  description={description}
+  structuredData={structuredData}
 >
   <Navbar />
 
@@ -65,7 +86,7 @@ const retained = [
 
       <!-- Applies to -->
       <div class="glass-card rounded-2xl p-6 mb-10 reveal">
-        <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-3">Applies to</p>
+        <p class="text-muted text-xs font-semibold tracking-widest uppercase mb-3">Applies to</p>
         <div class="flex flex-wrap gap-2">
           {['Pakiza'].map(app => (
             <span class="text-slate-300 text-sm px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03]">
@@ -137,7 +158,7 @@ const retained = [
 
         <!-- Deleted -->
         <div class="glass-card rounded-2xl p-7 reveal">
-          <p class="text-slate-500 text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What Gets Deleted</p>
+          <p class="text-muted text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What Gets Deleted</p>
           <ul class="space-y-3">
             {deleted.map(item => (
               <li class="flex gap-3 text-sm text-slate-300">
@@ -154,7 +175,7 @@ const retained = [
 
         <!-- Retained -->
         <div class="glass-card rounded-2xl p-7 reveal reveal-d1">
-          <p class="text-slate-500 text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What We Must Retain</p>
+          <p class="text-muted text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What We Must Retain</p>
           <div class="space-y-5">
             {retained.map(item => (
               <div>
@@ -162,7 +183,7 @@ const retained = [
                   <p class="text-white font-medium text-sm">{item.label}</p>
                   <span class="text-[10px] font-semibold bg-white/5 border border-white/10 rounded-full px-2.5 py-1 text-slate-400 flex-shrink-0">{item.period}</span>
                 </div>
-                <p class="text-slate-500 text-xs leading-relaxed">{item.note}</p>
+                <p class="text-muted text-xs leading-relaxed">{item.note}</p>
               </div>
             ))}
           </div>

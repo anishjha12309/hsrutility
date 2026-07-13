@@ -1,0 +1,22 @@
+# HSR Utility
+
+> HSR Utility builds thoughtfully designed mobile apps for the Muslim community.
+> Its first app is Pakiza — HD Islamic wallpapers, status images, and ringtones &
+> nasheeds, free on Android. Pakiza is in development and is not yet available on
+> the Google Play Store.
+
+## Key facts
+
+- **Studio:** HSR Utility, an independent mobile app studio, founded 2026.
+- **App:** Pakiza — a curated collection of HD Islamic wallpapers, shareable status
+  images, and ringtones & nasheeds. Core content is free.
+- **Platform:** Android 7.0 (Nougat) and above. No iOS version.
+- **Status:** Launching soon on Google Play. Not yet released.
+- **Contact:** support@hsrutility.com — replies within 48 hours.
+
+## Pages
+
+- [Home](https://hsrutility.com/): HSR Utility and the Pakiza app — features and overview.
+- [Support & FAQ](https://hsrutility.com/support/): Answers about Pakiza's content, pricing, Android support, and how to report bugs.
+- [Privacy Policy](https://hsrutility.com/privacy/): What data Pakiza collects, how it is used, and how it is protected.
+- [Delete My Account](https://hsrutility.com/delete-account/): How to permanently delete a Pakiza account and its associated data.

@@ -18,6 +18,12 @@ export default {
           500: '#c9a84c',
           600: '#b8963e',
         },
+        // Tertiary text tier (captions, footer links, small print).
+        // Replaces slate-500/600, which fail WCAG AA on this dark palette
+        // (3.57:1 on the glass card, 3.82:1 on navy-900 — both under the 4.5:1 floor).
+        // This is the dimmest slate that still clears 4.5:1 on every surface we use:
+        // navy-900 5.18:1 · navy-800 4.77:1 · glass card 4.84:1.
+        muted: '#7a8aa0',
       },
       fontFamily: {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],

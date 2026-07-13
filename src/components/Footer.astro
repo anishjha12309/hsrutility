@@ -25,14 +25,14 @@ const links = [
       <!-- Nav links -->
       <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
         {links.map(link => (
-          <a href={link.href} class="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+          <a href={link.href} class="text-muted hover:text-slate-300 text-sm transition-colors">
             {link.label}
           </a>
         ))}
       </nav>
 
       <!-- Copyright -->
-      <p class="text-slate-600 text-sm flex-shrink-0">© {year} HSR Utility</p>
+      <p class="text-muted text-sm flex-shrink-0">© {year} HSR Utility</p>
     </div>
   </div>
 </footer>

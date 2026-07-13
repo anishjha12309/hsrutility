@@ -1,16 +1,31 @@
 ---
+import '../styles/fonts.css';
 import '../styles/global.css';
 import { ViewTransitions } from 'astro:transitions';
+import { ORG_DESCRIPTION } from '../lib/schema';
 
 interface Props {
   title: string;
   description?: string;
+  /** Share-card image, site-relative. Override per page only if a bespoke card exists. */
+  image?: string;
+  /** JSON-LD objects for this page. Built with the helpers in ../lib/schema.ts */
+  structuredData?: object[];
 }
 
 const {
   title,
-  description = 'HSR Utility — Building meaningful mobile applications for the community.',
+  description = ORG_DESCRIPTION,
+  image = '/og.jpg',
+  structuredData = [],
 } = Astro.props;
+
+const fullTitle = `${title} | HSR Utility`;
+
+// Astro.site comes from `site` in astro.config.mjs. Both of these resolve to absolute
+// URLs — required for canonical and og:image (relative og:image is ignored by scrapers).
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
 ---
 
 <!doctype html>
@@ -18,16 +33,62 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#12132a" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Icons — the 2026 minimal set. SVG covers modern browsers, the PNG covers iOS
+         home-screen (which ignores SVG). The 20-icon shotgun is long obsolete. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title} | HSR Utility</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#12132a" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HSR Utility" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="HSR Utility — Pakiza: HD Islamic wallpapers, status images & nasheeds" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- X/Twitter. X never migrated off the twitter:* namespace; without an explicit
+         card type it may render a small thumbnail instead of the large one. -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+    <meta name="twitter:image:alt" content="HSR Utility — Pakiza: HD Islamic wallpapers, status images & nasheeds" />
+
+    <!-- Fonts are self-hosted (see src/styles/fonts.css). Preload only the two faces
+         the hero paints with — the Playfair 700 headline is the LCP element, and Inter
+         400 is the body. Preloading more would compete for bandwidth with the LCP. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/playfair-display-700-latin.woff2"
+      crossorigin
     />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/inter-400-latin.woff2"
+      crossorigin
+    />
+
+    {
+      structuredData.map((schema) => (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      ))
+    }
+
     <ViewTransitions />
   </head>
   <body class="bg-navy-900 text-white font-sans min-h-screen">
