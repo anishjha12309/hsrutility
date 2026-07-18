@@ -11,7 +11,8 @@ import {
 
 const deleted = [
   'Your account — the Google account linked at sign-in (name, email, profile photo)',
-  'Saved favourites, submitted content, and in-app preferences',
+  'Saved favourites, referral records and rewards',
+  'Any content you submitted for review',
   'Your subscription record (premium status and dates)',
   'Analytics and advertising identifiers linked to your account',
   'All locally cached app data, upon uninstalling the app',
@@ -31,7 +32,7 @@ const retained = [
 ];
 
 const description =
-  'Step-by-step instructions to permanently delete your Pakiza or Arul account and data. Email support@hsrutility.com — requests are processed within 7 business days.';
+  'How to permanently delete your Pakiza or Arul account and data — instantly in the app (Settings → Delete account), or by email as a fallback.';
 
 const structuredData = [
   organizationSchema,
@@ -62,7 +63,7 @@ const structuredData = [
           Request deletion of your<br />account &amp; data
         </h1>
         <p class="text-slate-400 text-lg max-w-xl">
-          You can permanently delete your account and all associated data from our apps at any time. This action is irreversible.
+          You can permanently delete your account and all associated data at any time — instantly from inside the app, or by email if you no longer have it installed. This action is irreversible.
         </p>
       </div>
 
@@ -78,14 +79,57 @@ const structuredData = [
         </div>
       </div>
 
-      <!-- Steps -->
-      <div class="glass-card rounded-2xl p-8 md:p-10 mb-10 reveal">
-        <h2 class="font-serif text-2xl font-bold text-white mb-8">How to delete your account</h2>
+      <!-- Primary: in-app -->
+      <div class="glass-card rounded-2xl p-8 md:p-10 mb-6 reveal">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="inline-block text-[10px] font-semibold tracking-[0.18em] uppercase text-gold-500 bg-gold-500/10 px-3 py-1 rounded-full">Fastest</span>
+          <h2 class="font-serif text-2xl font-bold text-white">Delete it in the app</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-8">Takes effect immediately — no waiting, no email needed.</p>
         <div class="space-y-8">
 
           <!-- Step 1 -->
           <div class="flex gap-5">
             <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">1</div>
+            <div class="pt-1">
+              <p class="text-slate-300 leading-relaxed">
+                Open the app and go to the <strong class="text-white">Settings</strong> tab.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">2</div>
+            <div class="pt-1">
+              <p class="text-slate-300 leading-relaxed">
+                Tap <strong class="text-white">Delete account</strong> at the bottom of the screen.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">3</div>
+            <div class="pt-1">
+              <p class="text-slate-300 leading-relaxed">
+                Confirm on the prompt. Your account and all associated data are deleted <strong class="text-white">right away</strong>, any active premium subscription is cancelled, and you are signed out.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Fallback: email -->
+      <div class="glass-card rounded-2xl p-8 md:p-10 mb-10 reveal">
+        <h2 class="font-serif text-2xl font-bold text-white mb-2">Prefer email? (or already uninstalled)</h2>
+        <p class="text-slate-400 text-sm mb-8">If you can't open the app, email us and we'll handle it for you.</p>
+        <div class="space-y-8">
+
+          <!-- Step 1 -->
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 font-bold text-sm">1</div>
             <div class="pt-1">
               <p class="text-slate-300 leading-relaxed">
                 Send an email to{' '}
@@ -102,7 +146,7 @@ const structuredData = [
 
           <!-- Step 2 -->
           <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">2</div>
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 font-bold text-sm">2</div>
             <div class="pt-1">
               <p class="text-slate-300 leading-relaxed">
                 Include the <strong class="text-white">Google account email</strong> you used to sign in, so we can locate and verify your data.
@@ -112,7 +156,7 @@ const structuredData = [
 
           <!-- Step 3 -->
           <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">3</div>
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 font-bold text-sm">3</div>
             <div class="pt-1">
               <p class="text-slate-300 leading-relaxed">
                 We will process your request within <strong class="text-white">7 business days</strong> and send a confirmation email once your account and data have been permanently deleted.
