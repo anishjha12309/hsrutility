@@ -9,10 +9,10 @@ import {
   webPageSchema,
 } from '../lib/schema';
 
-const lastUpdated = 'June 2026';
+const lastUpdated = 'July 2026';
 
 const description =
-  "Pakiza's privacy policy: what data HSR Utility collects, how it's used and protected, and how to request account deletion at any time.";
+  "Privacy policy for Pakiza and Arul by HSR Utility: what data each app collects, the services it uses, how it's protected, and how to delete your account at any time.";
 
 const structuredData = [
   organizationSchema,
@@ -20,14 +20,91 @@ const structuredData = [
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy' }]),
   webPageSchema({
     path: Astro.url.pathname,
-    name: 'Pakiza Privacy Policy | HSR Utility',
+    name: 'Privacy Policy — Pakiza & Arul | HSR Utility',
     description,
   }),
+];
+
+// Third-party processors, rendered once. Keeping them in data guarantees the
+// visible list and any future schema stay in sync.
+const thirdParties = [
+  {
+    name: 'Google Sign-In & Google Play Services',
+    purpose: 'Sign-in with your Google account and core Android app distribution and functionality.',
+    url: 'https://policies.google.com/privacy',
+  },
+  {
+    name: 'Google Firebase (Analytics / GA4, Crashlytics, Performance)',
+    purpose: 'Aggregated usage analytics, anonymised crash reports, and performance monitoring.',
+    url: 'https://firebase.google.com/support/privacy',
+  },
+  {
+    name: 'PostHog',
+    purpose: 'Product analytics — understanding which features are used, in aggregate.',
+    url: 'https://posthog.com/privacy',
+  },
+  {
+    name: 'Meta (Facebook) App Events',
+    purpose: 'Measurement of advertising and conversion events (enabled only where we run campaigns).',
+    url: 'https://www.facebook.com/privacy/policy',
+  },
+  {
+    name: 'PhonePe',
+    purpose: 'Processing premium subscription payments and UPI AutoPay mandates.',
+    url: 'https://www.phonepe.com/privacy-policy/',
+  },
+  {
+    name: 'Cloudflare',
+    purpose: 'Application hosting, content delivery (media), and edge security.',
+    url: 'https://www.cloudflare.com/privacypolicy/',
+  },
+  {
+    name: 'Neon',
+    purpose: 'Managed PostgreSQL database that stores your account and app state.',
+    url: 'https://neon.tech/privacy-policy',
+  },
+];
+
+const permissions = [
+  {
+    name: 'Internet & network state',
+    why: 'To load wallpapers, ringtones, and your account data, and to detect connectivity.',
+  },
+  {
+    name: 'Set wallpaper',
+    why: 'To apply a wallpaper to your home or lock screen when you choose to.',
+  },
+  {
+    name: 'Modify system settings',
+    why: 'To set an audio track as your ringtone when you choose to. We change nothing else.',
+  },
+  {
+    name: 'Advertising ID',
+    why: 'Used by our analytics and measurement partners. You can reset or limit it in your Android settings at any time.',
+  },
+];
+
+const retention = [
+  {
+    label: 'Account & app data',
+    period: 'Until deleted',
+    note: 'Removed promptly upon a valid account deletion request.',
+  },
+  {
+    label: 'Aggregated analytics',
+    period: '14 months',
+    note: 'Already aggregated — cannot be linked to you after account deletion.',
+  },
+  {
+    label: 'Crash logs',
+    period: '90 days',
+    note: 'Contains no personal identifiers after account deletion.',
+  },
 ];
 ---
 
 <Layout
-  title="Pakiza Privacy Policy"
+  title="Privacy Policy — Pakiza & Arul"
   description={description}
   structuredData={structuredData}
 >
@@ -51,8 +128,11 @@ const structuredData = [
       <div class="space-y-10 text-slate-400 leading-relaxed">
 
         <div class="glass-card rounded-2xl p-6 md:p-8 reveal">
+          <p class="mb-4">
+            This Privacy Policy explains how <strong class="text-white">HSR Utility</strong>, a brand of <strong class="text-white">HSR Energy Private Limited</strong> ("we", "us", or "our"), collects, uses, and protects information when you use our mobile applications <strong class="text-white">Pakiza</strong> and <strong class="text-white">Arul</strong> (each, "the App").
+          </p>
           <p>
-            This Privacy Policy describes how <strong class="text-white">HSR Utility</strong> ("we", "us", or "our") collects, uses, and protects information when you use our mobile application <strong class="text-white">Pakiza</strong> ("the App"). By using the App, you agree to the practices described in this policy.
+            Both apps are built by the same team on the same technology and follow the same data practices — they differ only in the content they offer (Pakiza offers Islamic wallpapers and nasheeds; Arul offers South Indian devotional wallpapers and ringtones). By using either App, you agree to the practices described here.
           </p>
         </div>
 
@@ -62,37 +142,57 @@ const structuredData = [
           <div class="space-y-5">
             <div>
               <h3 class="text-white font-semibold mb-2">Account Information</h3>
-              <p>When you create an account, we collect your <strong class="text-slate-200">phone number</strong> (used for authentication via Firebase Phone Auth) or basic profile information if you sign in with Google (name, email address, profile photo).</p>
+              <p>You sign in with <strong class="text-slate-200">Google Sign-In</strong>. We receive your name, email address, profile photo, and Google account identifier, which we use to create and secure your account. We do <strong class="text-slate-200">not</strong> collect your phone number or password.</p>
             </div>
             <div>
-              <h3 class="text-white font-semibold mb-2">App Data</h3>
-              <p>We store data you generate within the App, including saved favourites, in-app preferences, and custom settings. This is stored securely in Firebase and linked to your account.</p>
+              <h3 class="text-white font-semibold mb-2">Content You Submit</h3>
+              <p>If you submit a wallpaper through the App's upload feature, we store the file you provide and basic details (such as a title) so our team can review it before it may appear in the App. You can ask us to remove submitted content at any time.</p>
             </div>
             <div>
-              <h3 class="text-white font-semibold mb-2">Usage & Analytics Data</h3>
-              <p>We use Firebase Analytics to understand how users interact with the App. This includes information such as your device type, operating system version, language, app version, and which features you use. This data is aggregated and does not directly identify you.</p>
+              <h3 class="text-white font-semibold mb-2">Purchase Information</h3>
+              <p>If you subscribe to a premium plan, payments and UPI AutoPay mandates are processed by <strong class="text-slate-200">PhonePe</strong>. We store your subscription status (for example, active or cancelled) and its dates so we can unlock premium features. We do <strong class="text-slate-200">not</strong> store your card, bank, or UPI credentials.</p>
             </div>
             <div>
-              <h3 class="text-white font-semibold mb-2">Push Notification Tokens</h3>
-              <p>If you enable push notifications, we store a Firebase Cloud Messaging (FCM) token associated with your account. This is used solely to send you relevant in-app notifications and is deleted when you delete your account or disable notifications.</p>
+              <h3 class="text-white font-semibold mb-2">Usage, Device & Analytics Data</h3>
+              <p>We use PostHog, Google Analytics for Firebase, and Meta App Events to understand how the App is used. This includes your device type, operating system version, language, app version, the advertising identifier, and which features you use. This data is aggregated and is not used by us to identify you personally.</p>
             </div>
             <div>
-              <h3 class="text-white font-semibold mb-2">Crash Reports</h3>
-              <p>We use Firebase Crashlytics to receive anonymised crash reports to identify and fix bugs. These reports contain device state at the time of a crash but do not include personally identifiable information.</p>
+              <h3 class="text-white font-semibold mb-2">Crash & Performance Data</h3>
+              <p>We use Firebase Crashlytics and Performance Monitoring to receive anonymised crash and performance reports so we can fix bugs. These reports describe the device state at the time of an issue and do not include personally identifiable information.</p>
+            </div>
+            <div>
+              <h3 class="text-white font-semibold mb-2">Install Attribution</h3>
+              <p>We use the Google Play Install Referrer to understand which campaign or link led you to install the App. This helps us measure our marketing and does not identify you personally.</p>
             </div>
           </div>
         </section>
 
         <!-- Section 2 -->
         <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">2. How We Use Your Information</h2>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">2. Device Permissions</h2>
+          <p class="mb-5">The App requests only the permissions it needs to work. Each is used solely for the purpose below, and only when you choose an action that requires it:</p>
+          <div class="space-y-4">
+            {permissions.map(p => (
+              <div class="glass-card rounded-xl p-5">
+                <p class="text-white font-semibold mb-1">{p.name}</p>
+                <p class="text-sm">{p.why}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">3. How We Use Your Information</h2>
           <ul class="space-y-3 list-none">
             {[
               'To provide, maintain, and improve the App and its features.',
-              'To authenticate your identity and manage your account securely.',
-              'To sync your favourites and preferences across devices (when signed in).',
-              'To send push notifications relevant to the App (only if you have enabled them).',
-              'To understand usage patterns and improve content curation.',
+              'To authenticate your identity and keep your account secure.',
+              'To sync your account, preferences, and premium status across devices.',
+              'To process premium subscriptions and manage AutoPay mandates.',
+              'To review content you submit before it may appear in the App.',
+              'To understand usage patterns and improve content and curation.',
+              'To measure our advertising and installs.',
               'To diagnose technical issues and fix bugs.',
             ].map(item => (
               <li class="flex gap-3">
@@ -103,39 +203,50 @@ const structuredData = [
           </ul>
         </section>
 
-        <!-- Section 3 -->
+        <!-- Section 4 -->
         <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">3. Third-Party Services</h2>
-          <p class="mb-5">We use the following third-party services to operate the App. Each has its own privacy policy governing how they handle data:</p>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">4. Third-Party Services</h2>
+          <p class="mb-5">We rely on the following third-party services to operate the App. Each processes data under its own privacy policy:</p>
           <div class="space-y-4">
-            {[
-              { name: 'Google Firebase', purpose: 'Authentication, database, analytics, crash reporting, and push notifications.', url: 'https://firebase.google.com/support/privacy' },
-              { name: 'Google Play Services', purpose: 'Required for app distribution and core Android functionality.' , url: 'https://policies.google.com/privacy' },
-            ].map(service => (
+            {thirdParties.map(service => (
               <div class="glass-card rounded-xl p-5">
                 <p class="text-white font-semibold mb-1">{service.name}</p>
                 <p class="text-sm mb-2">{service.purpose}</p>
-                <p class="text-xs text-muted">{service.url}</p>
+                <a href={service.url} target="_blank" rel="noopener noreferrer" class="text-xs text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors break-all">{service.url}</a>
               </div>
             ))}
           </div>
         </section>
 
-        <!-- Section 4 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">4. Data Storage & Security</h2>
-          <p>Your data is stored on Google Firebase infrastructure. We implement industry-standard security measures including encrypted connections (HTTPS/TLS) and Firebase Security Rules to restrict unauthorised access. No security measure is 100% guaranteed, but we take reasonable steps to protect your information.</p>
-        </section>
-
         <!-- Section 5 -->
         <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">5. Data Retention</h2>
-          <div class="grid gap-4 sm:grid-cols-3">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">5. How Your Information Is Shared</h2>
+          <p class="mb-4">We do <strong class="text-white">not</strong> sell your personal information, and we do not share the content of your account with anyone for their own advertising. We share data only:</p>
+          <ul class="space-y-3 list-none">
             {[
-              { label: 'Account & App Data', period: 'Until deleted', note: 'Deleted promptly upon a valid account deletion request.' },
-              { label: 'Anonymised Analytics', period: '14 months', note: 'Already anonymised — cannot be linked to you after account deletion.' },
-              { label: 'Crash Logs', period: '90 days', note: 'Contains no personal identifiers after account deletion.' },
+              'With the service providers listed above, strictly to operate the App on our behalf.',
+              'When required by law, or to protect the rights, safety, and security of our users and our service.',
+              'As part of a business transfer (such as a merger or acquisition), in which case this policy will continue to apply.',
             ].map(item => (
+              <li class="flex gap-3">
+                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Section 6 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">6. Data Storage & Security</h2>
+          <p>Your account and app data are stored in a managed PostgreSQL database (Neon), and media is delivered through Cloudflare's infrastructure. We use industry-standard safeguards including encrypted connections (HTTPS/TLS) and access controls that restrict data to our backend services. No method of transmission or storage is ever 100% secure, but we take reasonable steps to protect your information.</p>
+        </section>
+
+        <!-- Section 7 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">7. Data Retention</h2>
+          <div class="grid gap-4 sm:grid-cols-3">
+            {retention.map(item => (
               <div class="glass-card rounded-xl p-5 text-center">
                 <p class="text-gold-400 font-bold text-lg mb-1">{item.period}</p>
                 <p class="text-white text-sm font-medium mb-2">{item.label}</p>
@@ -145,16 +256,16 @@ const structuredData = [
           </div>
         </section>
 
-        <!-- Section 6 -->
+        <!-- Section 8 -->
         <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">6. Your Rights</h2>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">8. Your Rights</h2>
           <p class="mb-4">You have the right to:</p>
           <ul class="space-y-3">
             {[
               'Access the personal data we hold about you.',
               'Request correction of inaccurate data.',
               'Request permanent deletion of your account and associated data.',
-              'Withdraw consent for push notifications at any time via your device settings.',
+              'Reset or limit your advertising identifier at any time in your Android settings.',
             ].map(right => (
               <li class="flex gap-3">
                 <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
@@ -171,26 +282,34 @@ const structuredData = [
           </p>
         </section>
 
-        <!-- Section 7 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">7. Children's Privacy</h2>
-          <p>The App is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us and we will delete it promptly.</p>
-        </section>
-
-        <!-- Section 8 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">8. Changes to This Policy</h2>
-          <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. We encourage you to review this policy periodically. Continued use of the App after changes constitutes acceptance of the updated policy.</p>
-        </section>
-
         <!-- Section 9 -->
         <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">9. Contact Us</h2>
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">9. Children's Privacy</h2>
+          <p>The Apps are not directed at children under the age of 13, and we do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us and we will delete it promptly.</p>
+        </section>
+
+        <!-- Section 10 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">10. Consent</h2>
+          <p>By using Pakiza or Arul, you consent to this Privacy Policy and to the collection and use of information as described here. If you do not agree, please discontinue use of the App and, if you wish, request deletion of your account.</p>
+        </section>
+
+        <!-- Section 11 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">11. Changes to This Policy</h2>
+          <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. We encourage you to review this policy periodically. Continued use of an App after changes constitutes acceptance of the updated policy.</p>
+        </section>
+
+        <!-- Section 12 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">12. Contact Us</h2>
           <div class="glass-card rounded-2xl p-6 md:p-8">
             <p class="mb-4">If you have questions or concerns about this Privacy Policy, please contact us:</p>
             <div class="space-y-2">
               <p><span class="text-slate-300 font-medium">Email:</span> <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 transition-colors">support@hsrutility.com</a></p>
-              <p><span class="text-slate-300 font-medium">Brand:</span> HSR Utility</p>
+              <p><span class="text-slate-300 font-medium">Company:</span> HSR Energy Private Limited</p>
+              <p><span class="text-slate-300 font-medium">Address:</span> HSR Layout, Bengaluru, Karnataka 560102, India</p>
+              <p><span class="text-slate-300 font-medium">Applies to:</span> Pakiza · Arul</p>
             </div>
           </div>
         </section>

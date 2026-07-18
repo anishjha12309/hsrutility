@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="HSR Utility — Pakiza: HD Islamic wallpapers, status images and nasheed ringtones">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="HSR Utility — devotional wallpaper and ringtone apps for Android: Pakiza and Arul">
   <defs>
     <radialGradient id="glowGold" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.16"/>
@@ -36,28 +36,40 @@
   </g>
 
   <!-- Headline -->
-  <text x="80" y="310" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="68" fill="#ffffff">Carry your faith</text>
-  <text x="80" y="390" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="68" fill="#d4b45f">beautifully.</text>
+  <text x="80" y="306" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="56" fill="#ffffff">Devotion,</text>
+  <text x="80" y="378" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="56" fill="#d4b45f">beautifully designed.</text>
 
   <!-- Hairline -->
   <rect x="80" y="428" width="300" height="2" fill="url(#hairline)"/>
 
   <!-- Keyword line -->
-  <text x="80" y="478" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">Pakiza — HD Islamic wallpapers, status images</text>
-  <text x="80" y="510" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">&amp; nasheed ringtones. Free on Android.</text>
+  <text x="80" y="478" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">Pakiza &amp; Arul — HD and live devotional</text>
+  <text x="80" y="510" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">wallpapers &amp; ringtones. Free on Android.</text>
 
   <!-- Domain -->
   <text x="80" y="570" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="500" font-size="17" fill="#64748b">hsrutility.com</text>
 
-  <!-- Pakiza app icon (same mark as the site's app card) -->
-  <g transform="translate(838, 186)">
-    <rect width="276" height="276" rx="62" fill="#1a1b35" stroke="#c9a84c" stroke-opacity="0.18" stroke-width="2"/>
-    <g transform="scale(3.45)">
-      <circle cx="43" cy="38" r="21" fill="#c9a84c" opacity="0.95"/>
-      <circle cx="52" cy="29" r="16" fill="#1a1b35"/>
-      <circle cx="58" cy="47" r="3.5" fill="#c9a84c"/>
-      <circle cx="65" cy="36" r="2.5" fill="#c9a84c" opacity="0.75"/>
-      <circle cx="61" cy="54" r="1.8" fill="#c9a84c" opacity="0.5"/>
+  <!-- Two app icons (same marks as the site's app cards) -->
+  <g transform="translate(858, 214)">
+    <!-- Pakiza -->
+    <g>
+      <rect width="220" height="220" rx="50" fill="#1a1b35" stroke="#c9a84c" stroke-opacity="0.18" stroke-width="2"/>
+      <g transform="translate(24, 24) scale(2.15)">
+        <circle cx="43" cy="38" r="21" fill="#c9a84c" opacity="0.95"/>
+        <circle cx="52" cy="29" r="16" fill="#1a1b35"/>
+        <circle cx="58" cy="47" r="3.5" fill="#c9a84c"/>
+        <circle cx="65" cy="36" r="2.5" fill="#c9a84c" opacity="0.75"/>
+        <circle cx="61" cy="54" r="1.8" fill="#c9a84c" opacity="0.5"/>
+      </g>
+    </g>
+    <!-- Arul (overlapping, offset down-right) -->
+    <g transform="translate(-150, 92)">
+      <rect width="180" height="180" rx="42" fill="#1a1b35" stroke="#c9a84c" stroke-opacity="0.28" stroke-width="2"/>
+      <g transform="translate(18, 18) scale(1.8)">
+        <path d="M40 18c6 8 11 13 11 21a11 11 0 01-22 0c0-8 5-13 11-21z" fill="#c9a84c" opacity="0.95"/>
+        <path d="M40 30c2.6 3.6 4.6 5.8 4.6 9.4a4.6 4.6 0 01-9.2 0c0-3.6 2-5.8 4.6-9.4z" fill="#1a1b35"/>
+        <path d="M26 58h28M30 63h20" stroke="#c9a84c" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      </g>
     </g>
   </g>
 </svg>

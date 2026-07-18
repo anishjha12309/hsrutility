@@ -2,29 +2,32 @@
  * Shared JSON-LD (schema.org) builders.
  *
  * Everything is wired into one entity graph via @id references so Google and
- * AI answer engines resolve "HSR Utility" and "Pakiza" as consistent entities:
+ * AI answer engines resolve "HSR Utility", "Pakiza" and "Arul" as consistent
+ * entities:
  *
  *   Organization (#organization)
  *     ^-- publisher -- WebSite (#website)
  *     ^-- publisher -- MobileApplication (Pakiza)
+ *     ^-- publisher -- MobileApplication (Arul)
  *     ^-- about ------ WebPage (per page)
  *
  * Deliberate omissions (do NOT "fix" these without real data):
  *   - Organization.sameAs   — no social profiles exist yet; fabricating them is worse than nothing.
- *   - MobileApplication.offers / .aggregateRating / .review — Pakiza is not on Google Play yet.
- *     These are the properties Google requires for a software rich result, but inventing
- *     a rating to force eligibility violates Google's structured-data policy and risks a
- *     manual action. Add them at launch, with real Play Store numbers, and nothing sooner.
+ *   - MobileApplication.offers / .aggregateRating / .review — added only with real Play Store
+ *     numbers at each app's launch. Inventing a rating to force a software rich result violates
+ *     Google's structured-data policy and risks a manual action. Nothing sooner.
  */
 
 export const SITE_URL = 'https://hsrutility.com';
 
 /** Canonical one-line descriptors. Reuse these verbatim everywhere (site copy, schema,
- *  and eventually the Play Store listing) — entity resolution rewards exact repetition. */
+ *  and eventually the Play Store listings) — entity resolution rewards exact repetition. */
 export const ORG_DESCRIPTION =
-  'HSR Utility builds thoughtfully designed mobile apps for the Muslim community.';
-export const APP_DESCRIPTION =
-  'Pakiza is an Android app offering HD Islamic wallpapers, status images, and ringtones & nasheeds — free to use, built for the Muslim community.';
+  'HSR Utility builds beautifully designed devotional wallpaper and ringtone apps for Android.';
+export const PAKIZA_DESCRIPTION =
+  'Pakiza is an Android app offering HD and live Islamic wallpapers plus ringtones and nasheeds — free to browse, with an optional premium plan.';
+export const ARUL_DESCRIPTION =
+  'Arul is an Android app offering HD and live South Indian devotional wallpapers and ringtones across six deities — free to browse, with an optional premium plan.';
 
 const ORG_ID = `${SITE_URL}/#organization`;
 const SITE_ID = `${SITE_URL}/#website`;
@@ -37,11 +40,20 @@ export const organizationSchema = {
   '@type': 'Organization',
   '@id': ORG_ID,
   name: 'HSR Utility',
+  legalName: 'HSR Energy Private Limited',
   url: `${SITE_URL}/`,
   logo: abs('/icon-512.png'),
   email: 'support@hsrutility.com',
   foundingDate: '2026',
   description: ORG_DESCRIPTION,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'HSR Layout',
+    addressLocality: 'Bengaluru',
+    addressRegion: 'Karnataka',
+    postalCode: '560102',
+    addressCountry: 'IN',
+  },
 };
 
 export const websiteSchema = {
@@ -56,17 +68,30 @@ export const websiteSchema = {
 };
 
 /**
- * Pakiza as an entity, not a rich-result play.
- * This will not light up in the Rich Results Test — that's expected and correct:
- * software rich results require offers + aggregateRating, which we don't have honestly.
- * The value here is giving crawlers and AI engines a clean, unambiguous "what is Pakiza".
+ * The two apps as entities, not rich-result plays.
+ * These will not light up in the Rich Results Test — that's expected and correct:
+ * software rich results require offers + aggregateRating, which we only add with
+ * honest Play Store numbers. The value here is giving crawlers and AI engines a
+ * clean, unambiguous "what is Pakiza" and "what is Arul".
  */
 export const pakizaAppSchema = {
   '@context': 'https://schema.org',
   '@type': 'MobileApplication',
   name: 'Pakiza',
   url: `${SITE_URL}/#apps`,
-  description: APP_DESCRIPTION,
+  description: PAKIZA_DESCRIPTION,
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'ANDROID',
+  publisher: { '@id': ORG_ID },
+  author: { '@id': ORG_ID },
+};
+
+export const arulAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  name: 'Arul',
+  url: `${SITE_URL}/#apps`,
+  description: ARUL_DESCRIPTION,
   applicationCategory: 'LifestyleApplication',
   operatingSystem: 'ANDROID',
   softwareVersion: 'Unreleased',
