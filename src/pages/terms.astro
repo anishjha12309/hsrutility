@@ -1,0 +1,224 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import {
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from '../lib/schema';
+
+const lastUpdated = 'July 2026';
+
+const description =
+  'Terms of Service for Pakiza and Arul by HSR Utility: your rights and responsibilities, premium subscriptions, content submissions, and how to contact us.';
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms of Service' }]),
+  webPageSchema({
+    path: Astro.url.pathname,
+    name: 'Terms of Service — Pakiza & Arul | HSR Utility',
+    description,
+  }),
+];
+
+const acceptableUse = [
+  'Copy, extract, scrape, or redistribute wallpapers, ringtones, or nasheeds outside the App, or resell them in any form.',
+  'Reverse engineer, decompile, or tamper with the App, its APIs, or its content protection.',
+  'Bypass or attempt to bypass premium gating, subscription checks, or signed media URLs.',
+  'Use bots, automation, or bulk downloading against our services.',
+  'Submit content you do not own or do not have the right to share.',
+  'Submit content that is unlawful, hateful, sexually explicit, violent, or that disrespects any religion or community.',
+  'Abuse referral or reward programs (fake accounts, self-referral loops, or automated redemptions).',
+  'Use the App in any way that violates applicable law.',
+];
+
+const subscriptionPoints = [
+  {
+    title: 'What premium unlocks',
+    body: 'Browsing and previewing content is free. A premium subscription unlocks actions such as applying or sharing wallpapers and setting ringtones (features vary slightly by app).',
+  },
+  {
+    title: 'Billing',
+    body: 'Subscriptions are billed in Indian Rupees through PhonePe using a UPI AutoPay mandate that you approve in your UPI app. The price, billing period, and any free trial are shown clearly before you subscribe.',
+  },
+  {
+    title: 'Free trial',
+    body: 'Where offered, a free trial is available once per user. When the trial ends, your mandate is charged automatically unless you cancel before the trial ends. We send a reminder notification before each debit.',
+  },
+  {
+    title: 'Cancellation',
+    body: 'You can cancel anytime from the app (Settings → your plan → Cancel). Cancelling stops future charges; you keep premium access until the end of the period you already paid for. No partial-period refunds are given for the remaining days.',
+  },
+  {
+    title: 'Refunds',
+    body: 'Charges already made are generally non-refundable, except where required by law or where a charge was made in error. If you believe you were charged incorrectly, contact us within 7 days and we will investigate in good faith.',
+  },
+  {
+    title: 'Price changes',
+    body: 'We may change subscription prices. Changes never apply retroactively and will only take effect from your next billing period, with prior notice inside the App.',
+  },
+];
+---
+
+<Layout
+  title="Terms of Service — Pakiza & Arul"
+  description={description}
+  structuredData={structuredData}
+>
+  <Navbar />
+
+  <main class="pt-36 pb-24 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Header -->
+      <div class="mb-14 reveal">
+        <p class="section-label mb-4">Legal</p>
+        <h1 class="font-serif text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          Terms of <em class="text-gold-400 not-italic">Service</em>
+        </h1>
+        <p class="text-slate-400">
+          Last updated: <span class="text-slate-300">{lastUpdated}</span>
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div class="space-y-10 text-slate-400 leading-relaxed">
+
+        <div class="glass-card rounded-2xl p-6 md:p-8 reveal">
+          <p class="mb-4">
+            These Terms of Service ("Terms") are an agreement between you and <strong class="text-white">HSR Utility</strong>, a brand of <strong class="text-white">HSR Energy Private Limited</strong> ("we", "us", or "our"), and govern your use of our mobile applications <strong class="text-white">Pakiza</strong> and <strong class="text-white">Arul</strong> (each, "the App") and related services.
+          </p>
+          <p>
+            By creating an account or using either App, you accept these Terms and our <a href="/privacy" class="text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors">Privacy Policy</a>. If you do not agree, please do not use the App.
+          </p>
+        </div>
+
+        <!-- 1 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">1. Eligibility & Your Account</h2>
+          <div class="space-y-4">
+            <p>You must be at least 13 years old to use the App, and old enough to enter a binding agreement under the laws of your country. If you subscribe to a paid plan, you confirm you are legally able to authorise payments (in India, UPI AutoPay mandates require you to be at least 18 or have the consent of a guardian who holds the payment account).</p>
+            <p>You sign in with your Google account. You are responsible for activity that happens under your account and for keeping access to your Google account secure. Your account is personal to you — do not sell, share, or transfer it.</p>
+            <p>You can delete your account at any time from within the App (Settings → Delete account) or via our <a href="/delete-account" class="text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors">account deletion page</a>.</p>
+          </div>
+        </section>
+
+        <!-- 2 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">2. Licence to Use the App</h2>
+          <div class="space-y-4">
+            <p>We grant you a personal, limited, non-exclusive, non-transferable, revocable licence to use the App on Android devices you own or control, for your own personal, non-commercial use.</p>
+            <p>All content in the App — wallpapers, ringtones, nasheeds, artwork, designs, and software — is owned by us or licensed to us and is protected by copyright and other laws. Setting a wallpaper or ringtone on your own device is exactly what the App is for; redistributing that content outside the App is not.</p>
+          </div>
+        </section>
+
+        <!-- 3 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">3. Premium Subscriptions</h2>
+          <div class="space-y-4">
+            {subscriptionPoints.map(point => (
+              <div class="glass-card rounded-xl p-5">
+                <p class="text-white font-semibold mb-1">{point.title}</p>
+                <p class="text-sm">{point.body}</p>
+              </div>
+            ))}
+          </div>
+          <p class="mt-5 text-sm">Payments are processed by PhonePe under its own terms. We never see or store your card, bank, or UPI credentials.</p>
+        </section>
+
+        <!-- 4 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">4. Content You Submit</h2>
+          <div class="space-y-4">
+            <p>Some of our apps let you submit wallpapers for consideration. When you submit content, you confirm that you own it or have every right needed to share it, and you grant us a worldwide, royalty-free licence to review, store, adapt (for example, crop or re-encode), and — if approved — publish it inside the App.</p>
+            <p>All submissions are reviewed by our team before they can appear in the App. We may reject or remove any submission at our discretion, and we may remove published content at any time. You can ask us to take down content you submitted by contacting support.</p>
+            <p>Submissions must respect the devotional nature of our apps and must never include content you do not have rights to, watermarks belonging to others, or anything listed under Acceptable Use below.</p>
+          </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">5. Acceptable Use</h2>
+          <p class="mb-4">You agree that you will <strong class="text-white">not</strong>:</p>
+          <ul class="space-y-3 list-none">
+            {acceptableUse.map(item => (
+              <li class="flex gap-3">
+                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- 6 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">6. Referrals & Rewards</h2>
+          <p>Where the App offers referral rewards (such as temporary premium access), rewards are a goodwill benefit, have no cash value, cannot be transferred or exchanged, and may be adjusted or withdrawn if we detect abuse. Any reward balance is forfeited when your account is deleted.</p>
+        </section>
+
+        <!-- 7 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">7. Availability & Changes to the Service</h2>
+          <div class="space-y-4">
+            <p>Content is streamed from our servers, so the App needs an internet connection for most features. We work hard to keep the service available, but we do not guarantee uninterrupted or error-free operation — maintenance, network issues, and third-party outages can occur.</p>
+            <p>The catalogue of wallpapers and ringtones changes over time: we add new content regularly and may occasionally retire items. We may also add, change, or remove App features. If we ever discontinue an App entirely, we will give reasonable notice and stop future subscription charges.</p>
+          </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">8. Suspension & Termination</h2>
+          <div class="space-y-4">
+            <p>We may suspend or terminate your account if you materially breach these Terms — for example, by attempting to bypass premium gating, abusing referrals, or misusing our services. Where practical, we will warn you first.</p>
+            <p>You may stop using the App at any time, and you can delete your account whenever you wish. Sections of these Terms that by their nature should survive termination (such as intellectual property, disclaimers, and limitation of liability) survive it.</p>
+          </div>
+        </section>
+
+        <!-- 9 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">9. Disclaimers</h2>
+          <p>The App and its content are provided <strong class="text-white">"as is" and "as available"</strong>. To the fullest extent permitted by law, we disclaim all warranties, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the App will meet your requirements or that content will always be available.</p>
+        </section>
+
+        <!-- 10 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">10. Limitation of Liability</h2>
+          <p>To the fullest extent permitted by law, HSR Energy Private Limited and its team will not be liable for indirect, incidental, special, consequential, or punitive damages, or for loss of data or profits, arising from your use of the App. Our total aggregate liability for any claim relating to the App is limited to the amount you paid us in the 12 months before the claim arose (or ₹1,000 if you paid nothing). Nothing in these Terms limits liability that cannot be limited under applicable law.</p>
+        </section>
+
+        <!-- 11 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">11. Governing Law & Disputes</h2>
+          <p>These Terms are governed by the laws of India. Any dispute arising out of or relating to these Terms or the App is subject to the exclusive jurisdiction of the courts of Bengaluru, Karnataka. Before going to court, please contact us first — most issues can be resolved quickly by email.</p>
+        </section>
+
+        <!-- 12 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">12. Changes to These Terms</h2>
+          <p>We may update these Terms from time to time. When we do, we will update the "Last updated" date at the top of this page, and for material changes we will provide notice inside the App. Continued use of an App after changes take effect constitutes acceptance of the updated Terms.</p>
+        </section>
+
+        <!-- 13 -->
+        <section class="reveal">
+          <h2 class="font-serif text-2xl font-bold text-white mb-4">13. Contact Us</h2>
+          <div class="glass-card rounded-2xl p-6 md:p-8">
+            <p class="mb-4">If you have questions about these Terms, please contact us:</p>
+            <div class="space-y-2">
+              <p><span class="text-slate-300 font-medium">Email:</span> <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 transition-colors">support@hsrutility.com</a></p>
+              <p><span class="text-slate-300 font-medium">Company:</span> HSR Energy Private Limited</p>
+              <p><span class="text-slate-300 font-medium">Address:</span> HSR Layout, Bengaluru, Karnataka 560102, India</p>
+              <p><span class="text-slate-300 font-medium">Applies to:</span> Pakiza · Arul</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

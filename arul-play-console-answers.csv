@@ -1,0 +1,30 @@
+Section,Question,Answer,Notes
+Monetization - Ads,Does your app contain ads?,No,"No ad SDKs (no AdMob); Meta/GA4/PostHog are measurement only, not ad-serving."
+App content - App access,Is any part of your app restricted?,Yes,"Google Sign-In required to use the app; premium subscription tiers gate apply/share/set."
+App content - App access,Reviewer instructions,See notes,"Google Sign-In only (no username/password) - reviewer uses any Google account. Browsing/preview is free; premium (subscription) only unlocks apply/save/set, so the core experience is fully reviewable without purchase."
+Content rating - User content sharing,Does the app natively allow users to interact or exchange content with other users (voice/text/images/audio)?,No,"No user-to-user messaging/sharing. User-submitted wallpapers go to a moderation queue to become app content, not to other users."
+Content rating - User content sharing,[If Yes] Is shared user-generated content the primary source of content?,No,"Catalog is curated/published by the studio; user submissions are optional and moderated."
+Content rating - User content sharing,[If Yes] Does the app permit public sharing of nudity?,No,All submissions are moderated before publishing.
+Content rating - User content sharing,[If Yes] Does the app permit public sharing of real-world graphic violence outside newsworthy context?,No,All submissions are moderated before publishing.
+Content rating - User content sharing,[If Yes] Does the app include the ability to block users or user-generated content?,Yes,"Submissions are reviewed and can be rejected/removed by moderators before they ever appear."
+Content rating - Online content,Does the app feature/promote content not part of the initial download but accessible from the app?,Yes,"Wallpapers and ringtones are streamed from the CDN/catalog at runtime and grow over time via the CMS - not bundled in the APK/AAB."
+Content rating - Miscellaneous,Does the app share the user's current and precise physical location with other users?,No,App does not access or share location.
+Content rating - Miscellaneous,Does the app allow users to purchase digital goods?,Yes,Premium subscription (PhonePe UPI AutoPay).
+Content rating - Miscellaneous,"Does the app include cash rewards, gift cards, play-to-earn, crypto rewards, or transferable digital assets (NFTs)?",No,None of these features exist.
+Content rating - Miscellaneous,Is the app a web browser or search engine?,No,It is a wallpaper/ringtone app.
+Content rating - Target age group,What are the target age groups of your app?,18 and over,"Requires sign-in and paid subscriptions; no under-18 audience or families policy safeguards built."
+Data safety,Does your app collect or share any of the required user data types?,Yes,"Collects account info, app activity, device/other IDs incl. advertising ID."
+Data safety,Is all user data collected by your app encrypted in transit?,Yes,All traffic over HTTPS/TLS to the Worker API and third-party SDKs.
+Data safety,Which methods of account creation does your app support?,OAuth,"Google Sign-In (OAuth); no username/password. Not ""no account"" - signing in creates an account."
+Data safety,Do you provide a way for users to request that their account and data be deleted?,Yes,"In-app: Settings -> Delete account (instant, self-serve). Email fallback: support@hsrutility.com."
+Data safety,Delete account URL,https://hsrutility.com/delete-account,Public page documenting in-app deletion (primary) + email fallback.
+Data safety,Delete data URL,https://hsrutility.com/delete-account,Same page; deletion removes all associated data at once (no separate partial-delete feature).
+Data safety - Data types,Personal info - Name,Collected,Not shared. Purpose: App functionality (account). Not required to keep the app running.
+Data safety - Data types,Personal info - Email address,Collected,Not shared. Purpose: App functionality (account).
+Data safety - Data types,Financial info - Purchase history,Collected,Not shared. Purpose: App functionality (manage subscription). Payment credentials handled by PhonePe, not stored by us.
+Data safety - Data types,App activity - App interactions,Collected,"Shared with analytics providers. Purpose: Analytics, App functionality."
+Data safety - Data types,Device or other IDs - Device or other IDs,Collected,"Shared. Purpose: Analytics, Advertising or marketing (advertising ID)."
+Data safety - Data types,App info and performance - Crash logs,Collected,Not shared. Purpose: App functionality (bug fixing). Anonymised.
+Data safety - Data types,App info and performance - Diagnostics,Collected,Not shared. Purpose: App functionality (performance monitoring).
+Data safety - Security practices,Is data encrypted in transit?,Yes,HTTPS/TLS everywhere.
+Data safety - Security practices,Can users request data deletion?,Yes,In-app Settings -> Delete account + email fallback.
