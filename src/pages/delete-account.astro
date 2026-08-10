@@ -1,24 +1,69 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import {
+import DocLayout from '../layouts/DocLayout.astro';
+import { SUPPORT_EMAIL, APPS } from '../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
+
+/**
+ * PORTED from the previous build. The structure is load-bearing for Play Store
+ * compliance and is preserved exactly: in-app instant deletion leads, email is the
+ * fallback, and the deleted/retained split is stated with its real retention periods.
+ * Nothing here was softened or re-promised.
+ */
+
+const description =
+  'How to permanently delete your Pakiza or Arul account and data — instantly in the app (Settings → Delete account), or by email as a fallback.';
+
+const structuredData = [
   organizationSchema,
   websiteSchema,
-  breadcrumbSchema,
-  webPageSchema,
-} from '../lib/schema';
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Delete My Account' }]),
+  webPageSchema({
+    path: '/delete-account',
+    name: 'Delete Your Account & Data — Pakiza & Arul | HSR Utility',
+    description,
+  }),
+];
 
+const inAppSteps = [
+  'Open the app and go to the <strong>Settings</strong> tab.',
+  'Tap <strong>Delete account</strong> at the bottom of the screen.',
+  'Confirm on the prompt. Your account and its data are deleted <strong>immediately</strong>, your premium subscription and its UPI mandate are cancelled, and you are signed out. If we cannot reach the payment provider to cancel the mandate, the deletion is refused outright rather than half-applied — nothing is deleted and you can try again.',
+];
+
+const emailSteps = [
+  `Send an email to <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a> with the subject line naming the app you use: <span class="mono-inline">Delete my account — Pakiza (or Arul)</span>`,
+  'Include the <strong>Google account email</strong> you used to sign in, so we can locate and verify your data.',
+  'We will process your request within <strong>7 business days</strong> and send a confirmation email once your account and data have been permanently deleted.',
+];
+
+/**
+ * Verified line by line against the DELETE /me handler in both app backends.
+ *
+ * Two things that used to be on this list were never true: "saved favourites"
+ * (no app has ever had a favourites feature) and the Google "profile photo"
+ * (sign-in only ever returns name, email and account id). Do not put them back.
+ */
 const deleted = [
-  'Your account — the Google account linked at sign-in (name, email, profile photo)',
-  'Saved favourites, referral records and rewards',
-  'Any content you submitted for review',
-  'Your subscription record (premium status and dates)',
-  'Analytics and advertising identifiers linked to your account',
+  'Your account — the Google account linked at sign-in (name and email) and your display name',
+  'Your referral code, your referral records, and any premium reward days',
+  'Your subscription record, and the UPI AutoPay mandate itself, which is cancelled',
+  'Any content you submitted that has not yet been published',
+  'The analytics and advertising identifiers linked to your account on that device',
   'All locally cached app data, upon uninstalling the app',
 ];
 
 const retained = [
+  {
+    label: 'Published content you submitted',
+    period: 'Stays in the app',
+    note: 'Anything already reviewed and published remains in the library as anonymous content, with no link back to you. Email us if you want a published submission taken down.',
+  },
+  {
+    // Deliberately survives deletion — see the trial tombstone in the privacy policy.
+    label: 'One-off trial marker',
+    period: 'Indefinite',
+    note: 'A one-way hash of your Google account ID, so the one-trial-per-person limit cannot be reset by deleting and re-registering. No name, no email, nothing reversible.',
+  },
   {
     label: 'Anonymised, aggregated analytics',
     period: '14 months',
@@ -30,229 +75,218 @@ const retained = [
     note: 'For error tracking only; contains no personal identifiers after account deletion.',
   },
 ];
-
-const description =
-  'How to permanently delete your Pakiza or Arul account and data — instantly in the app (Settings → Delete account), or by email as a fallback.';
-
-const structuredData = [
-  organizationSchema,
-  websiteSchema,
-  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Delete My Account' }]),
-  webPageSchema({
-    path: Astro.url.pathname,
-    name: 'Delete Your Account & Data — Pakiza & Arul | HSR Utility',
-    description,
-  }),
-];
 ---
 
-<Layout
+<DocLayout
   title="Delete Your Account & Data — Pakiza & Arul"
+  heading="Delete your account &amp; data"
+  eyebrow="Account & data"
   description={description}
+  intro="You can permanently delete your account and its data at any time — instantly from inside the app, or by email if you no longer have it installed. This action is irreversible."
   structuredData={structuredData}
 >
-  <Navbar />
+  <section>
+    <p class="applies">
+      <span class="applies-label">Applies to</span>
+      {APPS.map((app) => <span class="applies-chip">{app.name}</span>)}
+    </p>
+  </section>
 
-  <main class="pt-36 pb-24 px-6">
-    <div class="max-w-3xl mx-auto">
+  {/* ── Primary path: in-app ─────────────────────────────────────────────── */}
+  <section>
+    <p class="method-flag">Fastest</p>
+    <h2 id="in-app">Delete it in the app</h2>
+    <p>Takes effect immediately — no waiting, no email needed.</p>
 
-      <!-- Header -->
-      <div class="mb-14 reveal">
-        <p class="section-label mb-4">Account &amp; Data</p>
-        <h1 class="font-serif text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
-          Request deletion of your<br />account &amp; data
-        </h1>
-        <p class="text-slate-400 text-lg max-w-xl">
-          You can permanently delete your account and all associated data at any time — instantly from inside the app, or by email if you no longer have it installed. This action is irreversible.
+    <ol class="steps">
+      {inAppSteps.map((step) => (
+        <li>
+          <span class="step-num accent" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {/* ── Fallback: email ──────────────────────────────────────────────────── */}
+  <section>
+    <h2 id="by-email">Prefer email? (or already uninstalled)</h2>
+    <p>If you can't open the app, email us and we'll handle it for you.</p>
+
+    <ol class="steps">
+      {emailSteps.map((step) => (
+        <li>
+          <span class="step-num" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+
+    <p style="margin-top:1.75rem">
+      <a href={`mailto:${SUPPORT_EMAIL}?subject=Delete%20my%20account`} class="btn btn-primary">
+        Email to delete
+        <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </p>
+  </section>
+
+  {/* ── What goes, what stays ────────────────────────────────────────────── */}
+  <section>
+    <h2 id="what-happens">What gets deleted</h2>
+    <ul>
+      {deleted.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="retained">What we must retain</h2>
+    <div class="doc-grid">
+      {retained.map((item) => (
+        <div class="doc-card">
+          <p class="doc-card-period">{item.period}</p>
+          <p class="doc-card-title">{item.label}</p>
+          <p>{item.note}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 id="premium">If you are a premium subscriber</h2>
+    <p>
+      Deleting your account is <strong>not</strong> the same as cancelling. Deletion ends premium
+      access immediately: any time remaining on the period you already paid for is lost, with no
+      refund, along with any referral reward days. Signing up again will not restore it, and will
+      not give you another free trial.
+    </p>
+    <p>
+      If you only want to stop future charges and keep premium until the period runs out, cancel
+      instead — Settings → your plan → Cancel. You can always delete the account later.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="per-app">What data our apps store</h2>
+    <p>
+      Our apps collect the same categories of personal data, and differ mainly in the content
+      they offer.
+    </p>
+    {APPS.map((app) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{app.name}</p>
+        <p>
+          Google account info from sign-in (name and email), your display name, content you
+          submitted for review, in-app preferences, subscription and referral status, and
+          analytics &amp; advertising identifiers.
+          {app.slug === 'pakiza' && ' Pakiza also accepts ringtone submissions, so an audio file you upload is stored for review.'}
         </p>
       </div>
+    ))}
+  </section>
 
-      <!-- Applies to -->
-      <div class="glass-card rounded-2xl p-6 mb-10 reveal">
-        <p class="text-muted text-xs font-semibold tracking-widest uppercase mb-3">Applies to</p>
-        <div class="flex flex-wrap gap-2">
-          {['Pakiza', 'Arul'].map(app => (
-            <span class="text-slate-300 text-sm px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03]">
-              {app}
-            </span>
-          ))}
-        </div>
-      </div>
+  <nav class="doc-foot-links" aria-label="Related pages">
+    <a href="/support" class="link">Support &amp; FAQ</a>
+    <a href="/privacy" class="link">Privacy Policy</a>
+    <a href="/terms" class="link">Terms of Service</a>
+  </nav>
+</DocLayout>
 
-      <!-- Primary: in-app -->
-      <div class="glass-card rounded-2xl p-8 md:p-10 mb-6 reveal">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="inline-block text-[10px] font-semibold tracking-[0.18em] uppercase text-gold-500 bg-gold-500/10 px-3 py-1 rounded-full">Fastest</span>
-          <h2 class="font-serif text-2xl font-bold text-white">Delete it in the app</h2>
-        </div>
-        <p class="text-slate-400 text-sm mb-8">Takes effect immediately — no waiting, no email needed.</p>
-        <div class="space-y-8">
+<style is:global>
+  .applies {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-          <!-- Step 1 -->
-          <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">1</div>
-            <div class="pt-1">
-              <p class="text-slate-300 leading-relaxed">
-                Open the app and go to the <strong class="text-white">Settings</strong> tab.
-              </p>
-            </div>
-          </div>
+  .applies-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 0.25rem;
+  }
 
-          <!-- Step 2 -->
-          <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">2</div>
-            <div class="pt-1">
-              <p class="text-slate-300 leading-relaxed">
-                Tap <strong class="text-white">Delete account</strong> at the bottom of the screen.
-              </p>
-            </div>
-          </div>
+  .applies-chip {
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 0.875rem;
+    color: var(--text);
+  }
 
-          <!-- Step 3 -->
-          <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-sm">3</div>
-            <div class="pt-1">
-              <p class="text-slate-300 leading-relaxed">
-                Confirm on the prompt. Your account and all associated data are deleted <strong class="text-white">right away</strong>, any active premium subscription is cancelled, and you are signed out.
-              </p>
-            </div>
-          </div>
+  .method-flag {
+    display: inline-block;
+    margin: 0 0 0.75rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--accent-soft);
+    border-radius: 999px;
+    background: var(--accent-wash);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
 
-        </div>
-      </div>
+  /* Numbered steps. The counter lives in CSS so the markup stays a plain <ol> and
+     screen readers still announce "list of 3 items" with real numbering. */
+  .steps {
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
 
-      <!-- Fallback: email -->
-      <div class="glass-card rounded-2xl p-8 md:p-10 mb-10 reveal">
-        <h2 class="font-serif text-2xl font-bold text-white mb-2">Prefer email? (or already uninstalled)</h2>
-        <p class="text-slate-400 text-sm mb-8">If you can't open the app, email us and we'll handle it for you.</p>
-        <div class="space-y-8">
+  .steps li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    color: var(--muted);
+  }
 
-          <!-- Step 1 -->
-          <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 font-bold text-sm">1</div>
-            <div class="pt-1">
-              <p class="text-slate-300 leading-relaxed">
-                Send an email to{' '}
-                <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 transition-colors font-medium">
-                  support@hsrutility.com
-                </a>{' '}
-                with the subject line (name the app you use):
-              </p>
-              <div class="mt-3 glass-card rounded-xl px-5 py-3 font-mono text-sm text-slate-200 select-all">
-                Delete my account — Pakiza (or Arul)
-              </div>
-            </div>
-          </div>
+  .step-num {
+    counter-increment: step;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text);
+  }
 
-          <!-- Step 2 -->
-          <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 font-bold text-sm">2</div>
-            <div class="pt-1">
-              <p class="text-slate-300 leading-relaxed">
-                Include the <strong class="text-white">Google account email</strong> you used to sign in, so we can locate and verify your data.
-              </p>
-            </div>
-          </div>
+  .step-num::before {
+    content: counter(step);
+  }
 
-          <!-- Step 3 -->
-          <div class="flex gap-5">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-slate-300 font-bold text-sm">3</div>
-            <div class="pt-1">
-              <p class="text-slate-300 leading-relaxed">
-                We will process your request within <strong class="text-white">7 business days</strong> and send a confirmation email once your account and data have been permanently deleted.
-              </p>
-            </div>
-          </div>
+  .step-num.accent {
+    border-color: var(--accent-soft);
+    background: var(--accent-wash);
+    color: var(--accent);
+  }
 
-        </div>
-
-        <div class="mt-8 pt-8 border-t border-white/5">
-          <a
-            href="mailto:support@hsrutility.com?subject=Delete%20my%20account"
-            class="btn-gold"
-          >
-            Email to Delete
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- What gets deleted & retained -->
-      <div class="grid md:grid-cols-2 gap-5 mb-10">
-
-        <!-- Deleted -->
-        <div class="glass-card rounded-2xl p-7 reveal">
-          <p class="text-muted text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What Gets Deleted</p>
-          <ul class="space-y-3">
-            {deleted.map(item => (
-              <li class="flex gap-3 text-sm text-slate-300">
-                <span class="text-green-400 flex-shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <!-- Retained -->
-        <div class="glass-card rounded-2xl p-7 reveal reveal-d1">
-          <p class="text-muted text-[10px] font-semibold tracking-[0.18em] uppercase mb-5">What We Must Retain</p>
-          <div class="space-y-5">
-            {retained.map(item => (
-              <div>
-                <div class="flex items-center justify-between gap-3 mb-1">
-                  <p class="text-white font-medium text-sm">{item.label}</p>
-                  <span class="text-[10px] font-semibold bg-white/5 border border-white/10 rounded-full px-2.5 py-1 text-slate-400 flex-shrink-0">{item.period}</span>
-                </div>
-                <p class="text-muted text-xs leading-relaxed">{item.note}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <!-- Per-app data -->
-      <div class="glass-card rounded-2xl p-7 mb-10 reveal">
-        <h2 class="font-serif text-xl font-bold text-white mb-2">What data our apps store</h2>
-        <p class="text-slate-400 text-sm mb-6">Both apps collect the same categories of personal data — they differ only in the content they offer.</p>
-        {['Pakiza', 'Arul'].map(app => (
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 border-t border-white/5">
-            <div>
-              <p class="text-white font-semibold mb-1">{app}</p>
-              <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
-                Google account info (sign-in), saved favourites and submitted content, in-app preferences, subscription status, and analytics &amp; advertising identifiers.
-              </p>
-            </div>
-            <a
-              href="mailto:support@hsrutility.com?subject=Delete%20my%20account"
-              class="flex-shrink-0 border border-white/20 text-white text-xs font-semibold tracking-wider uppercase px-5 py-2.5 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-200"
-            >
-              Email to Delete
-            </a>
-          </div>
-        ))}
-      </div>
-
-      <!-- Back links -->
-      <div class="flex flex-wrap gap-4 text-sm reveal">
-        <a href="/support" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-          </svg>
-          Back to Support
-        </a>
-        <a href="/privacy" class="text-slate-400 hover:text-white transition-colors">
-          Privacy Policy
-        </a>
-      </div>
-
-    </div>
-  </main>
-
-  <Footer />
-</Layout>
+  .mono-inline {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text);
+    user-select: all;
+  }
+</style>

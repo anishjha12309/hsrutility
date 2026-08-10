@@ -1,13 +1,15 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import {
-  organizationSchema,
-  websiteSchema,
-  breadcrumbSchema,
-  webPageSchema,
-} from '../lib/schema';
+import DocLayout from '../layouts/DocLayout.astro';
+import { SUPPORT_EMAIL, appNames } from '../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
+
+/**
+ * PORTED from the previous build (reviewed for Play Store compliance). Every promise
+ * and claim is unchanged. Two edits, both required by WEBSITE_BRIEF.md:
+ *   - the invented legal entity "HSR Energy Private Limited" and the Bengaluru postal
+ *     address are gone; the studio is "HSR Utility" and has neither.
+ *   - "nasheeds" -> "ringtones", matching the app's actual curated ringtone library.
+ */
 
 const lastUpdated = 'July 2026';
 
@@ -19,14 +21,12 @@ const structuredData = [
   websiteSchema,
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy' }]),
   webPageSchema({
-    path: Astro.url.pathname,
+    path: '/privacy',
     name: 'Privacy Policy — Pakiza & Arul | HSR Utility',
     description,
   }),
 ];
 
-// Third-party processors, rendered once. Keeping them in data guarantees the
-// visible list and any future schema stay in sync.
 const thirdParties = [
   {
     name: 'Google Sign-In & Google Play Services',
@@ -63,12 +63,29 @@ const thirdParties = [
     purpose: 'Managed PostgreSQL database that stores your account and app state.',
     url: 'https://neon.tech/privacy-policy',
   },
+  {
+    // Pakiza fetches a display font from Google's CDN on first launch, which
+    // discloses the device IP before sign-in. Arul bundles its fonts and makes no
+    // such request. Disclosed because it is true today; if the font is ever bundled
+    // in Pakiza too, delete this entry.
+    name: 'Google Fonts (Pakiza only)',
+    purpose:
+      'Pakiza loads one display typeface from Google’s font CDN the first time it runs, which involves a request from your device to Google. Arul bundles its fonts and makes no such request.',
+    url: 'https://policies.google.com/privacy',
+  },
 ];
 
+/**
+ * Permissions. Audited against the MERGED Android manifests of both apps, not the
+ * hand-written source manifest — the shipped app declares more than the source file
+ * does, because libraries add their own. Every permission the apps' own code
+ * actually uses is listed here; the ones libraries pull in are covered by the note
+ * under the list rather than each being given a card it does not deserve.
+ */
 const permissions = [
   {
     name: 'Internet & network state',
-    why: 'To load wallpapers, ringtones, and your account data, and to detect connectivity.',
+    why: 'To load wallpapers, ringtones, and your account data.',
   },
   {
     name: 'Set wallpaper',
@@ -77,6 +94,18 @@ const permissions = [
   {
     name: 'Modify system settings',
     why: 'To set an audio track as your ringtone when you choose to. We change nothing else.',
+  },
+  {
+    name: 'Notifications',
+    why: 'To show the reminders you switch on in Settings. Requested only when you enable them, never at launch. Reminders are generated on your device — nothing is sent to a server to produce them.',
+  },
+  {
+    name: 'Run at startup',
+    why: 'To re-arm your scheduled reminders after your phone restarts, so they do not silently stop working.',
+  },
+  {
+    name: 'Photos & media (older Android versions only)',
+    why: 'On Android 9 and below, to register a ringtone you choose to set. In Pakiza, also to pick a file from your device when you submit a wallpaper or ringtone. Not used on Android 10 and newer.',
   },
   {
     name: 'Advertising ID',
@@ -100,223 +129,286 @@ const retention = [
     period: '90 days',
     note: 'Contains no personal identifiers after account deletion.',
   },
+  {
+    // Disclosed because it deliberately SURVIVES account deletion. A stable,
+    // re-derivable hash of a Google account is pseudonymous personal data, not
+    // anonymous data, and leaving it undisclosed is the kind of gap that costs you.
+    label: 'One-off trial marker',
+    period: 'Indefinite',
+    note: 'A one-way hash of your Google account ID, kept so the one-trial-per-person limit cannot be reset by deleting and re-registering. It holds no name, email or reversible data, and cannot be used to identify or contact you.',
+  },
+];
+
+const uses = [
+  'To provide, maintain, and improve the App and its features.',
+  'To authenticate your identity and keep your account secure.',
+  'To sync your account, preferences, and premium status across devices.',
+  'To process premium subscriptions and manage AutoPay mandates.',
+  'To review content you submit before it may appear in the App.',
+  'To understand usage patterns and improve content and curation.',
+  'To measure our advertising and installs.',
+  'To diagnose technical issues and fix bugs.',
+];
+
+const sharing = [
+  'With the service providers listed above, strictly to operate the App on our behalf.',
+  'When required by law, or to protect the rights, safety, and security of our users and our service.',
+  'As part of a business transfer (such as a merger or acquisition), in which case this policy will continue to apply.',
+];
+
+const rights = [
+  'Access the personal data we hold about you.',
+  'Request correction of inaccurate data.',
+  'Request permanent deletion of your account and associated data.',
+  'Reset or limit your advertising identifier at any time in your Android settings.',
 ];
 ---
 
-<Layout
+<DocLayout
   title="Privacy Policy — Pakiza & Arul"
+  heading="Privacy Policy"
+  eyebrow="Legal"
   description={description}
+  lastUpdated={lastUpdated}
   structuredData={structuredData}
 >
-  <Navbar />
+  <section>
+    <p>
+      This Privacy Policy explains how <strong>HSR Utility</strong> ("we", "us", or "our")
+      collects, uses, and protects information when you use our Android applications
+      <strong>{appNames()}</strong> (each, "the App").
+    </p>
+    <p>
+      Our apps are built by the same team on the same technology and follow the same data
+      practices, with the small differences noted where they apply. They differ mainly in the
+      content they offer: Pakiza offers Islamic wallpapers and ringtones, Arul offers South
+      Indian devotional wallpapers and ringtones. By using any of them, you agree to the
+      practices described here.
+    </p>
+  </section>
 
-  <main class="pt-36 pb-24 px-6">
-    <div class="max-w-3xl mx-auto">
+  <section>
+    <h2 id="collect">1. Information We Collect</h2>
 
-      <!-- Header -->
-      <div class="mb-14 reveal">
-        <p class="section-label mb-4">Legal</p>
-        <h1 class="font-serif text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-          Privacy <em class="text-gold-400 not-italic">Policy</em>
-        </h1>
-        <p class="text-slate-400">
-          Last updated: <span class="text-slate-300">{lastUpdated}</span>
+    <h3>Account Information</h3>
+    <p>
+      You sign in with <strong>Google Sign-In</strong>. We receive your name, email address, and
+      Google account identifier, which we use to create and secure your account. We do
+      <strong>not</strong> receive your Google profile photo, and we do <strong>not</strong>
+      collect your phone number or password.
+    </p>
+
+    <h3>Content You Submit</h3>
+    <p>
+      If you submit content through the App's upload feature — a wallpaper in any of our apps,
+      or a ringtone in Pakiza — we store the file you provide and basic details (such as a
+      title) so our team can review it before it may appear in the App. You can ask us to remove
+      submitted content at any time.
+    </p>
+
+    <h3>Referrals</h3>
+    <p>
+      If you invite someone with your referral link, we record the link between your account and
+      theirs so the reward can be credited. On your referrals screen you can see the display name
+      or a partly masked email address of people who joined through your link, and they can see
+      nothing about you beyond the fact that you referred them.
+    </p>
+
+    <h3>Purchase Information</h3>
+    <p>
+      If you subscribe to a premium plan, payments and UPI AutoPay mandates are processed by
+      <strong>PhonePe</strong>. We store your subscription status (for example, active or
+      cancelled) and its dates so we can unlock premium features. We do <strong>not</strong>
+      store your card, bank, or UPI credentials.
+    </p>
+
+    <h3>Usage, Device & Analytics Data</h3>
+    <p>
+      We use PostHog, Google Analytics for Firebase, and Meta App Events to understand how the
+      App is used. This includes your device type, operating system version, language, app
+      version, the advertising identifier, and which features you use. We read this in aggregate
+      to improve the App, rather than to build a profile of you. Two exceptions worth naming:
+      subscription events are reported with an app-installation identifier so a payment can be
+      matched to the install that produced it, and PostHog receives a short list of events from
+      only a small sample of installations.
+    </p>
+
+    <h3>Crash & Performance Data</h3>
+    <p>
+      We use Firebase Crashlytics and Performance Monitoring to receive anonymised crash and
+      performance reports so we can fix bugs. These reports describe the device state at the
+      time of an issue and do not include personally identifiable information.
+    </p>
+
+    <h3>Install Attribution</h3>
+    <p>
+      We use the Google Play Install Referrer to understand which campaign, link, or friend's
+      referral led you to install the App. This helps us measure our marketing and credit
+      referral rewards.
+    </p>
+
+    <h3>Reminders</h3>
+    <p>
+      Reminders are built and scheduled <strong>entirely on your device</strong>. To schedule them
+      correctly the App reads your device's time zone locally. There is no push service, no
+      server involved, and no location access — nothing about your reminders leaves the phone.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="permissions">2. Device Permissions</h2>
+    <p>
+      The App requests the permissions below, each for the feature described, and only when you
+      choose an action that needs it:
+    </p>
+    {permissions.map((permission) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{permission.name}</p>
+        <p>{permission.why}</p>
+      </div>
+    ))}
+    <p style="margin-top:1rem">
+      Some of the standard libraries we build on — video playback, secure storage, analytics —
+      declare additional common Android permissions of their own, such as network state, wake
+      lock and advertising identifiers. We do not use them for any purpose beyond what is
+      described in this policy.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="use">3. How We Use Your Information</h2>
+    <ul>
+      {uses.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="third-parties">4. Third-Party Services</h2>
+    <p>
+      We rely on the following third-party services to operate the App. Each processes data under
+      its own privacy policy:
+    </p>
+    {thirdParties.map((service) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{service.name}</p>
+        <p>{service.purpose}</p>
+        <p>
+          <a href={service.url} target="_blank" rel="noopener noreferrer">
+            {service.url}
+          </a>
         </p>
       </div>
+    ))}
+  </section>
 
-      <!-- Content -->
-      <div class="space-y-10 text-slate-400 leading-relaxed">
+  <section>
+    <h2 id="sharing">5. How Your Information Is Shared</h2>
+    <p>
+      We do <strong>not</strong> sell your personal information, and we do not share the content
+      of your account with anyone for their own advertising. We share data only:
+    </p>
+    <ul>
+      {sharing.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
 
-        <div class="glass-card rounded-2xl p-6 md:p-8 reveal">
-          <p class="mb-4">
-            This Privacy Policy explains how <strong class="text-white">HSR Utility</strong>, a brand of <strong class="text-white">HSR Energy Private Limited</strong> ("we", "us", or "our"), collects, uses, and protects information when you use our mobile applications <strong class="text-white">Pakiza</strong> and <strong class="text-white">Arul</strong> (each, "the App").
-          </p>
-          <p>
-            Both apps are built by the same team on the same technology and follow the same data practices — they differ only in the content they offer (Pakiza offers Islamic wallpapers and nasheeds; Arul offers South Indian devotional wallpapers and ringtones). By using either App, you agree to the practices described here.
-          </p>
+  <section>
+    <h2 id="security">6. Data Storage & Security</h2>
+    <p>
+      Your account and app data are stored in a managed PostgreSQL database (Neon), and media is
+      delivered through Cloudflare's infrastructure. We use industry-standard safeguards including
+      encrypted connections (HTTPS/TLS) and access controls that restrict data to our backend
+      services. No method of transmission or storage is ever 100% secure, but we take reasonable
+      steps to protect your information.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="retention">7. Data Retention</h2>
+    <div class="doc-grid">
+      {retention.map((item) => (
+        <div class="doc-card">
+          <p class="doc-card-period">{item.period}</p>
+          <p class="doc-card-title">{item.label}</p>
+          <p>{item.note}</p>
         </div>
-
-        <!-- Section 1 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">1. Information We Collect</h2>
-          <div class="space-y-5">
-            <div>
-              <h3 class="text-white font-semibold mb-2">Account Information</h3>
-              <p>You sign in with <strong class="text-slate-200">Google Sign-In</strong>. We receive your name, email address, profile photo, and Google account identifier, which we use to create and secure your account. We do <strong class="text-slate-200">not</strong> collect your phone number or password.</p>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold mb-2">Content You Submit</h3>
-              <p>If you submit a wallpaper through the App's upload feature, we store the file you provide and basic details (such as a title) so our team can review it before it may appear in the App. You can ask us to remove submitted content at any time.</p>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold mb-2">Purchase Information</h3>
-              <p>If you subscribe to a premium plan, payments and UPI AutoPay mandates are processed by <strong class="text-slate-200">PhonePe</strong>. We store your subscription status (for example, active or cancelled) and its dates so we can unlock premium features. We do <strong class="text-slate-200">not</strong> store your card, bank, or UPI credentials.</p>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold mb-2">Usage, Device & Analytics Data</h3>
-              <p>We use PostHog, Google Analytics for Firebase, and Meta App Events to understand how the App is used. This includes your device type, operating system version, language, app version, the advertising identifier, and which features you use. This data is aggregated and is not used by us to identify you personally.</p>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold mb-2">Crash & Performance Data</h3>
-              <p>We use Firebase Crashlytics and Performance Monitoring to receive anonymised crash and performance reports so we can fix bugs. These reports describe the device state at the time of an issue and do not include personally identifiable information.</p>
-            </div>
-            <div>
-              <h3 class="text-white font-semibold mb-2">Install Attribution</h3>
-              <p>We use the Google Play Install Referrer to understand which campaign or link led you to install the App. This helps us measure our marketing and does not identify you personally.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Section 2 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">2. Device Permissions</h2>
-          <p class="mb-5">The App requests only the permissions it needs to work. Each is used solely for the purpose below, and only when you choose an action that requires it:</p>
-          <div class="space-y-4">
-            {permissions.map(p => (
-              <div class="glass-card rounded-xl p-5">
-                <p class="text-white font-semibold mb-1">{p.name}</p>
-                <p class="text-sm">{p.why}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <!-- Section 3 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">3. How We Use Your Information</h2>
-          <ul class="space-y-3 list-none">
-            {[
-              'To provide, maintain, and improve the App and its features.',
-              'To authenticate your identity and keep your account secure.',
-              'To sync your account, preferences, and premium status across devices.',
-              'To process premium subscriptions and manage AutoPay mandates.',
-              'To review content you submit before it may appear in the App.',
-              'To understand usage patterns and improve content and curation.',
-              'To measure our advertising and installs.',
-              'To diagnose technical issues and fix bugs.',
-            ].map(item => (
-              <li class="flex gap-3">
-                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <!-- Section 4 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">4. Third-Party Services</h2>
-          <p class="mb-5">We rely on the following third-party services to operate the App. Each processes data under its own privacy policy:</p>
-          <div class="space-y-4">
-            {thirdParties.map(service => (
-              <div class="glass-card rounded-xl p-5">
-                <p class="text-white font-semibold mb-1">{service.name}</p>
-                <p class="text-sm mb-2">{service.purpose}</p>
-                <a href={service.url} target="_blank" rel="noopener noreferrer" class="text-xs text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors break-all">{service.url}</a>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <!-- Section 5 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">5. How Your Information Is Shared</h2>
-          <p class="mb-4">We do <strong class="text-white">not</strong> sell your personal information, and we do not share the content of your account with anyone for their own advertising. We share data only:</p>
-          <ul class="space-y-3 list-none">
-            {[
-              'With the service providers listed above, strictly to operate the App on our behalf.',
-              'When required by law, or to protect the rights, safety, and security of our users and our service.',
-              'As part of a business transfer (such as a merger or acquisition), in which case this policy will continue to apply.',
-            ].map(item => (
-              <li class="flex gap-3">
-                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <!-- Section 6 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">6. Data Storage & Security</h2>
-          <p>Your account and app data are stored in a managed PostgreSQL database (Neon), and media is delivered through Cloudflare's infrastructure. We use industry-standard safeguards including encrypted connections (HTTPS/TLS) and access controls that restrict data to our backend services. No method of transmission or storage is ever 100% secure, but we take reasonable steps to protect your information.</p>
-        </section>
-
-        <!-- Section 7 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">7. Data Retention</h2>
-          <div class="grid gap-4 sm:grid-cols-3">
-            {retention.map(item => (
-              <div class="glass-card rounded-xl p-5 text-center">
-                <p class="text-gold-400 font-bold text-lg mb-1">{item.period}</p>
-                <p class="text-white text-sm font-medium mb-2">{item.label}</p>
-                <p class="text-muted text-xs leading-relaxed">{item.note}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <!-- Section 8 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">8. Your Rights</h2>
-          <p class="mb-4">You have the right to:</p>
-          <ul class="space-y-3">
-            {[
-              'Access the personal data we hold about you.',
-              'Request correction of inaccurate data.',
-              'Request permanent deletion of your account and associated data.',
-              'Reset or limit your advertising identifier at any time in your Android settings.',
-            ].map(right => (
-              <li class="flex gap-3">
-                <span class="text-gold-500 flex-shrink-0 mt-1">—</span>
-                <span>{right}</span>
-              </li>
-            ))}
-          </ul>
-          <p class="mt-5">
-            To exercise any of these rights, please visit our{' '}
-            <a href="/delete-account" class="text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors">
-              account deletion page
-            </a>{' '}
-            or contact us at <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 underline underline-offset-2 transition-colors">support@hsrutility.com</a>.
-          </p>
-        </section>
-
-        <!-- Section 9 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">9. Children's Privacy</h2>
-          <p>The Apps are not directed at children under the age of 13, and we do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us and we will delete it promptly.</p>
-        </section>
-
-        <!-- Section 10 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">10. Consent</h2>
-          <p>By using Pakiza or Arul, you consent to this Privacy Policy and to the collection and use of information as described here. If you do not agree, please discontinue use of the App and, if you wish, request deletion of your account.</p>
-        </section>
-
-        <!-- Section 11 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">11. Changes to This Policy</h2>
-          <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. We encourage you to review this policy periodically. Continued use of an App after changes constitutes acceptance of the updated policy.</p>
-        </section>
-
-        <!-- Section 12 -->
-        <section class="reveal">
-          <h2 class="font-serif text-2xl font-bold text-white mb-4">12. Contact Us</h2>
-          <div class="glass-card rounded-2xl p-6 md:p-8">
-            <p class="mb-4">If you have questions or concerns about this Privacy Policy, please contact us:</p>
-            <div class="space-y-2">
-              <p><span class="text-slate-300 font-medium">Email:</span> <a href="mailto:support@hsrutility.com" class="text-gold-400 hover:text-gold-300 transition-colors">support@hsrutility.com</a></p>
-              <p><span class="text-slate-300 font-medium">Company:</span> HSR Energy Private Limited</p>
-              <p><span class="text-slate-300 font-medium">Address:</span> HSR Layout, Bengaluru, Karnataka 560102, India</p>
-              <p><span class="text-slate-300 font-medium">Applies to:</span> Pakiza · Arul</p>
-            </div>
-          </div>
-        </section>
-
-      </div>
+      ))}
     </div>
-  </main>
+  </section>
 
-  <Footer />
-</Layout>
+  <section>
+    <h2 id="rights">8. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      {rights.map((item) => <li>{item}</li>)}
+    </ul>
+    <p>
+      To exercise any of these rights, please visit our <a href="/delete-account">account
+      deletion page</a> or contact us at <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="children">9. Children's Privacy</h2>
+    <p>
+      The Apps are not directed at children under the age of 13, and we do not knowingly collect
+      personal information from children. If you believe we have inadvertently collected
+      information from a child, please contact us and we will delete it promptly.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="consent">10. Consent</h2>
+    <p>
+      By using Pakiza or Arul, you consent to this Privacy Policy and to the collection and use of
+      information as described here. If you do not agree, please discontinue use of the App and,
+      if you wish, request deletion of your account.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="changes">11. Changes to This Policy</h2>
+    <p>
+      We may update this Privacy Policy from time to time. When we do, we will update the "Last
+      updated" date at the top of this page. We encourage you to review this policy periodically.
+      Continued use of an App after changes constitutes acceptance of the updated policy.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">12. Contact Us</h2>
+    <div class="doc-card">
+      <p>If you have questions or concerns about this Privacy Policy, please contact us:</p>
+      <dl class="doc-meta">
+        <div>
+          <dt>Email</dt>
+          <dd><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></dd>
+        </div>
+        <div>
+          <dt>Studio</dt>
+          <dd>HSR Utility</dd>
+        </div>
+        <div>
+          <dt>Applies to</dt>
+          <dd>Pakiza · Arul</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <nav class="doc-foot-links" aria-label="Related pages">
+    <a href="/terms" class="link">Terms of Service</a>
+    <a href="/delete-account" class="link">Delete your account</a>
+    <a href="/support" class="link">Support &amp; FAQ</a>
+  </nav>
+</DocLayout>
+
+<style is:global>
+  .doc-card-period {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    line-height: 1.1;
+    color: var(--accent);
+  }
+</style>

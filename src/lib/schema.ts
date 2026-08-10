@@ -1,9 +1,8 @@
 /**
  * Shared JSON-LD (schema.org) builders.
  *
- * Everything is wired into one entity graph via @id references so Google and
- * AI answer engines resolve "HSR Utility", "Pakiza" and "Arul" as consistent
- * entities:
+ * Everything is wired into one entity graph via @id references so search engines
+ * and AI answer engines resolve "HSR Utility", "Pakiza" and "Arul" consistently:
  *
  *   Organization (#organization)
  *     ^-- publisher -- WebSite (#website)
@@ -12,48 +11,30 @@
  *     ^-- about ------ WebPage (per page)
  *
  * Deliberate omissions (do NOT "fix" these without real data):
- *   - Organization.sameAs   — no social profiles exist yet; fabricating them is worse than nothing.
- *   - MobileApplication.offers / .aggregateRating / .review — added only with real Play Store
- *     numbers at each app's launch. Inventing a rating to force a software rich result violates
- *     Google's structured-data policy and risks a manual action. Nothing sooner.
+ *   - Organization.legalName / .address — no registered entity or published address
+ *     exists. The previous build invented both; they are gone and stay gone.
+ *   - Organization.sameAs — no social profiles exist yet.
+ *   - aggregateRating / review — only with real Play Store numbers. Inventing one to
+ *     force a rich result violates Google's structured-data policy.
  */
 
-export const SITE_URL = 'https://hsrutility.com';
-
-/** Canonical one-line descriptors. Reuse these verbatim everywhere (site copy, schema,
- *  and eventually the Play Store listings) — entity resolution rewards exact repetition. */
-export const ORG_DESCRIPTION =
-  'HSR Utility builds beautifully designed devotional wallpaper and ringtone apps for Android.';
-export const PAKIZA_DESCRIPTION =
-  'Pakiza is an Android app offering HD and live Islamic wallpapers plus ringtones and nasheeds — free to browse, with an optional premium plan.';
-export const ARUL_DESCRIPTION =
-  'Arul is an Android app offering HD and live South Indian devotional wallpapers and ringtones across six deities — free to browse, with an optional premium plan.';
+import { SITE_URL, SUPPORT_EMAIL, ORG_DESCRIPTION, abs, PAKIZA, ARUL, type AppFact } from './site';
 
 const ORG_ID = `${SITE_URL}/#organization`;
 const SITE_ID = `${SITE_URL}/#website`;
 
-/** Absolute URL for a site-relative path. */
-export const abs = (path: string) => new URL(path, SITE_URL).href;
+export { SITE_URL, ORG_DESCRIPTION, abs };
 
 export const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   '@id': ORG_ID,
   name: 'HSR Utility',
-  legalName: 'HSR Energy Private Limited',
   url: `${SITE_URL}/`,
   logo: abs('/icon-512.png'),
-  email: 'support@hsrutility.com',
+  email: SUPPORT_EMAIL,
   foundingDate: '2026',
   description: ORG_DESCRIPTION,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'HSR Layout',
-    addressLocality: 'Bengaluru',
-    addressRegion: 'Karnataka',
-    postalCode: '560102',
-    addressCountry: 'IN',
-  },
 };
 
 export const websiteSchema = {
@@ -68,36 +49,34 @@ export const websiteSchema = {
 };
 
 /**
- * The two apps as entities, not rich-result plays.
- * These will not light up in the Rich Results Test — that's expected and correct:
- * software rich results require offers + aggregateRating, which we only add with
- * honest Play Store numbers. The value here is giving crawlers and AI engines a
- * clean, unambiguous "what is Pakiza" and "what is Arul".
+ * An app as an entity, not a rich-result play. These will not light up in the Rich
+ * Results Test — that needs offers + aggregateRating, which we only add with honest
+ * Play Store numbers. The value is an unambiguous "what is Pakiza" / "what is Arul".
+ *
+ * `offers` is safe to state: both apps are free to download, and that is a fact
+ * independent of the premium tier inside them.
  */
-export const pakizaAppSchema = {
+export const appSchema = (app: AppFact) => ({
   '@context': 'https://schema.org',
   '@type': 'MobileApplication',
-  name: 'Pakiza',
-  url: `${SITE_URL}/#apps`,
-  description: PAKIZA_DESCRIPTION,
+  '@id': `${abs(`/${app.slug}`)}#app`,
+  name: app.name,
+  url: abs(`/${app.slug}`),
+  description: app.description,
   applicationCategory: 'LifestyleApplication',
   operatingSystem: 'ANDROID',
   publisher: { '@id': ORG_ID },
   author: { '@id': ORG_ID },
-};
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'INR',
+  },
+  ...(app.playUrl ? { installUrl: app.playUrl, downloadUrl: app.playUrl } : {}),
+});
 
-export const arulAppSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'MobileApplication',
-  name: 'Arul',
-  url: `${SITE_URL}/#apps`,
-  description: ARUL_DESCRIPTION,
-  applicationCategory: 'LifestyleApplication',
-  operatingSystem: 'ANDROID',
-  softwareVersion: 'Unreleased',
-  publisher: { '@id': ORG_ID },
-  author: { '@id': ORG_ID },
-};
+export const pakizaAppSchema = appSchema(PAKIZA);
+export const arulAppSchema = appSchema(ARUL);
 
 type Crumb = { name: string; path?: string };
 
@@ -113,11 +92,7 @@ export const breadcrumbSchema = (crumbs: Crumb[]) => ({
   })),
 });
 
-export const webPageSchema = (opts: {
-  path: string;
-  name: string;
-  description: string;
-}) => ({
+export const webPageSchema = (opts: { path: string; name: string; description: string }) => ({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   '@id': `${abs(opts.path)}#webpage`,
@@ -130,12 +105,12 @@ export const webPageSchema = (opts: {
 });
 
 /**
- * FAQPage — built from the SAME array that renders the visible FAQ, so the markup can
- * never drift from the on-page text (Google's structured-data policy forbids mismatches,
- * and that rule outlived the rich result itself).
+ * FAQPage — built from the SAME array that renders the visible FAQ, so the markup
+ * cannot drift from the on-page text (Google's structured-data policy forbids
+ * mismatches, and that rule outlived the rich result itself).
  *
- * Reality check: Google retired FAQ rich results on 2026-05-07. This produces NO SERP
- * visual. It is kept purely because AI answer engines still parse it for grounding.
+ * Reality check: Google retired FAQ rich results on 2026-05-07. This produces no
+ * SERP visual. It is kept because AI answer engines still parse it for grounding.
  */
 export const faqPageSchema = (faqs: { q: string; a: string }[]) => ({
   '@context': 'https://schema.org',

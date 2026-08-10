@@ -1,107 +1,180 @@
 /**
- * Self-hosted fonts.
+ * Self-hosted fonts. No external requests of any kind — no googleapis, no gstatic.
  *
- * Previously loaded from fonts.googleapis.com, which cost two extra origins
- * (DNS + TLS each) on the critical path and made the font CSS render-blocking:
- * HTML -> googleapis CSS -> gstatic woff2. That chain was the single biggest
- * drag on FCP/LCP (~2.7s on throttled mobile).
+ * Three faces, each earning its bytes:
+ *   Instrument Serif   — display face: headlines only, 400 roman + italic.
+ *                        The companion serif to Instrument Sans (same designer,
+ *                        drawn to pair). Accent words in headlines are set in
+ *                        the italic. Preloaded (LCP element).
+ *   Instrument Sans    — body / UI, variable, weight axis 400–700. Preloaded.
+ *   (variable)
+ *   IBM Plex Mono 500  — letter-spaced uppercase eyebrows and labels only.
  *
- * Serving from our own origin collapses the chain to one hop, and lets us
- * preload the two faces the hero actually needs (see Layout.astro).
- *
- * Only the faces the site truly uses are included: no italics (every <em> is
- * .not-italic) and no weight 300. The latin-ext files ship but are never
- * downloaded for English content — unicode-range gates them.
+ * The -ext files ship but are never downloaded for English content: unicode-range
+ * gates them, so the browser only fetches one if a Latin-Extended glyph appears.
  */
 
-/* ── Inter (body / UI) ── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   METRIC-MATCHED FALLBACKS
+
+   `font-display: swap` means text paints in a fallback face first. If that face
+   sets a different width, the text re-wraps when the real font arrives and
+   everything below it moves — layout shift with no image in sight. Lighthouse
+   caught exactly that on /privacy (CLS 0.078, attributed to "Web font loaded").
+
+   The fix is a fallback @font-face whose metrics are scaled to match the real
+   face, so the fallback occupies the same space and the swap is invisible.
+
+   The percentages below are MEASURED, not guessed. The Instrument faces were
+   read straight from the font tables with fontkit (avg lowercase advance /
+   unitsPerEm, against the same measurement for the local fallback); Plex was
+   canvas TextMetrics in Chrome:
+
+     Instrument Serif vs Georgia ..... 0.38400 / 0.48958 em = 78.43%
+     Instrument Sans vs Arial ........ 0.51285 / 0.48170 em = 106.47%
+     IBM Plex Mono vs Courier New .... 46.200 / 46.208 em = 99.98%
+
+   Instrument Serif metrics: upm 1000, ascent 990, descent -310, lineGap 0.
+   ascent-override = 0.990 / 0.7843, descent-override = 0.310 / 0.7843.
+   Instrument Sans metrics: upm 1000, ascent 970, descent -250, lineGap 0.
+   ascent-override = 0.970 / 1.0647, descent-override = 0.250 / 1.0647.
+
+   Re-measure if a face is ever swapped — Instrument Serif is a NARROW display
+   face (Georgia scaled to 78%), and getting that number wrong is exactly what
+   produced the CLS above with a previous face.
+
+   Caveat: local() can only match a font the device actually has. Arial and
+   Courier New ship on Windows and macOS; on Android neither exists, the fallback
+   face fails to load, and the stack falls through to the unadjusted generic.
+   That is a graceful degradation, not a regression.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Instrument Serif Fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 78.43%;
+  ascent-override: 126.22%;
+  descent-override: 39.53%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Instrument Sans Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Liberation Sans');
+  size-adjust: 106.47%;
+  ascent-override: 91.11%;
+  descent-override: 23.48%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono Fallback';
+  src: local('Courier New'), local('Liberation Mono');
+  size-adjust: 99.98%;
+  ascent-override: 102.52%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+}
+
+/* ── Instrument Serif (display / headlines) — 400 roman + italic ── */
+@font-face {
+  font-family: 'Instrument Serif';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/inter-400-latin.woff2') format('woff2');
+  src: url('/fonts/instrument-serif-latin-400-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Inter';
-  font-style: normal;
+  font-family: 'Instrument Serif';
+  font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/inter-400-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: url('/fonts/instrument-serif-latin-400-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/instrument-serif-latin-ext-400-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/instrument-serif-latin-ext-400-italic.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── Instrument Sans (body + UI) — variable, weight axis 400–700 ── */
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/instrument-sans-var-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * Latin Extended, with U+20B9 (₹) deliberately carved out — see the symbols face
+ * below. Everything else in the standard Google range is kept, so a stray accented
+ * character still renders in Instrument Sans rather than a system face.
+ */
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/instrument-sans-var-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20B8, U+20BA-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/*
+ * Two glyphs, 3.9kB — Inter-drawn ₹ and →, re-declared under the body family.
+ *
+ *   ₹ (U+20B9) sits inside the Latin-Extended range, so the single rupee sign in
+ *   the Terms liability cap would pull down the whole -ext file for one
+ *   character (measured at 450ms of LCP on /terms in a previous build).
+ *
+ *   → (U+2192) is in neither the latin nor the latin-ext range, so the arrows in
+ *   "Settings → Delete account" would silently render in a system fallback.
+ *
+ * Ordered after latin-ext, and latin-ext no longer claims U+20B9, so this wins
+ * for both codepoints. The glyphs are Inter's — at these sizes the difference
+ * from Instrument Sans is imperceptible, and it saves subsetting a new file.
+ */
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-symbols.woff2') format('woff2');
+  unicode-range: U+2192, U+20B9;
+}
+
+/* ── IBM Plex Mono (eyebrows / labels) ── */
+@font-face {
+  font-family: 'IBM Plex Mono';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/fonts/inter-500-latin.woff2') format('woff2');
+  src: url('/fonts/ibm-plex-mono-500-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Inter';
+  font-family: 'IBM Plex Mono';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/fonts/inter-500-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/inter-600-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/inter-600-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-/* ── Playfair Display (display / headings) ── */
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/playfair-display-400-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/playfair-display-400-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/playfair-display-700-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/playfair-display-700-latin-ext.woff2') format('woff2');
+  src: url('/fonts/ibm-plex-mono-500-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }

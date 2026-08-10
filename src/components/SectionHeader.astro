@@ -1,0 +1,60 @@
+---
+/**
+ * The section rhythm lifted from the reference: mono eyebrow, oversized serif H2,
+ * muted subtitle. Centred by default, left-aligned where a section runs as a column.
+ */
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  align?: 'center' | 'start';
+  /** Heading level — sections are h2, but app pages use it for h1 too. */
+  as?: 'h1' | 'h2';
+  id?: string;
+  class?: string;
+}
+
+// Annotated explicitly: renaming `as` to `Tag` for use as a component defeats
+// Astro's implicit Props inference, which then reports Props as unused.
+const {
+  eyebrow,
+  title,
+  subtitle,
+  align = 'center',
+  as: Tag = 'h2',
+  id,
+  class: className = '',
+}: Props = Astro.props;
+---
+
+<div class:list={['head', `align-${align}`, className]}>
+  {eyebrow && <p class="eyebrow reveal">{eyebrow}</p>}
+  <Tag id={id} class="display-2 reveal">{title}</Tag>
+  {subtitle && <p class="lede reveal">{subtitle}</p>}
+</div>
+
+<style>
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .align-center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .align-center .lede {
+    max-width: 42ch;
+  }
+
+  .align-start {
+    align-items: flex-start;
+  }
+
+  .align-start .lede {
+    max-width: 52ch;
+  }
+</style>

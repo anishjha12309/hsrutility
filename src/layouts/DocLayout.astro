@@ -1,0 +1,198 @@
+---
+import Layout from './Layout.astro';
+
+/**
+ * Shell for the long-form pages: privacy, terms, delete-account, support.
+ * Narrow measure, a mono eyebrow, and the prose rhythm — nothing else.
+ */
+
+interface Props {
+  title: string;
+  /** The <h1>. Usually the title without the "— Pakiza & Arul" tail. */
+  heading: string;
+  eyebrow: string;
+  description: string;
+  lastUpdated?: string;
+  intro?: string;
+  structuredData?: object[];
+}
+
+const { title, heading, eyebrow, description, lastUpdated, intro, structuredData } = Astro.props;
+---
+
+<Layout title={title} description={description} structuredData={structuredData}>
+  <article class="doc">
+    {/* data-hero marks this as the page's above-the-fold block: its entrance runs
+        from CSS keyframes on first paint, not from GSAP after a network round trip. */}
+    <header class="doc-head shell-narrow" data-hero>
+      <p class="eyebrow reveal-fade">{eyebrow}</p>
+      <h1 class="display-2">{heading}</h1>
+      {intro && <p class="lede doc-intro">{intro}</p>}
+      {lastUpdated && (
+        <p class="doc-updated">
+          Last updated <time>{lastUpdated}</time>
+        </p>
+      )}
+    </header>
+
+    <div class="doc-body shell-narrow prose">
+      <slot />
+    </div>
+  </article>
+</Layout>
+
+<style is:global>
+  .doc {
+    padding-block: 8.5rem 2rem;
+  }
+
+  .doc-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-bottom: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .doc-intro {
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  .doc-updated {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Prose ──────────────────────────────────────────────────────────────
+     Scoped to .prose so the marketing pages keep their own type scale. */
+  .prose > section + section {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .prose h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    scroll-margin-top: 7rem;
+  }
+
+  .prose h3 {
+    margin: 1.75rem 0 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  .prose p {
+    margin: 0 0 1rem;
+    color: var(--muted);
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .prose ul {
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .prose ul li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--muted);
+  }
+
+  /* An em dash marker, matching the eyebrow rhythm rather than a bullet glyph. */
+  .prose ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  /* ── Doc cards: the boxed asides used for contact blocks, permissions, etc. ── */
+  .doc-card {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+  }
+
+  .doc-card + .doc-card {
+    margin-top: 0.75rem;
+  }
+
+  .doc-card-title {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  .doc-card p {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  .doc-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+
+  .doc-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .doc-meta div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .doc-meta dt {
+    min-width: 6.5rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .doc-meta dd {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .doc-foot-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+</style>

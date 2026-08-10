@@ -1,0 +1,52 @@
+---
+/**
+ * Splits a string into per-word spans at BUILD time.
+ *
+ * Doing this in the browser is the usual approach and the wrong one here: it would
+ * rewrite the LCP element's DOM after first paint, which costs a layout pass and
+ * risks a visible reflow on exactly the element Lighthouse is timing. Rendered
+ * static, the markup ships ready and GSAP only ever animates transforms.
+ *
+ * Words the design wants emphasised can be wrapped by passing `accent` — matching
+ * words render in the accent colour.
+ */
+
+interface Props {
+  text: string;
+  /** Words (case-insensitive, punctuation-stripped) to tint with the accent colour. */
+  accent?: string[];
+}
+
+const { text, accent = [] } = Astro.props;
+
+const accentSet = new Set(accent.map((word) => word.toLowerCase()));
+const bare = (word: string) => word.replace(/[^\p{L}\p{N}]/gu, '').toLowerCase();
+
+const words = text.split(/\s+/).filter(Boolean);
+---
+
+{
+  words.map((word, i) => (
+    <>
+      <span class="split-word">
+        {/* --wi drives the CSS stagger; see the hero keyframes in global.css. */}
+        <span
+          class:list={['split-word-inner', accentSet.has(bare(word)) && 'is-accent']}
+          style={`--wi:${i}`}
+        >
+          {word}
+        </span>
+      </span>
+      {i < words.length - 1 && ' '}
+    </>
+  ))
+}
+
+<style>
+  /* Accent words carry the display italic as well as the colour — the serif's
+     italic is where Instrument Serif does its best work. */
+  .is-accent {
+    color: var(--accent);
+    font-style: italic;
+  }
+</style>

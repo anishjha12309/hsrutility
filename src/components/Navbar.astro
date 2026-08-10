@@ -1,144 +1,819 @@
 ---
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Apps', href: '/#apps' },
-  { label: 'Support', href: '/support' },
-];
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { APPS } from '../lib/site';
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const appsActive = APPS.some((app) => isActive(`/${app.slug}`));
 ---
 
-<header class="fixed top-4 left-0 right-0 z-50 px-4">
-  <nav id="main-nav" class="glass-nav rounded-full max-w-4xl mx-auto flex items-center justify-between px-5 py-3">
-
-    <!-- Brand -->
-    <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
-      <div class="w-8 h-8 rounded-lg bg-gold-500 flex items-center justify-center flex-shrink-0">
-        <span class="font-serif font-bold text-navy-900 text-sm leading-none">H</span>
-      </div>
-      <span class="text-white font-semibold text-sm hidden sm:block">HSR Utility</span>
+<header class="nav-wrap" data-nav>
+  <nav class="nav-bar shell" aria-label="Primary">
+    <a href="/" class="brand" aria-label="HSR Utility — home">
+      <Logo size={28} class="brand-mark" />
+      <span class="brand-word">HSR&nbsp;Utility</span>
     </a>
 
-    <!-- Desktop links -->
-    <div class="hidden md:flex items-center gap-1">
-      {navLinks.map(link => (
-        <a
-          href={link.href}
-          class="text-slate-300 hover:text-white text-sm px-4 py-2 rounded-full hover:bg-white/5 transition-all duration-200"
+    <ul class="nav-links">
+      <li>
+        <a href="/" class="nav-link" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+      </li>
+
+      <li class="has-menu">
+        <button
+          type="button"
+          class="nav-link nav-trigger"
+          aria-expanded="false"
+          aria-controls="apps-menu"
+          data-menu-trigger
+          aria-current={appsActive ? 'page' : undefined}
         >
-          {link.label}
-        </a>
-      ))}
-    </div>
+          Apps
+          <svg class="chev" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
 
-    <!-- Right side -->
-    <div class="flex items-center gap-3">
-      <a
-        href="/privacy"
-        class="hidden md:block border border-gold-500/40 text-gold-400 text-sm px-5 py-2 rounded-full hover:bg-gold-500/10 hover:border-gold-500/60 transition-all duration-200"
-      >
-        Privacy
-      </a>
+        <div class="menu" id="apps-menu" data-menu hidden>
+          {APPS.map((app) => (
+            <a href={`/${app.slug}`} class="menu-item" aria-current={isActive(`/${app.slug}`) ? 'page' : undefined}>
+              <span class="menu-item-name">{app.name}</span>
+              <span class="menu-item-note">{app.tagline}</span>
+            </a>
+          ))}
+        </div>
+      </li>
 
-      <!-- Mobile hamburger — 44px touch target -->
+      <li>
+        <a href="/support" class="nav-link" aria-current={isActive('/support') ? 'page' : undefined}>Support</a>
+      </li>
+    </ul>
+
+    <div class="nav-end">
+      <ThemeToggle id="nav" class="nav-theme" />
+
       <button
-        id="menu-btn"
-        class="md:hidden w-11 h-11 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
-        aria-label="Toggle navigation menu"
+        type="button"
+        class="burger"
         aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+        data-burger
       >
-        <svg id="icon-open" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-        <svg id="icon-close" class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
+        <span class="burger-box" aria-hidden="true">
+          <span class="burger-bar"></span>
+          <span class="burger-bar"></span>
+        </span>
       </button>
     </div>
   </nav>
-
-  <!-- Mobile dropdown — animated slide-down -->
-  <div id="mobile-menu" class="mt-2 max-w-4xl mx-auto">
-    <div class="overflow-hidden">
-      <div class="glass-card rounded-2xl p-3 space-y-1">
-        {navLinks.map(link => (
-          <a
-            href={link.href}
-            class="block text-slate-300 hover:text-white text-sm px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200"
-          >
-            {link.label}
-          </a>
-        ))}
-        <a
-          href="/privacy"
-          class="block text-gold-400 text-sm px-4 py-3 rounded-xl hover:bg-gold-500/10 transition-all duration-200"
-        >
-          Privacy
-        </a>
-      </div>
-    </div>
-  </div>
 </header>
 
+<!-- Full-screen mobile overlay -->
+<div class="sheet" id="mobile-menu" data-sheet hidden>
+  <div class="sheet-inner">
+    <ul class="sheet-links">
+      <li class="sheet-item">
+        <a href="/" class="sheet-link" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+      </li>
+
+      <li class="sheet-item">
+        <button type="button" class="sheet-link sheet-sub-trigger" aria-expanded="false" aria-controls="sheet-apps" data-sub-trigger>
+          Apps
+          <svg class="chev chev-lg" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+
+        <div class="sheet-sub" id="sheet-apps" data-sub>
+          <div class="sheet-sub-inner">
+            {APPS.map((app) => (
+              <a href={`/${app.slug}`} class="sheet-sublink" aria-current={isActive(`/${app.slug}`) ? 'page' : undefined}>
+                {app.name}
+                <span class="sheet-sublink-note">{app.statusLabel}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </li>
+
+      <li class="sheet-item">
+        <a href="/support" class="sheet-link" aria-current={isActive('/support') ? 'page' : undefined}>Support</a>
+      </li>
+    </ul>
+
+    <div class="sheet-foot sheet-item">
+      <span class="sheet-foot-label">Theme</span>
+      <ThemeToggle id="sheet" />
+    </div>
+  </div>
+</div>
+
 <style>
-  #mobile-menu {
-    display: grid;
-    grid-template-rows: 0fr;
+  /* ── Flat bar, full width — the reference's nav, not a floating pill. ──── */
+  .nav-wrap {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    /* Transparent over the page top; a blurred ground + hairline fade in once
+       the page scrolls (is-condensed). Transitioning the custom ground via
+       background-color keeps this on the compositor-friendly path. */
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      backdrop-filter 0.3s ease;
+  }
+
+  :global([data-nav].is-condensed) {
+    background: var(--nav-bg-condensed);
+    border-bottom-color: var(--line);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :global([data-nav].is-condensed) {
+      background: var(--bg);
+    }
+  }
+
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding-block: 0.7rem;
+    transition: padding 0.3s ease;
+  }
+
+  :global([data-nav].is-condensed) .nav-bar {
+    padding-block: 0.45rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    text-decoration: none;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* :global() — the mark is <Logo>'s root element and carries Logo's scope id,
+     not this component's, so an unscoped selector would never match it. */
+  .brand :global(.brand-mark) {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .brand-word {
+    /* Wordmark stays in the sans — the serif is a headline voice, and UI chrome
+       set in it reads as decoration rather than identity. */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .brand:hover :global(.brand-mark) {
+      transform: scale(1.08);
+    }
+  }
+
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: 0.15rem;
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      color 0.18s ease,
+      background-color 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: var(--accent-wash);
+  }
+
+  /* Active page: accent text plus a dot, so the state is not colour-only. */
+  .nav-link[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  .nav-link[aria-current='page']::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .chev {
+    width: 11px;
+    height: 11px;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [aria-expanded='true'] > .chev {
+    transform: rotate(180deg);
+  }
+
+  /* ── Desktop dropdown ──────────────────────────────────────────────────── */
+  .has-menu {
+    position: relative;
+  }
+
+  .menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    width: max-content;
+    min-width: 16rem;
+    padding: 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--bg);
+    box-shadow: var(--shadow-pop);
+    /* Scales from the trigger, not from its own centre. */
+    transform-origin: top center;
+    translate: -50% 0;
+    scale: 0.96;
     opacity: 0;
     transition:
-      grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.22s ease;
-    pointer-events: none;
+      opacity 0.18s ease,
+      scale 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
 
-  #mobile-menu.open {
-    grid-template-rows: 1fr;
+  .menu[hidden] {
+    display: none;
+  }
+
+  .menu.is-open {
     opacity: 1;
-    pointer-events: auto;
+    scale: 1;
   }
 
-  @media (min-width: 768px) {
-    #mobile-menu { display: none; }
+  .menu-item {
+    display: block;
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    /* Staggered in by JS via --i. */
+    opacity: 0;
+    translate: 0 6px;
+    transition:
+      opacity 0.22s ease,
+      translate 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.15s ease;
+    transition-delay: calc(var(--i, 0) * 40ms);
+  }
+
+  .menu.is-open .menu-item {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .menu-item:hover {
+    background: var(--accent-wash);
+  }
+
+  .menu-item-name {
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .menu-item[aria-current='page'] .menu-item-name {
+    color: var(--accent);
+  }
+
+  .menu-item-note {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  /* ── Right-hand side ───────────────────────────────────────────────────── */
+  .nav-end {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* Desktop keeps links centred-right; nav-end loses auto-margin then. */
+  @media (min-width: 860px) {
+    .nav-links {
+      display: flex;
+    }
+    .nav-end {
+      margin-left: 0;
+    }
+  }
+
+  /* Theme lives in the bar on desktop; the mobile sheet carries its own pill.
+     :global() — the pill is <ThemeToggle>'s root and carries its scope id. */
+  .nav-end :global(.nav-theme) {
+    display: none;
+  }
+
+  @media (min-width: 860px) {
+    .nav-end :global(.nav-theme) {
+      display: block;
+    }
+  }
+
+  .burger {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .burger:hover {
+    background: var(--accent-wash);
+  }
+
+  .burger-box {
+    position: relative;
+    display: block;
+    width: 18px;
+    height: 12px;
+  }
+
+  .burger-bar {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+      top 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .burger-bar:nth-child(1) {
+    top: 0;
+  }
+  .burger-bar:nth-child(2) {
+    top: 10.5px;
+  }
+
+  /* Morph to X: both bars slide to the middle, then rotate. */
+  .burger[aria-expanded='true'] .burger-bar {
+    top: 5.25px;
+    transition-delay: 0s, 0s;
+  }
+  .burger[aria-expanded='true'] .burger-bar:nth-child(1) {
+    transform: rotate(45deg);
+    transition-delay: 0.16s, 0s;
+  }
+  .burger[aria-expanded='true'] .burger-bar:nth-child(2) {
+    transform: rotate(-45deg);
+    transition-delay: 0.16s, 0s;
+  }
+
+  /* ── Mobile sheet ──────────────────────────────────────────────────────── */
+  .sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: var(--bg);
+    opacity: 0;
+    transition: opacity 0.28s ease;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .sheet[hidden] {
+    display: none;
+  }
+
+  .sheet.is-open {
+    opacity: 1;
+  }
+
+  .sheet-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    /* Clears the fixed nav bar. */
+    padding: 6.25rem clamp(1.5rem, 6vw, 3rem) 2.5rem;
+  }
+
+  .sheet-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Staggered entrance, ~40ms apart (brief). */
+  .sheet-item {
+    opacity: 0;
+    translate: 0 14px;
+    transition:
+      opacity 0.34s ease,
+      translate 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sheet.is-open .sheet-item {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: calc(var(--i, 0) * 40ms + 60ms);
+  }
+
+  .sheet-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.55rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.25rem, 10vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .sheet-link[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  .sheet-link:active {
+    opacity: 0.6;
+  }
+
+  .chev-lg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: var(--muted);
+  }
+
+  .sheet-sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sheet-sub.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  .sheet-sub-inner {
+    overflow: hidden;
+  }
+
+  .sheet-sublink {
+    display: flex;
+    flex-direction: column;
+    padding: 0.7rem 0 0.7rem 1.1rem;
+    border-left: 1px solid var(--line-strong);
+    color: var(--text);
+    font-size: 1.125rem;
+    text-decoration: none;
+  }
+
+  .sheet-sublink[aria-current='page'] {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+
+  .sheet-sublink-note {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sheet-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .sheet-foot-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Breakpoint ────────────────────────────────────────────────────────── */
+  @media (min-width: 860px) {
+    .burger {
+      display: none;
+    }
+    .sheet {
+      display: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu,
+    .menu-item,
+    .sheet,
+    .sheet-item,
+    .sheet-sub,
+    .burger-bar,
+    .chev,
+    .nav-wrap,
+    .nav-bar {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+    }
   }
 </style>
 
 <script>
-  function setupNavMenu() {
-    const btn = document.getElementById('menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    const iconOpen = document.getElementById('icon-open');
-    const iconClose = document.getElementById('icon-close');
+  const DESKTOP = '(min-width: 860px)';
 
-    if (!btn || !menu) return;
+  /** Elements that can hold focus inside a trapped container. */
+  const FOCUSABLE =
+    'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-    // Clone button to remove stale listeners from prior navigations
-    const freshBtn = btn.cloneNode(true) as HTMLButtonElement;
-    btn.parentNode?.replaceChild(freshBtn, btn);
+  /**
+   * Element listeners die with the elements the view transition replaces, but
+   * document- and matchMedia-level ones would stack up one set per navigation.
+   * They are all registered against this controller and aborted on the next swap.
+   */
+  let controller: AbortController | null = null;
 
-    freshBtn.addEventListener('click', () => {
-      const isOpen = menu.classList.contains('open');
-      menu.classList.toggle('open', !isOpen);
-      iconOpen?.classList.toggle('hidden', !isOpen);
-      iconClose?.classList.toggle('hidden', isOpen);
-      freshBtn.setAttribute('aria-expanded', String(!isOpen));
-    });
+  function init() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
 
-    menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        menu.classList.remove('open');
-        iconOpen?.classList.remove('hidden');
-        iconClose?.classList.add('hidden');
-        freshBtn.setAttribute('aria-expanded', 'false');
-      });
-    });
+    const nav = document.querySelector<HTMLElement>('[data-nav]');
+    const trigger = document.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+    const menu = document.querySelector<HTMLElement>('[data-menu]');
+    const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+    const sheet = document.querySelector<HTMLElement>('[data-sheet]');
+    const subTrigger = document.querySelector<HTMLButtonElement>('[data-sub-trigger]');
+    const sub = document.querySelector<HTMLElement>('[data-sub]');
 
-    // ── Navbar darkens on scroll ──
-    const nav = document.getElementById('main-nav');
-    function updateNavOnScroll() {
-      nav?.classList.toggle('scrolled', window.scrollY > 24);
+    // ── Condense past the hero ──────────────────────────────────────────────
+    // Pages with a hero mark its end with [data-nav-sentinel]; everything else
+    // (legal pages, 404) falls back to a fixed offset.
+    if (nav) {
+      const sentinel = document.querySelector('[data-nav-sentinel]');
+
+      if (sentinel) {
+        const io = new IntersectionObserver(
+          ([entry]) => nav.classList.toggle('is-condensed', !entry.isIntersecting),
+          { rootMargin: '0px 0px -100% 0px' }
+        );
+        io.observe(sentinel);
+      } else {
+        const onScroll = () => nav.classList.toggle('is-condensed', window.scrollY > 64);
+        window.addEventListener('scroll', onScroll, { passive: true, signal });
+        onScroll();
+      }
     }
-    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
-    updateNavOnScroll();
+
+    // ── Desktop "Apps" dropdown (disclosure pattern) ────────────────────────
+    let menuOpen = false;
+
+    function setMenu(open: boolean) {
+      if (!trigger || !menu) return;
+      menuOpen = open;
+      trigger.setAttribute('aria-expanded', String(open));
+
+      if (open) {
+        menu.hidden = false;
+        // Next frame, so the transition has a start state to animate from.
+        requestAnimationFrame(() => menu.classList.add('is-open'));
+      } else {
+        menu.classList.remove('is-open');
+        const done = () => {
+          if (!menuOpen) menu.hidden = true;
+          menu.removeEventListener('transitionend', done);
+        };
+        menu.addEventListener('transitionend', done);
+        // Fallback for reduced-motion, where transitionend may not fire usefully.
+        setTimeout(() => {
+          if (!menuOpen) menu.hidden = true;
+        }, 260);
+      }
+    }
+
+    if (trigger && menu) {
+      menu.querySelectorAll<HTMLElement>('.menu-item').forEach((item, i) => {
+        item.style.setProperty('--i', String(i));
+      });
+
+      trigger.addEventListener('click', () => setMenu(!menuOpen));
+
+      // Hover intent: where a real hover exists the menu opens on it, with a
+      // short close delay so the diagonal move from trigger to panel does not
+      // flicker it shut. Click and keyboard still work everywhere else.
+      if (window.matchMedia('(hover: hover)').matches) {
+        const holder = trigger.closest('.has-menu');
+        let closeTimer: ReturnType<typeof setTimeout> | undefined;
+
+        holder?.addEventListener(
+          'pointerenter',
+          () => {
+            clearTimeout(closeTimer);
+            setMenu(true);
+          },
+          { signal }
+        );
+
+        holder?.addEventListener(
+          'pointerleave',
+          () => {
+            closeTimer = setTimeout(() => setMenu(false), 180);
+          },
+          { signal }
+        );
+      }
+
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          setMenu(true);
+          menu.querySelector<HTMLAnchorElement>('.menu-item')?.focus();
+        }
+      });
+
+      // Outside click.
+      document.addEventListener(
+        'pointerdown',
+        (event) => {
+          if (!menuOpen) return;
+          const target = event.target as Node;
+          if (!menu.contains(target) && !trigger.contains(target)) setMenu(false);
+        },
+        { signal }
+      );
+
+      // Tabbing out of the last item should close it, not leave a panel hanging.
+      menu.addEventListener('focusout', () => {
+        requestAnimationFrame(() => {
+          if (menuOpen && !menu.contains(document.activeElement) && document.activeElement !== trigger) {
+            setMenu(false);
+          }
+        });
+      });
+    }
+
+    // ── Mobile sheet ────────────────────────────────────────────────────────
+    let sheetOpen = false;
+    let lastFocused: HTMLElement | null = null;
+
+    function setSheet(open: boolean) {
+      if (!burger || !sheet) return;
+      sheetOpen = open;
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+
+      if (open) {
+        lastFocused = document.activeElement as HTMLElement;
+        sheet.hidden = false;
+        requestAnimationFrame(() => sheet.classList.add('is-open'));
+        document.documentElement.style.overflow = 'hidden';
+        document.dispatchEvent(new CustomEvent('hsr:scroll-lock'));
+        sheet.querySelector<HTMLAnchorElement>('.sheet-link')?.focus();
+      } else {
+        sheet.classList.remove('is-open');
+        document.documentElement.style.overflow = '';
+        document.dispatchEvent(new CustomEvent('hsr:scroll-unlock'));
+        setTimeout(() => {
+          if (!sheetOpen) sheet.hidden = true;
+        }, 300);
+        lastFocused?.focus();
+      }
+    }
+
+    if (burger && sheet) {
+      sheet.querySelectorAll<HTMLElement>('.sheet-item').forEach((item, i) => {
+        item.style.setProperty('--i', String(i));
+      });
+
+      burger.addEventListener('click', () => setSheet(!sheetOpen));
+
+      // Tapping the backdrop (the sheet itself, outside its content) closes.
+      sheet.addEventListener('click', (event) => {
+        if (event.target === sheet) setSheet(false);
+      });
+
+      // Any navigation closes the sheet. Same-page anchors do not trigger a swap,
+      // so this cannot rely on astro:page-load alone.
+      sheet.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setSheet(false));
+      });
+
+      // Focus trap.
+      sheet.addEventListener('keydown', (event) => {
+        if (event.key !== 'Tab' || !sheetOpen) return;
+
+        const items = [...sheet.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+          (el) => el.offsetParent !== null
+        );
+        if (items.length === 0) return;
+
+        const first = items[0];
+        const last = items[items.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+    }
+
+    // ── Mobile submenu ──────────────────────────────────────────────────────
+    if (subTrigger && sub) {
+      subTrigger.addEventListener('click', () => {
+        const open = subTrigger.getAttribute('aria-expanded') === 'true';
+        subTrigger.setAttribute('aria-expanded', String(!open));
+        sub.classList.toggle('is-open', !open);
+      });
+    }
+
+    // ── Esc closes whichever is open ────────────────────────────────────────
+    function onKeydown(event: KeyboardEvent) {
+      if (event.key !== 'Escape') return;
+
+      if (sheetOpen) {
+        setSheet(false);
+        burger?.focus();
+      } else if (menuOpen) {
+        setMenu(false);
+        trigger?.focus();
+      }
+    }
+
+    document.addEventListener('keydown', onKeydown, { signal });
+
+    // Crossing to desktop with the sheet open would leave the scroll lock stuck on.
+    window.matchMedia(DESKTOP).addEventListener(
+      'change',
+      (event) => {
+        if (event.matches && sheetOpen) setSheet(false);
+        if (!event.matches && menuOpen) setMenu(false);
+      },
+      { signal }
+    );
+
+    // A navigation while the sheet is open must not leave <html> locked.
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        document.documentElement.style.overflow = '';
+        document.dispatchEvent(new CustomEvent('hsr:scroll-unlock'));
+      },
+      { signal }
+    );
   }
 
-  setupNavMenu();
-  document.addEventListener('astro:after-swap', setupNavMenu);
+  document.addEventListener('astro:page-load', init);
 </script>

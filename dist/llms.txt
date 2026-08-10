@@ -1,25 +1,38 @@
 # HSR Utility
 
-> HSR Utility (a brand of HSR Energy Private Limited) builds beautifully designed
-> devotional wallpaper and ringtone apps for Android. Its apps are Pakiza (Islamic
-> wallpapers and nasheeds) and Arul (South Indian devotional wallpapers and
-> ringtones). Both are being prepared for the Google Play Store.
+> HSR Utility is an indie Android studio building carefully crafted wallpaper and
+> ringtone apps for specific cultural audiences. Its apps are Pakiza (an Islamic
+> lifestyle app, coming soon to Google Play) and Arul (South Indian wallpapers, live
+> on Google Play). The studio itself has no religious affiliation.
 
 ## Key facts
 
-- **Studio:** HSR Utility, a brand of HSR Energy Private Limited, Bengaluru, India. Founded 2026.
-- **Apps:**
-  - **Pakiza** — HD and live Islamic wallpapers with ringtones and nasheeds.
-  - **Arul** — HD and live South Indian devotional wallpapers and ringtones across six deities
-    (Amman, Ayyappan, Murugan, Perumal, Sivan, Temples).
-- **Model:** Free to browse and preview; an optional premium plan unlocks setting and saving.
-- **Sign-in:** Google Sign-In (name, email, profile photo). No phone number or password.
-- **Platform:** Android 7.0 (Nougat) and above. No iOS version.
+- **Studio:** HSR Utility. Indie Android studio, founded 2026. There is no separate
+  registered legal entity name and no published postal address.
+- **Apps** — both Android-only, built with Flutter:
+  - **Pakiza** — Islamic lifestyle app. Shorts-style vertical feed of static and live
+    (video) wallpapers with one-tap apply, a curated Islamic ringtone library, and
+    offline Jummah + Islamic-calendar reminders (fully local — no location, no push).
+    Localized into 11 Indian languages. Light/dark/system theming.
+    **Status: coming soon to Google Play.**
+  - **Arul** — South Indian wallpapers. Shorts-style feed of static and live wallpapers,
+    category browse, ringtones, and upload-your-own-wallpaper submissions.
+    **Status: live on Google Play** —
+    https://play.google.com/store/apps/details?id=com.hsrutility.arul
+- **Model:** browsing and previewing is always free. Applying wallpapers, setting
+  ringtones and sharing are premium, billed via UPI Autopay after a one-time free trial.
+- **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
+- **Account deletion:** instant from inside either app (Settings → Delete account);
+  email support@hsrutility.com as a fallback if the app is already uninstalled.
 - **Contact:** support@hsrutility.com — replies within 48 hours.
+- **This website:** no analytics, no cookies, no third-party requests of any kind.
 
 ## Pages
 
-- [Home](https://hsrutility.com/): HSR Utility and its two apps, Pakiza and Arul — features and overview.
-- [Support & FAQ](https://hsrutility.com/support/): Answers about the apps' content, pricing, sign-in, Android support, and how to report bugs.
-- [Privacy Policy](https://hsrutility.com/privacy/): What data Pakiza and Arul collect, how it is used, and how it is protected.
-- [Delete My Account](https://hsrutility.com/delete-account/): How to permanently delete a Pakiza or Arul account and its associated data.
+- [Home](https://hsrutility.com/): HSR Utility and its two apps — positioning and overview.
+- [Pakiza](https://hsrutility.com/pakiza): Features, screens and availability for the Islamic lifestyle app.
+- [Arul](https://hsrutility.com/arul): Features, screens and Google Play link for the South Indian wallpapers app.
+- [Support & FAQ](https://hsrutility.com/support): Questions about content, pricing, sign-in, Android support, and reporting bugs.
+- [Privacy Policy](https://hsrutility.com/privacy): What data Pakiza and Arul collect, how it is used, and how it is protected.
+- [Terms of Service](https://hsrutility.com/terms): Account terms, premium subscriptions, content submissions, acceptable use.
+- [Delete My Account](https://hsrutility.com/delete-account): How to permanently delete an account and its data.

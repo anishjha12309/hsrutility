@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="HSR Utility">
-  <!-- Full-bleed square, deliberately NOT rounded: iOS and Android apply their own
-       mask. Rounding here would leave transparent corners, which iOS fills with black. -->
-  <rect width="512" height="512" fill="#c9a84c"/>
-  <text x="256" y="364" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="300" fill="#12132a">H</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32" role="img" aria-label="HSR Utility">
+  <!-- Full-bleed square and deliberately NOT rounded: iOS and Android apply their
+       own mask. Rounding here would leave transparent corners, which iOS fills
+       with black. Source for icon-192/512 and apple-touch-icon.
+       Geometry mirrors src/components/Logo.astro. -->
+  <rect width="32" height="32" fill="#0B4FFF"/>
+  <circle cx="16" cy="10.5" r="7.5" fill="#FFFFFF" opacity="0.62"/>
+  <circle cx="11" cy="19" r="7.5" fill="#FFFFFF" opacity="0.62"/>
+  <circle cx="21" cy="19" r="7.5" fill="#FFFFFF" opacity="0.62"/>
 </svg>

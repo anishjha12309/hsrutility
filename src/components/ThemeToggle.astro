@@ -1,0 +1,239 @@
+---
+/**
+ * Auto / Dark / Light pill.
+ *
+ * Built on native radio inputs inside a fieldset, so arrow-key navigation, the
+ * roving focus ring and the "one of three" announcement all come from the platform
+ * rather than from a hand-rolled radiogroup. The visible pill is the <label>s; the
+ * inputs themselves are sr-only but focusable, which is what drives :focus-visible.
+ *
+ * Radio groups are scoped document-wide by `name`, so each instance needs its own —
+ * otherwise the footer pill and the mobile-menu pill would fight over a single
+ * checked state. They are kept in sync by the delegated handler below instead.
+ */
+
+interface Props {
+  /** Unique within the page. Becomes the radio group name. */
+  id: string;
+  class?: string;
+}
+
+const { id, class: className = '' } = Astro.props;
+
+const OPTIONS = [
+  { value: 'auto', label: 'Auto' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'light', label: 'Light' },
+] as const;
+---
+
+<fieldset class:list={['theme-pill', className]} data-theme-toggle>
+  <legend class="sr-only">Colour theme</legend>
+
+  <div class="track">
+    <span class="thumb" aria-hidden="true"></span>
+
+    {OPTIONS.map((opt) => (
+      <label class="seg" data-value={opt.value}>
+        <input type="radio" name={`theme-${id}`} value={opt.value} class="sr-only" />
+        <span class="sr-only">{opt.label}</span>
+
+        {opt.value === 'auto' && <span class="seg-text" aria-hidden="true">Auto</span>}
+
+        {opt.value === 'dark' && (
+          <svg class="seg-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M20.4 14.7A8.7 8.7 0 0 1 9.3 3.6a8.7 8.7 0 1 0 11.1 11.1Z"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linejoin="round"></path>
+          </svg>
+        )}
+
+        {opt.value === 'light' && (
+          <svg class="seg-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7"></circle>
+            <path
+              d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"></path>
+          </svg>
+        )}
+      </label>
+    ))}
+  </div>
+</fieldset>
+
+<style>
+  .theme-pill {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0; /* fieldset defaults to min-content; this lets it shrink */
+  }
+
+  .track {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    padding: 3px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+
+  .thumb {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / 3);
+    border-radius: 999px;
+    background: var(--btn-bg);
+    /* Spring-ish: overshoots ~6% then settles. */
+    transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Positioned from the checked input rather than a JS-set class, so the pill is
+     correct on first paint with no flash of a mis-parked thumb. */
+  .track:has(input[value='auto']:checked) .thumb {
+    transform: translateX(0);
+  }
+  .track:has(input[value='dark']:checked) .thumb {
+    transform: translateX(100%);
+  }
+  .track:has(input[value='light']:checked) .thumb {
+    transform: translateX(200%);
+  }
+
+  .seg {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* ≥44px tap target on both axes. */
+    min-width: 46px;
+    min-height: 40px;
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .seg:has(input:checked) {
+    color: var(--btn-fg);
+  }
+
+  @media (hover: hover) {
+    .seg:hover {
+      color: var(--text);
+    }
+    .seg:has(input:checked):hover {
+      color: var(--btn-fg);
+    }
+  }
+
+  /* The input is sr-only, so its focus ring has to be drawn by the segment. */
+  .seg:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .seg-text {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .seg-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .thumb {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * One delegated handler for every pill on the page. Astro hoists this script once
+   * no matter how many <ThemeToggle> instances render, so binding to `document` is
+   * both cheaper and immune to instance count.
+   */
+  const STORAGE_KEY = 'hsr-theme';
+
+  type Pref = 'auto' | 'dark' | 'light';
+
+  const systemLight = () => window.matchMedia('(prefers-color-scheme: light)');
+
+  function resolve(pref: Pref): 'dark' | 'light' {
+    if (pref === 'auto') return systemLight().matches ? 'light' : 'dark';
+    return pref;
+  }
+
+  function readPref(): Pref {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === 'dark' || stored === 'light' || stored === 'auto') return stored;
+    } catch {
+      /* storage blocked */
+    }
+    return 'auto';
+  }
+
+  function apply(pref: Pref) {
+    const root = document.documentElement;
+    root.dataset.theme = resolve(pref);
+    root.dataset.themePref = pref;
+    try {
+      localStorage.setItem(STORAGE_KEY, pref);
+    } catch {
+      /* storage blocked — the theme still applies for this page view */
+    }
+  }
+
+  /** Point every pill on the page at the current preference. */
+  function syncPills(pref: Pref) {
+    document.querySelectorAll<HTMLInputElement>('[data-theme-toggle] input[type="radio"]').forEach((input) => {
+      input.checked = input.value === pref;
+    });
+  }
+
+  document.addEventListener('change', (event) => {
+    const input = (event.target as HTMLElement | null)?.closest<HTMLInputElement>(
+      '[data-theme-toggle] input[type="radio"]'
+    );
+    if (!input) return;
+
+    const pref = input.value as Pref;
+    apply(pref);
+    syncPills(pref);
+  });
+
+  // Following the OS while set to Auto.
+  systemLight().addEventListener('change', () => {
+    if (readPref() === 'auto') apply('auto');
+  });
+
+  /**
+   * The inline head script sets the theme before first paint, but Astro's ClientRouter
+   * copies <html> attributes from the incoming document on every navigation — which
+   * drops data-theme. Re-stamping here is what keeps the theme across page transitions.
+   */
+  function restore() {
+    const pref = readPref();
+    apply(pref);
+    syncPills(pref);
+  }
+
+  restore();
+  document.addEventListener('astro:after-swap', restore);
+</script>

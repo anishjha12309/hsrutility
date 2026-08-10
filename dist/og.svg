@@ -1,75 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="HSR Utility — devotional wallpaper and ringtone apps for Android: Pakiza and Arul">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <radialGradient id="glowGold" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.16"/>
-      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glowIndigo" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#4c4fa8" stop-opacity="0.14"/>
-      <stop offset="100%" stop-color="#4c4fa8" stop-opacity="0"/>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="hairline" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
+    
+  <mask id="ogmark">
+    <rect width="32" height="32" fill="#000"/>
+    <circle cx="16" cy="10.5" r="7.5" fill="#fff" opacity="0.62"/>
+    <circle cx="11" cy="19" r="7.5" fill="#fff" opacity="0.62"/>
+    <circle cx="21" cy="19" r="7.5" fill="#fff" opacity="0.62"/>
+  </mask>
   </defs>
 
-  <!-- Canvas -->
-  <rect width="1200" height="630" fill="#12132a"/>
-
-  <!-- Ambient glows (mirrors the site's hero) -->
-  <ellipse cx="930" cy="200" rx="430" ry="370" fill="url(#glowGold)"/>
-  <ellipse cx="150" cy="580" rx="380" ry="320" fill="url(#glowIndigo)"/>
+  <rect width="1200" height="630" fill="#0B4FFF"/>
+  <ellipse cx="980" cy="120" rx="470" ry="400" fill="url(#glow)"/>
 
   <!-- Brand row -->
-  <g transform="translate(80, 64)">
-    <rect width="52" height="52" rx="13" fill="#c9a84c"/>
-    <text x="26" y="37" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="30" fill="#12132a">H</text>
-    <text x="70" y="35" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="600" font-size="23" fill="#ffffff">HSR Utility</text>
+  <g transform="translate(84, 74)">
+    <svg x="0" y="0" width="56" height="56" viewBox="0 0 32 32">
+      <rect width="32" height="32" fill="#FFFFFF" mask="url(#ogmark)"/>
+    </svg>
+    <text x="74" y="40" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="bold" fill="#FFFFFF">HSR Utility</text>
   </g>
 
-  <!-- Status pill -->
-  <g transform="translate(80, 168)">
-    <rect width="216" height="40" rx="20" fill="#c9a84c" fill-opacity="0.09" stroke="#c9a84c" stroke-opacity="0.35" stroke-width="1.5"/>
-    <circle cx="24" cy="20" r="4.5" fill="#c9a84c"/>
-    <text x="42" y="26" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="500" font-size="15" fill="#cbd5e1">Building for Android</text>
-  </g>
+  <rect x="84" y="176" width="420" height="1" fill="url(#hairline)"/>
 
-  <!-- Headline -->
-  <text x="80" y="306" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="56" fill="#ffffff">Devotion,</text>
-  <text x="80" y="378" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="56" fill="#d4b45f">beautifully designed.</text>
+  <!-- Headline — Georgia is the declared fallback for Instrument Serif, so the
+       card carries the site's serif display voice without embedding the face. -->
+  <text x="84" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="74" fill="#FFFFFF">Screens worth <tspan font-style="italic">looking</tspan> at.</text>
+  <text x="84" y="386" font-family="Georgia, 'Times New Roman', serif" font-size="74" fill="#C9D4FF">Made for someone specific.</text>
 
-  <!-- Hairline -->
-  <rect x="80" y="428" width="300" height="2" fill="url(#hairline)"/>
+  <!-- Sub -->
+  <text x="84" y="462" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#C9D4FF">Wallpapers, live wallpapers and ringtones for specific cultural audiences.</text>
 
-  <!-- Keyword line -->
-  <text x="80" y="478" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">Pakiza &amp; Arul — HD and live devotional</text>
-  <text x="80" y="510" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="400" font-size="22" fill="#94a3b8">wallpapers &amp; ringtones. Free on Android.</text>
-
-  <!-- Domain -->
-  <text x="80" y="570" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="500" font-size="17" fill="#64748b">hsrutility.com</text>
-
-  <!-- Two app icons (same marks as the site's app cards) -->
-  <g transform="translate(858, 214)">
-    <!-- Pakiza -->
-    <g>
-      <rect width="220" height="220" rx="50" fill="#1a1b35" stroke="#c9a84c" stroke-opacity="0.18" stroke-width="2"/>
-      <g transform="translate(24, 24) scale(2.15)">
-        <circle cx="43" cy="38" r="21" fill="#c9a84c" opacity="0.95"/>
-        <circle cx="52" cy="29" r="16" fill="#1a1b35"/>
-        <circle cx="58" cy="47" r="3.5" fill="#c9a84c"/>
-        <circle cx="65" cy="36" r="2.5" fill="#c9a84c" opacity="0.75"/>
-        <circle cx="61" cy="54" r="1.8" fill="#c9a84c" opacity="0.5"/>
-      </g>
-    </g>
-    <!-- Arul (overlapping, offset down-right) -->
-    <g transform="translate(-150, 92)">
-      <rect width="180" height="180" rx="42" fill="#1a1b35" stroke="#c9a84c" stroke-opacity="0.28" stroke-width="2"/>
-      <g transform="translate(18, 18) scale(1.8)">
-        <path d="M40 18c6 8 11 13 11 21a11 11 0 01-22 0c0-8 5-13 11-21z" fill="#c9a84c" opacity="0.95"/>
-        <path d="M40 30c2.6 3.6 4.6 5.8 4.6 9.4a4.6 4.6 0 01-9.2 0c0-3.6 2-5.8 4.6-9.4z" fill="#1a1b35"/>
-        <path d="M26 58h28M30 63h20" stroke="#c9a84c" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
-      </g>
-    </g>
-  </g>
+  <!-- Footer row -->
+  <text x="84" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">Pakiza</text>
+  <text x="176" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#C9D4FF">·</text>
+  <text x="200" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">Arul</text>
+  <text x="1116" y="556" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#C9D4FF">hsrutility.com</text>
 </svg>

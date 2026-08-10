@@ -1,8 +1,9 @@
 ---
-import '../styles/fonts.css';
 import '../styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
-import { ORG_DESCRIPTION } from '../lib/schema';
+import { ClientRouter } from 'astro:transitions';
+import { ORG_DESCRIPTION } from '../lib/site';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
@@ -16,14 +17,14 @@ interface Props {
 const {
   title,
   description = ORG_DESCRIPTION,
-  image = '/og.jpg',
+  image = '/og.png',
   structuredData = [],
 } = Astro.props;
 
 const fullTitle = `${title} | HSR Utility`;
 
 // Astro.site comes from `site` in astro.config.mjs. Both of these resolve to absolute
-// URLs — required for canonical and og:image (relative og:image is ignored by scrapers).
+// URLs — required for canonical and og:image (a relative og:image is ignored by scrapers).
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
 ---
@@ -32,87 +33,146 @@ const socialImageURL = new URL(image, Astro.site);
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Icons — the 2026 minimal set. SVG covers modern browsers, the PNG covers iOS
-         home-screen (which ignores SVG). The 20-icon shotgun is long obsolete. -->
+    {/*
+      No-flash theme. Must be `is:inline` and must stay in <head> above the body:
+      a bundled module script is deferred, which would paint the dark default first
+      and then snap to light. This also stamps `.motion-ok`, which is what unhides
+      the animated start states in global.css — so if JS is off or the visitor asks
+      for reduced motion, every element renders in its final position.
+    */}
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var pref = 'auto';
+        try {
+          pref = localStorage.getItem('hsr-theme') || 'auto';
+        } catch (e) {
+          /* Private mode / storage blocked — 'auto' is the right fallback. */
+        }
+        var resolved =
+          pref === 'auto'
+            ? window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark'
+            : pref;
+        root.dataset.theme = resolved;
+        root.dataset.themePref = pref;
+
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          root.classList.add('motion-ok');
+        }
+      })();
+    </script>
+
+    {/* SVG covers modern browsers; the PNG covers iOS home-screen, which ignores SVG. */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#12132a" />
+    <meta name="theme-color" content="#161613" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F0EFE3" media="(prefers-color-scheme: light)" />
 
-    <!-- Open Graph -->
+    {/*
+      Only the faces that paint above the fold: the serif headline is the LCP
+      element on every page, the sans is the body. Preloading the mono or the
+      serif italic as well would just contend for bandwidth with the LCP on a
+      throttled connection (the italic accent word swaps in a frame later,
+      metric-matched, so nothing moves).
+    */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/instrument-serif-latin-400-normal.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/instrument-sans-var-latin.woff2"
+      crossorigin
+    />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="HSR Utility" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
-    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="HSR Utility — devotional wallpaper & ringtone apps for Android" />
+    <meta
+      property="og:image:alt"
+      content="HSR Utility — an indie Android studio behind the apps Pakiza and Arul"
+    />
     <meta property="og:locale" content="en_US" />
 
-    <!-- X/Twitter. X never migrated off the twitter:* namespace; without an explicit
-         card type it may render a small thumbnail instead of the large one. -->
+    {/* X never migrated off the twitter:* namespace; without an explicit card type
+        it renders a small thumbnail instead of the large one. */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageURL} />
-    <meta name="twitter:image:alt" content="HSR Utility — devotional wallpaper & ringtone apps for Android" />
-
-    <!-- Fonts are self-hosted (see src/styles/fonts.css). Preload only the two faces
-         the hero paints with — the Playfair 700 headline is the LCP element, and Inter
-         400 is the body. Preloading more would compete for bandwidth with the LCP. -->
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="/fonts/playfair-display-700-latin.woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="/fonts/inter-400-latin.woff2"
-      crossorigin
+    <meta
+      name="twitter:image:alt"
+      content="HSR Utility — an indie Android studio behind the apps Pakiza and Arul"
     />
 
-    {
-      structuredData.map((schema) => (
-        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-      ))
-    }
+    {/* is:inline is explicit here: these are data blocks, not code to bundle. */}
+    {structuredData.map((schema) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+    ))}
 
-    <ViewTransitions />
+    <ClientRouter />
   </head>
-  <body class="bg-navy-900 text-white font-sans min-h-screen">
-    <slot />
+
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <Navbar />
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      import { initMotion } from '../scripts/motion';
+      initMotion();
+    </script>
   </body>
 </html>
 
-<script>
-  function setupReveal() {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: '0px 0px -50px 0px' }
-    );
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+<style>
+  .skip-link {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    translate: -50% -140%;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0 0 0.75rem 0.75rem;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: translate 0.2s ease;
   }
 
-  // Run on first load and after every View Transition swap
-  setupReveal();
-  document.addEventListener('astro:after-swap', setupReveal);
-</script>
+  .skip-link:focus-visible {
+    translate: -50% 0;
+  }
+
+  /* The <main> is focus target for the skip link but must not show a ring of its own. */
+  main:focus {
+    outline: none;
+  }
+</style>

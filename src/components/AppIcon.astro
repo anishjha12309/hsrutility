@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+import { APP_ICONS } from '../lib/media';
+import type { AppFact } from '../lib/site';
+
+/**
+ * App icon through astro:assets — AVIF/WebP with a responsive srcset, and explicit
+ * width/height so the box is reserved before the bytes land (CLS stays at 0).
+ *
+ * The source PNGs are 512px masters; `densities` caps the largest emitted variant at
+ * 2x the display size, so a 112px icon never ships a 512px file.
+ */
+
+interface Props {
+  app: AppFact;
+  size?: number;
+  /** Adds the gold ambient wash and the gentle float. Off inside dense lists. */
+  glow?: boolean;
+  class?: string;
+}
+
+const { app, size = 96, glow = false, class: className = '' } = Astro.props;
+const src = APP_ICONS[app.slug];
+---
+
+<div
+  class:list={['icon-wrap', glow && 'has-glow', className]}
+  style={`--icon-size:${size}px; --icon-hue:${app.hue};`}
+  data-float={glow ? '' : undefined}
+>
+  <Image
+    src={src}
+    alt={app.iconAlt}
+    width={size}
+    height={size}
+    densities={[1, 2]}
+    loading={glow ? 'eager' : 'lazy'}
+    decoding="async"
+    class="icon"
+  />
+</div>
+
+<style>
+  .icon-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--icon-size);
+    height: var(--icon-size);
+  }
+
+  .icon {
+    width: 100%;
+    height: 100%;
+    /* The masters are square with square corners; Android's squircle is applied by
+       the launcher, so the site applies its own. */
+    border-radius: 24%;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Ambient wash pulled from the icon art, so each app carries its own colour
+     without introducing a second brand accent. */
+  .has-glow::before {
+    content: '';
+    position: absolute;
+    inset: -35%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(var(--icon-hue) / 0.28), transparent 68%);
+    filter: blur(28px);
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    /* A calm lift only — no rotation. Tilting images on hover read as shake. */
+    .icon-wrap:hover .icon {
+      transform: scale(1.04);
+    }
+  }
+</style>

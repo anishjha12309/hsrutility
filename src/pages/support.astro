@@ -1,7 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
+import DocLayout from '../layouts/DocLayout.astro';
+import { SUPPORT_EMAIL } from '../lib/site';
 import {
   organizationSchema,
   websiteSchema,
@@ -10,26 +9,37 @@ import {
   faqPageSchema,
 } from '../lib/schema';
 
+/**
+ * PORTED from the previous build. Three answers were factually stale and are corrected
+ * against WEBSITE_BRIEF.md and the app repos:
+ *   - Arul is LIVE on Google Play (was: "both apps are being prepared").
+ *   - Premium unlocks applying, setting ringtones and SHARING (was: "saving").
+ *     Both app READMEs say sharing; saving was never the gated action.
+ *   - The invented legal entity is gone, and "nasheeds" is now "ringtones".
+ * Everything else is unchanged.
+ */
+
 const faqs = [
   {
     q: 'What is HSR Utility?',
-    a: 'HSR Utility (a brand of HSR Energy Private Limited) builds beautifully designed devotional wallpaper and ringtone apps for Android. Our apps are Pakiza (Islamic wallpapers and nasheeds) and Arul (South Indian devotional wallpapers and ringtones).',
+    a: 'HSR Utility is an indie Android studio. It builds wallpaper and ringtone apps for specific cultural audiences: Pakiza, an Islamic lifestyle app, and Arul, South Indian wallpapers. The studio itself has no religious affiliation.',
   },
   {
     q: 'What are Pakiza and Arul?',
-    a: 'Pakiza offers a curated collection of HD and live Islamic wallpapers with ringtones and nasheeds. Arul offers HD and live South Indian devotional wallpapers and ringtones across six deities — Amman, Ayyappan, Murugan, Perumal, Sivan, and Temples. Both are Android apps built by the same team.',
+    a: 'Pakiza pairs a shorts-style feed of Islamic wallpapers — still images and live video — with a curated ringtone library and offline Jummah and Islamic-calendar reminders, in eleven Indian languages. Arul offers South Indian devotional wallpapers and ringtones in the same shorts-style feed, browsable across six collections (Amman, Ayyappan, Murugan, Perumal, Sivan and Temples), in six Indian languages. Both apps let you submit your own content from inside the app, and both have offline reminders. They are Android apps built by the same team.',
   },
   {
-    q: 'When will the apps be available on the Play Store?',
-    a: "Both apps are being prepared for the Google Play Store. Email us at support@hsrutility.com and we'll let you know when each one goes live.",
+    q: 'Are the apps on the Google Play Store?',
+    a: 'Arul is live on Google Play now. Pakiza is coming soon — email us at support@hsrutility.com and we will let you know when it goes live.',
+    link: { label: 'Get Arul on Google Play', href: 'https://play.google.com/store/apps/details?id=com.hsrutility.arul', external: true },
   },
   {
     q: 'Are the apps free?',
-    a: 'Yes — browsing and previewing every wallpaper and ringtone is completely free in both apps. An optional premium plan unlocks setting wallpapers, setting ringtones, and saving.',
+    a: 'Yes — browsing and previewing every wallpaper and ringtone is completely free. An optional premium plan unlocks applying and sharing wallpapers, and setting ringtones. Setting up the UPI AutoPay mandate involves a small verification debit (currently ₹2) that is reversed automatically.',
   },
   {
     q: 'How do I sign in?',
-    a: 'Both apps use Sign in with Google. We only receive your name, email, and profile photo to create your account — we never ask for a phone number or password.',
+    a: 'Our apps use Sign in with Google. We only receive your name and email address to create your account — not your Google profile photo, and never a phone number or password.',
   },
   {
     q: 'How do I report a bug or request a feature?',
@@ -37,7 +47,7 @@ const faqs = [
   },
   {
     q: 'How do I delete my account and data?',
-    a: 'You can request permanent deletion of your account and data for either app at any time. Visit our Delete My Account page for full step-by-step instructions.',
+    a: 'You can delete your account and data instantly from inside either app (Settings → Delete account), or request it by email if you have already uninstalled. Our Delete My Account page has the full steps.',
     link: { label: 'Go to Delete My Account', href: '/delete-account' },
   },
   {
@@ -54,7 +64,7 @@ const structuredData = [
   websiteSchema,
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Support' }]),
   webPageSchema({
-    path: Astro.url.pathname,
+    path: '/support',
     name: 'Support & FAQ — Pakiza & Arul | HSR Utility',
     description,
   }),
@@ -63,141 +73,207 @@ const structuredData = [
 ];
 ---
 
-<Layout
+<DocLayout
   title="Support & FAQ — Pakiza & Arul"
+  heading="Help &amp; Support"
+  eyebrow="Support"
   description={description}
+  intro="Quick answers to the questions we get most. If yours isn't here, email us — we reply within 48 hours."
   structuredData={structuredData}
 >
-  <Navbar />
-
-  <main class="pt-36 pb-24 px-6">
-    <div class="max-w-3xl mx-auto">
-
-      <!-- Header -->
-      <div class="text-center mb-16 reveal">
-        <h1 class="font-serif text-4xl md:text-6xl font-bold text-white leading-tight mb-4">
-          Help &amp; <em class="text-gold-400 not-italic">Support</em>
-        </h1>
-        <p class="text-slate-400 text-lg max-w-md mx-auto">
-          Find quick answers to common questions, or reach out — we reply within 48 hours.
-        </p>
+  <section>
+    <div class="doc-card support-cta">
+      <div>
+        <p class="doc-card-title">Request account &amp; data deletion</p>
+        <p>Permanently delete your Pakiza or Arul account and associated data at any time.</p>
       </div>
-
-      <!-- Account Deletion card -->
-      <div class="reveal glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-14">
-        <div>
-          <span class="inline-block text-[10px] font-semibold tracking-[0.18em] uppercase text-gold-500 bg-gold-500/10 px-3 py-1 rounded-full mb-2">
-            Account &amp; Data
-          </span>
-          <h2 class="text-white font-semibold text-lg">Request account &amp; data deletion</h2>
-          <p class="text-slate-400 text-sm mt-1">Permanently delete your Pakiza or Arul account and associated data at any time.</p>
-        </div>
-        <a
-          href="/delete-account"
-          class="flex-shrink-0 border border-white/20 text-white text-sm px-5 py-2.5 rounded-full hover:border-white/40 hover:bg-white/5 transition-all duration-200 whitespace-nowrap"
-        >
-          Delete Account →
-        </a>
-      </div>
-
-      <!-- FAQ -->
-      <div class="reveal mb-16">
-        <h2 class="font-serif text-2xl font-bold text-white mb-8">Frequently Asked Questions</h2>
-
-        <div id="faq-list" class="divide-y divide-white/5">
-          {faqs.map((faq, i) => (
-            <div class="faq-item py-1">
-              <button
-                class="faq-trigger flex items-center justify-between w-full py-5 text-left text-white hover:text-gold-400 transition-colors duration-200 font-medium"
-                aria-expanded="false"
-                data-index={i}
-              >
-                <span class="pr-6">{faq.q}</span>
-                <span class="faq-icon flex-shrink-0 w-6 h-6 rounded-full border border-white/10 flex items-center justify-center">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-                  </svg>
-                </span>
-              </button>
-              <div class="faq-content">
-                <div class="overflow-hidden">
-                  <div class="pb-6 text-slate-400 text-sm leading-relaxed pr-10">
-                    <p>{faq.a}</p>
-                    {faq.link && (
-                      <a
-                        href={faq.link.href}
-                        class="inline-flex items-center gap-1.5 text-gold-400 hover:text-gold-300 transition-colors mt-3 text-sm"
-                      >
-                        {faq.link.label}
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Still need help -->
-      <div class="reveal glass-card rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
-        <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div class="w-48 h-48 rounded-full bg-gold-500/[0.06] blur-[60px]"></div>
-        </div>
-        <div class="relative z-10">
-          <h2 class="font-serif text-2xl md:text-3xl font-bold text-white mb-3">Still need help?</h2>
-          <p class="text-slate-400 mb-8">Can't find what you're looking for? Email us — we reply within 48 hours.</p>
-          <a href="mailto:support@hsrutility.com" class="btn-gold mb-6">
-            Contact Support
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-          </a>
-          <p class="text-muted text-sm mt-6">
-            <span class="text-slate-400 font-medium">support@hsrutility.com</span>
-          </p>
-        </div>
-      </div>
-
+      <a href="/delete-account" class="btn btn-ghost">
+        Delete account
+        <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
     </div>
-  </main>
+  </section>
 
-  <Footer />
-</Layout>
+  <section>
+    <h2 id="faq">Frequently asked questions</h2>
 
-<script>
-  function setupFAQ() {
-    const triggers = document.querySelectorAll<HTMLButtonElement>('.faq-trigger');
+    {/*
+      Native <details>. A hand-rolled accordion would need JS for open/close state,
+      keyboard handling and aria-expanded; the element gives all three for nothing,
+      and the open animation is pure CSS (see the ::details-content rule below).
+    */}
+    <div class="faq">
+      {faqs.map((faq) => (
+        <details class="faq-item">
+          <summary class="faq-q">
+            <span>{faq.q}</span>
+            <span class="faq-mark" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none">
+                <path d="M8 3.5v9M3.5 8h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-a">
+            <p>{faq.a}</p>
+            {faq.link && (
+              <p>
+                <a
+                  href={faq.link.href}
+                  class="link"
+                  {...(faq.link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  {faq.link.label}
+                  {faq.link.external && <span class="sr-only"> (opens in a new tab)</span>}
+                </a>
+              </p>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
 
-    triggers.forEach(trigger => {
-      // Remove any pre-existing listener by cloning
-      const fresh = trigger.cloneNode(true) as HTMLButtonElement;
-      trigger.parentNode?.replaceChild(fresh, trigger);
+  <section>
+    <div class="doc-card support-close">
+      <h2 id="contact" class="support-close-title">Still need help?</h2>
+      <p>Email us and we'll get back to you within 48 hours.</p>
+      <p style="margin-top:1.5rem">
+        <a href={`mailto:${SUPPORT_EMAIL}`} class="btn btn-primary">
+          {SUPPORT_EMAIL}
+          <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </p>
+    </div>
+  </section>
 
-      fresh.addEventListener('click', () => {
-        const content = fresh.nextElementSibling as HTMLElement | null;
-        const isOpen = fresh.classList.contains('open');
+  <nav class="doc-foot-links" aria-label="Related pages">
+    <a href="/privacy" class="link">Privacy Policy</a>
+    <a href="/terms" class="link">Terms of Service</a>
+    <a href="/delete-account" class="link">Delete your account</a>
+  </nav>
+</DocLayout>
 
-        // Close all others
-        document.querySelectorAll('.faq-trigger').forEach(t => {
-          t.classList.remove('open');
-          t.setAttribute('aria-expanded', 'false');
-        });
-        document.querySelectorAll('.faq-content').forEach(c => c.classList.remove('open'));
-
-        // Toggle this one
-        if (!isOpen) {
-          fresh.classList.add('open');
-          fresh.setAttribute('aria-expanded', 'true');
-          content?.classList.add('open');
-        }
-      });
-    });
+<style is:global>
+  .support-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
   }
 
-  setupFAQ();
-  document.addEventListener('astro:after-swap', setupFAQ);
-</script>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    /* ≥44px tap target. */
+    padding-block: 1.15rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.18s ease;
+  }
+
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-q:hover {
+    color: var(--accent);
+  }
+
+  .faq-mark {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    color: var(--muted);
+    transition:
+      transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+
+  .faq-mark svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .faq-item[open] .faq-mark {
+    transform: rotate(135deg);
+    color: var(--accent);
+    border-color: var(--accent-soft);
+  }
+
+  .faq-a {
+    padding-bottom: 1.25rem;
+    padding-right: 2.5rem;
+  }
+
+  .faq-a p {
+    margin: 0 0 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .faq-a p:last-child {
+    margin-bottom: 0;
+  }
+
+  /*
+    Smooth open/close for <details>. `interpolate-size` is what lets height animate
+    to `auto`, and `allow-discrete` keeps content-visibility from cutting the
+    transition short. Browsers without support simply snap open — the correct
+    degradation, since the content is identical either way.
+  */
+  @supports (interpolate-size: allow-keywords) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        content-visibility 0.3s allow-discrete,
+        opacity 0.25s ease;
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+
+  .support-close {
+    text-align: center;
+  }
+
+  .support-close-title {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::details-content {
+      transition: none;
+    }
+  }
+</style>

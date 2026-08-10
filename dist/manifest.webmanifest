@@ -1,21 +1,24 @@
 {
   "name": "HSR Utility",
   "short_name": "HSR Utility",
-  "description": "HSR Utility builds beautifully designed devotional wallpaper and ringtone apps for Android.",
+  "description": "HSR Utility is an indie Android studio building carefully crafted wallpaper and ringtone apps for specific cultural audiences.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#12132a",
-  "theme_color": "#12132a",
+  "background_color": "#F0EFE3",
+  "theme_color": "#0B4FFF",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

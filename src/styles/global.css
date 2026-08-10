@@ -1,158 +1,662 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import './fonts.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PALETTE — bone #F0EFE3 · ink #232323 · electric blue #0B4FFF
+
+   Taken from the reference site's computed styles (auxia.io, read via
+   devtools): warm bone ground, near-black ink text, one saturated blue doing
+   all the accent work, and full-width "mega panels" in ink and blue with a
+   1.5rem radius. One text family at weight 400/500 — the display voice comes
+   from scale and tight tracking, not from a second face.
+
+   DARK mode inverts the ground pair: warm ink page, bone text. The blue is
+   only 3.05:1 against the dark ground, so --accent lifts to periwinkle
+   #6B8CFF for anything that must read as text, while the raw blue survives in
+   fills (buttons, panels) where the WHITE TEXT ON TOP is what has to pass.
+
+   Panels carry their own local token overrides (.panel-ink / .panel-blue), so
+   everything nested inside them — muted text, hairlines, buttons — recolours
+   itself without per-component theming.
+
+   Contrast, computed with the WCAG 2.1 relative-luminance formula (AA floor
+   4.5:1 for body text, 3:1 for UI). Every pair the site actually renders:
+
+     LIGHT  ink #232323 on bone #F0EFE3 ............ 12.9:1
+            muted #5D5C4F on bone ................... 6.0:1
+            blue #0B4FFF on bone .................... 5.1:1
+            white on blue fill #0B4FFF .............. 5.9:1
+     DARK   bone #F0EFE3 on ink bg #161613 ......... 14.9:1
+            muted #A7A69A on bg ..................... 7.4:1
+            muted on surface #232323 ................ 6.4:1
+            accent #6B8CFF on bg .................... 5.9:1
+            accent on surface ....................... 5.1:1
+            white on btn fill #2E63FF ............... 4.8:1
+     PANELS ink panel: bone text 12.9:1 · muted #B4B3A6 7.4:1
+            blue panel: white text 5.9:1 · muted #C9D4FF 4.6:1
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+
+  /* Warm ink, not neutral black — the inverse of the bone ground. */
+  --bg: #161613;
+  --surface: #232323;
+  --surface-2: #2c2c29;
+  --text: #f0efe3;
+  --muted: #a7a69a;
+
+  --accent: #6b8cff;
+  --accent-2: #0b4fff;
+
+  --line: rgb(240 239 227 / 0.13);
+  --line-strong: rgb(240 239 227 / 0.24);
+  --accent-soft: rgb(107 140 255 / 0.35);
+  --accent-wash: rgb(107 140 255 / 0.09);
+  --accent-2-wash: rgb(11 79 255 / 0.32);
+
+  --btn-bg: #2e63ff;
+  --btn-fg: #ffffff;
+  --btn-bg-hover: #3d70ff;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.35);
+  --shadow-pop: 0 8px 44px rgb(0 0 0 / 0.6);
+
+  --nav-bg: rgb(22 22 19 / 0.55);
+  --nav-bg-condensed: rgb(22 22 19 / 0.78);
+
+  /* Panels keep one look in both themes; in dark the ink panel lifts a step
+     off the page so its edge still reads without a border. */
+  --panel-ink-bg: #232323;
+  --panel-blue-bg: #0b4fff;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f0efe3;
+  --surface: #e7e6d8;
+  --surface-2: #dedccb;
+  --text: #232323;
+  --muted: #5d5c4f;
+
+  --accent: #0b4fff;
+  --accent-2: #0b4fff;
+
+  --line: rgb(35 35 35 / 0.13);
+  --line-strong: rgb(35 35 35 / 0.26);
+  --accent-soft: rgb(11 79 255 / 0.3);
+  --accent-wash: rgb(11 79 255 / 0.07);
+  --accent-2-wash: rgb(11 79 255 / 0.14);
+
+  --btn-bg: #0b4fff;
+  --btn-fg: #ffffff;
+  --btn-bg-hover: #0a45e0;
+
+  --shadow-card: 0 1px 2px rgb(35 35 35 / 0.05), 0 12px 32px rgb(35 35 35 / 0.08);
+  --shadow-pop: 0 8px 44px rgb(35 35 35 / 0.16);
+
+  --nav-bg: rgb(240 239 227 / 0.6);
+  --nav-bg-condensed: rgb(240 239 227 / 0.85);
+
+  --panel-ink-bg: #232323;
+  --panel-blue-bg: #0b4fff;
+}
+
+/* No-JS / pre-hydration fallback. The inline head script always stamps an explicit
+   data-theme before first paint, so this block only ever wins with JS disabled. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+
+    --bg: #f0efe3;
+    --surface: #e7e6d8;
+    --surface-2: #dedccb;
+    --text: #232323;
+    --muted: #5d5c4f;
+    --accent: #0b4fff;
+    --accent-2: #0b4fff;
+    --line: rgb(35 35 35 / 0.13);
+    --line-strong: rgb(35 35 35 / 0.26);
+    --accent-soft: rgb(11 79 255 / 0.3);
+    --accent-wash: rgb(11 79 255 / 0.07);
+    --accent-2-wash: rgb(11 79 255 / 0.14);
+    --btn-bg: #0b4fff;
+    --btn-fg: #ffffff;
+    --btn-bg-hover: #0a45e0;
+    --shadow-card: 0 1px 2px rgb(35 35 35 / 0.05), 0 12px 32px rgb(35 35 35 / 0.08);
+    --shadow-pop: 0 8px 44px rgb(35 35 35 / 0.16);
+    --nav-bg: rgb(240 239 227 / 0.6);
+    --nav-bg-condensed: rgb(240 239 227 / 0.85);
+    --panel-ink-bg: #232323;
+    --panel-blue-bg: #0b4fff;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-wash: var(--accent-wash);
+  --color-accent-2-wash: var(--accent-2-wash);
+  --color-btn-bg: var(--btn-bg);
+  --color-btn-fg: var(--btn-fg);
+
+  /* Serif display voice over a sans body — Instrument Serif and Instrument Sans
+     are companion faces by the same designer. The *-Fallback shims are
+     metric-matched (see fonts.css) and must sit immediately after the real face
+     so the swap costs no layout shift. */
+  --font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
+  --font-sans: 'Instrument Sans', 'Instrument Sans Fallback', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'IBM Plex Mono Fallback', ui-monospace, Menlo, monospace;
+
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PANELS — the reference's signature move: full-width rounded slabs in ink or
+   blue. They override the theme tokens locally, so anything rendered inside
+   (muted copy, hairlines, ghost buttons, chips) recolours itself for free.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .panel {
+    border-radius: 1.5rem;
+    overflow: hidden;
+  }
+
+  .panel-ink {
+    background: var(--panel-ink-bg);
+    --text: #f0efe3;
+    --muted: #b4b3a6;
+    --line: rgb(240 239 227 / 0.15);
+    --line-strong: rgb(240 239 227 / 0.3);
+    --accent: #8fa8ff;
+    --accent-soft: rgb(143 168 255 / 0.4);
+    --accent-wash: rgb(240 239 227 / 0.07);
+    --surface: #2c2c29;
+    --btn-bg: #0b4fff;
+    --btn-fg: #ffffff;
+    --btn-bg-hover: #2e63ff;
+    color: var(--text);
+  }
+
+  .panel-blue {
+    background: var(--panel-blue-bg);
+    --text: #ffffff;
+    --muted: #c9d4ff;
+    --line: rgb(255 255 255 / 0.22);
+    --line-strong: rgb(255 255 255 / 0.4);
+    --accent: #ffffff;
+    --accent-soft: rgb(255 255 255 / 0.45);
+    --accent-wash: rgb(255 255 255 / 0.1);
+    --surface: #2e63ff;
+    /* On the blue slab the primary button flips to white-on-ink. */
+    --btn-bg: #ffffff;
+    --btn-fg: #232323;
+    --btn-bg-hover: #f0efe3;
+    color: var(--text);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   html {
-    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    /* Lenis owns scrolling on desktop. Native smooth here would fight it, and the
+       anchor-scroll handler eases through Lenis anyway. */
+    scroll-behavior: auto;
   }
 
   body {
-    @apply bg-navy-900 text-white antialiased;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Theme crossfade rather than a snap (brief: ~250ms). */
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    /* Instrument Serif ships one weight — 400. The drama comes from scale and
+       the italic accent words, not from bolding (which would only synthesise). */
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Accent focus ring on everything interactive. Never removed — only restyled. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   ::selection {
-    background-color: rgba(201, 168, 76, 0.25);
-    color: #fff;
+    background: var(--accent-soft);
+    color: var(--text);
   }
 
-  /* Remove default details marker (legacy FAQ, kept for safety) */
-  details summary::-webkit-details-marker { display: none; }
-  details summary { list-style: none; }
-
-  /* Subtle scrollbar — webkit only */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.22);
+    background: var(--line-strong);
+    border: 3px solid var(--bg);
+    border-radius: 99px;
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPE SCALE
+   Fluid, clamped, and steep — the reference's h1 is 104px at 1440w with a
+   0.95 line-height. Weight stays at 500 across the scale.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@utility display-1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.25rem, 1.5rem + 7.6vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+}
+
+@utility display-2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.375rem, 1.5rem + 4vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.012em;
+}
+
+@utility display-3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 1.4rem + 1.7vw, 2.625rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+@utility lede {
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Mono eyebrow — letter-spaced uppercase, muted like the reference's labels. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@utility shell {
+  width: 100%;
+  max-width: 82rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+}
+
+@utility shell-narrow {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+@utility section {
+  padding-block: clamp(4rem, 2.5rem + 6vw, 9rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @layer components {
-  .glass-card {
-    background: rgba(26, 27, 53, 0.5);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+  /* ── Buttons — boxy 12px radius, weight 500, like the reference ────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    /* ≥44px tap target (brief). */
+    padding: 0.8rem 1.4rem;
+    min-height: 3rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease,
+      box-shadow 0.18s ease;
   }
 
-  /* More translucent at top, subtly darkens on scroll via .scrolled class */
-  .glass-nav {
-    background: rgba(11, 12, 26, 0.42);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(201, 168, 76, 0.13);
-    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  .btn-primary {
+    background: var(--btn-bg);
+    color: var(--btn-fg);
   }
 
-  .glass-nav.scrolled {
-    background: rgba(11, 12, 26, 0.74);
-    border-color: rgba(201, 168, 76, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-  }
-
-  .btn-gold {
-    @apply bg-gold-500 text-navy-900 font-semibold px-6 py-3 rounded-full transition-all duration-200 hover:bg-gold-400 hover:shadow-[0_0_28px_rgba(201,168,76,0.35)] active:scale-95 inline-flex items-center gap-2;
+  .btn-primary:hover {
+    background: var(--btn-bg-hover);
   }
 
   .btn-ghost {
-    @apply border border-white/20 text-white px-6 py-3 rounded-full transition-all duration-200 hover:border-white/40 hover:bg-white/5 active:scale-95 inline-flex items-center gap-2;
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line-strong);
   }
 
-  .section-label {
-    @apply text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase;
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    background: var(--accent-wash);
   }
 
-  .section-heading {
-    @apply font-serif text-4xl md:text-5xl font-bold text-white leading-tight;
+  /* Arrow nudge lives on a child so the button itself only lifts. */
+  .btn .btn-arrow {
+    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .section-subtext {
-    @apply text-slate-400 text-lg leading-relaxed;
+  @media (hover: hover) {
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-card);
+    }
+    .btn:hover .btn-arrow {
+      transform: translateX(3px);
+    }
   }
 
-  .tag {
-    @apply text-slate-400 text-xs px-3 py-1.5 rounded-full border border-white/10;
+  .btn:active {
+    transform: translateY(0) scale(0.98);
   }
 
-  /* Card hover lift — add to interactive cards, not structural glass-cards */
-  .card-lift {
+  .btn[aria-disabled='true'] {
+    cursor: default;
+    opacity: 1;
+  }
+
+  /* ── Chips — small mono labels on a soft ground ──────────────────────── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── Cards ───────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
     transition:
-      transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1),
-      box-shadow 0.28s ease,
-      border-color 0.28s ease;
+      transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.22s ease,
+      box-shadow 0.22s ease;
   }
 
-  .card-lift:hover {
-    transform: translateY(-5px);
-    box-shadow:
-      0 16px 48px rgba(201, 168, 76, 0.07),
-      0 4px 24px rgba(0, 0, 0, 0.35);
-    border-color: rgba(201, 168, 76, 0.22);
+  .card-interactive:active {
+    transform: scale(0.985);
   }
 
-  /* FAQ smooth accordion */
-  .faq-content {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  @media (hover: hover) {
+    .card-interactive:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-soft);
+      box-shadow: var(--shadow-card);
+    }
   }
 
-  .faq-content.open {
-    grid-template-rows: 1fr;
+  /* ── Links: underline slides in from the left ────────────────────────── */
+  .link {
+    color: var(--accent);
+    text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Keep the underline off the descenders. */
+    padding-bottom: 1px;
   }
 
-  .faq-icon {
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+  .link:hover,
+  .link:focus-visible {
+    background-size: 100% 1px;
   }
 
-  .faq-trigger.open .faq-icon {
-    transform: rotate(45deg);
-    color: #c9a84c;
+  /* Inline links inside body copy always carry an underline — colour alone is
+     not a sufficient affordance (WCAG 1.4.1).
+
+     The :not() exclusions are load-bearing. `.prose a` (0,1,1) outranks
+     `.btn-primary` (0,1,0), so without them a filled button inside prose would
+     keep the link colour. Buttons and .link bring their own colour. */
+  .prose a:not(.btn):not(.link) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s ease;
+  }
+
+  .prose a:not(.btn):not(.link):hover {
+    text-decoration-thickness: 2px;
+  }
+
+  /* ── Hairline divider ────────────────────────────────────────────────── */
+  .rule {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(90deg, var(--accent-soft), var(--line) 40%, transparent);
+  }
+
+  /* ── Checklist rows — the reference's capability lists ───────────────── */
+  .check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .check-list svg {
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    color: var(--accent);
   }
 }
 
-/* ── Hero entrance: fade up from below ── */
-@keyframes fadeUp {
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOTION
+
+   Every animated state has an author-time resting position that is the FINAL
+   position, and the "hidden" start state is only applied when <html> carries
+   .motion-ok. That class is set by the inline head script and requires JS +
+   no reduced-motion preference — so content is visible if either is missing,
+   and a failed GSAP load can never leave the page blank.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.motion-ok .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.motion-ok .reveal-fade {
+  opacity: 0;
+}
+
+/* Hero split-text: each word rides up out of its own clipped box.
+   Clipping per WORD rather than per LINE is deliberate — line boxes are not known
+   until the browser wraps, so a per-line clip breaks at every viewport width. The
+   padding/margin pair gives descenders and accents somewhere to live; without it a
+   0.95 line-height crops the tail off every "g" and "y". */
+.motion-ok .split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-block: 0.12em 0.2em;
+  margin-block: -0.12em -0.2em;
+}
+
+/* ── Hero entrance ────────────────────────────────────────────────────────
+   CSS, not GSAP, and that is a performance decision rather than a stylistic one.
+
+   The hero paragraph is the LCP element on every page. Driving its entrance from
+   GSAP meant it sat at opacity 0 until a dynamically-imported 46kB chunk had
+   downloaded, parsed and run — Lighthouse measured 2.59s of "element render
+   delay" and an LCP of 2.1s on throttled mobile for a page whose HTML arrives in
+   13ms. Keyframes start on the first frame the browser paints, with no
+   dependency on the network, so LCP collapses back toward FCP.
+
+   GSAP still owns everything below the fold, where its scroll integration earns
+   the bytes. Total hero sequence: 310ms of stagger + 600ms = ~910ms.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@keyframes hsr-word-rise {
   from {
-    opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(110%);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 
-.animate-fade-up {
-  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+@keyframes hsr-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.delay-1 { animation-delay: 60ms; }
-.delay-2 { animation-delay: 160ms; }
-.delay-3 { animation-delay: 270ms; }
-.delay-4 { animation-delay: 380ms; }
-.delay-5 { animation-delay: 500ms; }
-
-/* ── Scroll reveal ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition:
-    opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+@keyframes hsr-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.reveal.in-view {
-  opacity: 1;
-  transform: translateY(0);
+.motion-ok .split-word-inner {
+  display: inline-block;
+  animation: hsr-word-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--wi, 0) * 30ms + 40ms);
 }
 
-/* Stagger helpers for sibling reveals */
-.reveal-d1 { transition-delay: 90ms; }
-.reveal-d2 { transition-delay: 180ms; }
-.reveal-d3 { transition-delay: 270ms; }
+.motion-ok [data-hero] .reveal-fade {
+  animation: hsr-fade-in 0.4s ease both;
+}
+
+/* Supporting line and CTA rise after the headline (brief). */
+.motion-ok [data-hero-tail] {
+  animation: hsr-rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--ti, 0) * 80ms + 300ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Belt and braces: even if .motion-ok were somehow present, nothing hides. */
+  .reveal,
+  .reveal-fade,
+  .split-word-inner,
+  [data-hero-tail] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .split-word {
+    overflow: visible !important;
+  }
+}

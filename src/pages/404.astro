@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SplitText from '../components/SplitText.astro';
+import { APPS } from '../lib/site';
+
+const description = 'That page does not exist. Head back to HSR Utility, or jump straight to one of the apps.';
+---
+
+{/* No structured data: an error page should not be indexed as content. */}
+<Layout title="Page not found" description={description}>
+  <section class="nf" data-hero>
+    <div class="nf-glow" aria-hidden="true"></div>
+
+    <div class="shell nf-inner">
+      <p class="eyebrow reveal-fade">Error 404</p>
+
+      <h1 class="display-1">
+        <SplitText text="This page isn’t here." accent={['isn’t', 'here.']} />
+      </h1>
+
+      <p class="lede nf-lede" data-hero-tail style="--ti:0">
+        The link may be old, or the address slightly off. Everything else is where you left it.
+      </p>
+
+      <div class="nf-actions" data-hero-tail style="--ti:1">
+        <a href="/" class="btn btn-primary">
+          Back to home
+          <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+        {APPS.map((app) => (
+          <a href={`/${app.slug}`} class="btn btn-ghost">{app.name}</a>
+        ))}
+      </div>
+
+      <p class="nf-help" data-hero-tail style="--ti:2">
+        Looking for something specific? Try <a href="/support" class="link">Support</a>,
+        <a href="/privacy" class="link">Privacy</a> or
+        <a href="/delete-account" class="link">Delete account</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .nf {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: min(82svh, 44rem);
+    padding-block: 9rem 4rem;
+    overflow: hidden;
+  }
+
+  .nf-glow {
+    position: absolute;
+    top: -35%;
+    left: 50%;
+    width: min(60rem, 130%);
+    aspect-ratio: 1;
+    translate: -50% 0;
+    background: radial-gradient(circle, var(--accent-wash), transparent 62%);
+    pointer-events: none;
+  }
+
+  .nf-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .nf h1 {
+    max-width: 14ch;
+    margin: 0;
+  }
+
+  .nf-lede {
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  .nf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .nf-help {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+</style>

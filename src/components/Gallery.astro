@@ -1,0 +1,303 @@
+---
+import { Picture } from 'astro:assets';
+import { shotImage } from '../lib/media';
+import type { AppFact } from '../lib/site';
+
+/**
+ * The app's store graphics as a PAGED CAROUSEL (Anish's pick over the old
+ * free-scrolling rail, whose visible scrollbar he vetoed).
+ *
+ * Under the hood it is still a native scroll-snap container — that is what
+ * keeps touch swipe, trackpad drag and keyboard scrolling for free — but the
+ * scrollbar is hidden and the interface is arrows + page dots. The dot count
+ * is measured from real layout on load and resize, so any number of shots and
+ * any viewport width produce the right number of pages.
+ *
+ * Accessibility: the scroller is a labelled region with tabindex="0" (the
+ * documented pattern for scroll containers), the dots are real buttons, and
+ * the arrows disable at the ends.
+ */
+
+interface Props {
+  app: AppFact;
+  /** First gallery on the page paints eagerly; later ones stay lazy. */
+  eager?: boolean;
+}
+
+const { app, eager = false } = Astro.props;
+---
+
+<div class="car" data-carousel>
+  <div
+    class="car-view"
+    data-car-view
+    role="region"
+    aria-label={`${app.name} screenshots`}
+    tabindex="0"
+  >
+    {app.shots.map((shot, i) => (
+      <figure class="shot">
+        <div class="shot-media">
+          {/*
+            Picture, not Image, and AVIF first. These are dense photographic store
+            graphics: at WebP's default quality a single 600px-wide card came out at
+            209kB, and Lighthouse flagged 435kB of waste on this page alone. AVIF at
+            this quality lands the same card an order of magnitude smaller with no
+            visible difference at 278px on screen, and WebP stays as the fallback.
+
+            `width` is explicit on purpose: without it Astro emits the untouched
+            941px master as the <img> fallback src — ~108kB per card of build output
+            that the srcset means almost nobody ever downloads.
+          */}
+          <Picture
+            src={shotImage(shot.file)}
+            alt={shot.alt}
+            formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            quality={55}
+            width={600}
+            widths={[300, 500, 600]}
+            sizes="(min-width: 900px) 300px, 68vw"
+            loading={eager && i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            class="shot-img"
+          />
+        </div>
+        <figcaption class="shot-cap">{shot.caption}</figcaption>
+      </figure>
+    ))}
+  </div>
+
+  <div class="car-foot">
+    <div class="car-dots" data-car-dots></div>
+    <div class="car-nav">
+      <button type="button" class="car-btn" data-car-prev aria-label="Previous screenshots">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M13 8H3M7 4 3 8l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <button type="button" class="car-btn" data-car-next aria-label="Next screenshots">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .car-view {
+    display: flex;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0.25rem;
+    /* Room for the focus ring and the hover lift, which would otherwise clip. */
+    padding: 0.5rem 0.25rem 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    /* Paged, not a rail: no scrollbar in any engine. Arrows and dots carry the
+       affordance instead. */
+    scrollbar-width: none;
+  }
+
+  .car-view::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shot {
+    flex: 0 0 auto;
+    width: min(68vw, 300px);
+    margin: 0;
+    scroll-snap-align: start;
+  }
+
+  .shot-media {
+    /* Fixed ratio reserves the box before the bytes arrive — CLS stays at 0 even
+       though one of the source graphics is a different shape from the rest. */
+    aspect-ratio: 941 / 1672;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+    transition:
+      transform 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.24s ease;
+  }
+
+  .shot-img {
+    width: 100%;
+    height: 100%;
+    /* `top` matters: the graphics carry their headline in the upper third, so a
+       centre crop would cut the words off the odd-sized one. */
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .shot-cap {
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @media (hover: hover) {
+    .shot:hover .shot-media {
+      transform: translateY(-4px);
+      border-color: var(--accent-soft);
+    }
+  }
+
+  /* ── Controls ──────────────────────────────────────────────────────────── */
+  .car-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .car-dots {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .car-dots :global(.car-dot) {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--line-strong);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .car-dots :global(.car-dot.is-on) {
+    width: 22px;
+    background: var(--accent);
+  }
+
+  .car-nav {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .car-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.75rem;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition:
+      border-color 0.18s ease,
+      color 0.18s ease,
+      background-color 0.18s ease,
+      opacity 0.18s ease;
+  }
+
+  .car-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-wash);
+  }
+
+  .car-btn[disabled] {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .car-view {
+      scroll-snap-type: none;
+    }
+    .shot-media,
+    .car-dots :global(.car-dot) {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /** One page = one viewport width of the scroller. Dot count is measured, not
+      assumed, so it stays correct for any app's shot count and any viewport. */
+  function initCarousel(root: HTMLElement) {
+    const view = root.querySelector<HTMLElement>('[data-car-view]');
+    const dotsBox = root.querySelector<HTMLElement>('[data-car-dots]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-car-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-car-next]');
+    if (!view || !dotsBox || !prev || !next) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const behavior: ScrollBehavior = reduced ? 'auto' : 'smooth';
+
+    const pageCount = () => Math.max(1, Math.ceil(view.scrollWidth / view.clientWidth));
+    const page = () => Math.round(view.scrollLeft / view.clientWidth);
+
+    function buildDots() {
+      const n = pageCount();
+      dotsBox.innerHTML = '';
+      for (let i = 0; i < n; i++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'car-dot';
+        dot.setAttribute('aria-label', `Page ${i + 1} of ${n}`);
+        dot.addEventListener('click', () =>
+          view.scrollTo({ left: i * view.clientWidth, behavior })
+        );
+        dotsBox.appendChild(dot);
+      }
+      sync();
+    }
+
+    function sync() {
+      const p = page();
+      const n = pageCount();
+      dotsBox.querySelectorAll('.car-dot').forEach((d, i) => {
+        d.classList.toggle('is-on', i === p);
+        d.setAttribute('aria-current', i === p ? 'true' : 'false');
+      });
+      prev.disabled = p <= 0;
+      next.disabled = p >= n - 1;
+    }
+
+    prev.addEventListener('click', () =>
+      view.scrollBy({ left: -view.clientWidth, behavior })
+    );
+    next.addEventListener('click', () =>
+      view.scrollBy({ left: view.clientWidth, behavior })
+    );
+
+    // Swipe/drag and keyboard scrolling still move the container directly, so
+    // the dots follow the scroll position rather than the buttons.
+    let raf = 0;
+    view.addEventListener('scroll', () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(sync);
+    }, { passive: true });
+
+    // Reflow on resize: page width changed, so the page count may have too.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    window.addEventListener('resize', () => {
+      clearTimeout(timer);
+      timer = setTimeout(buildDots, 150);
+    });
+
+    buildDots();
+  }
+
+  const initAll = () =>
+    document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(initCarousel);
+
+  document.addEventListener('astro:page-load', initAll);
+</script>

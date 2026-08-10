@@ -1,4 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#c9a84c"/>
-  <text x="16" y="23" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="18" fill="#12132a">H</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="HSR Utility">
+  <!-- Aperture mark on brand blue: three translucent discs, overlaps brighten.
+       Rounded tile here (unlike icon.svg) because browser tabs do not mask.
+       Geometry mirrors src/components/Logo.astro. -->
+  <rect width="32" height="32" rx="7" fill="#0B4FFF"/>
+  <g fill="#FFFFFF" opacity="1">
+    <circle cx="16" cy="10.5" r="7.5" opacity="0.62"/>
+    <circle cx="11" cy="19" r="7.5" opacity="0.62"/>
+    <circle cx="21" cy="19" r="7.5" opacity="0.62"/>
+  </g>
 </svg>
