@@ -1,4 +1,7 @@
 node_modules
 
+# Astro's generated types/cache — regenerated on every build, not source
+.astro/
+
 # Browser-automation tooling residue (screenshots/traces), not project source
 .playwright-mcp/
