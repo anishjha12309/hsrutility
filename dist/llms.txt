@@ -7,8 +7,10 @@
 
 ## Key facts
 
-- **Studio:** HSR Utility. Indie Android studio, founded 2026. There is no separate
-  registered legal entity name and no published postal address.
+- **Studio:** HSR Utility. Indie Android studio, founded 2026. HSR Utility is the brand
+  name; the registered company behind it is **HSR Utility Apps Private Limited**, A3002,
+  Adonia Hiranandani, Garden, South AvenuePowai, Mumbai, Mumbai, Mumbai, Maharashtra,
+  400076, India.
 - **Apps** — both Android-only, built with Flutter:
   - **Pakiza** — Islamic lifestyle app. Shorts-style vertical feed of static and live
     (video) wallpapers with one-tap apply, a curated Islamic ringtone library, and
@@ -24,7 +26,7 @@
 - **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
 - **Account deletion:** instant from inside either app (Settings → Delete account);
   email support@hsrutility.com as a fallback if the app is already uninstalled.
-- **Contact:** support@hsrutility.com — replies within 48 hours.
+- **Contact:** support@hsrutility.com — replies within 48 hours. Phone: +91 7827100871.
 - **This website:** no analytics, no cookies, no third-party requests of any kind.
 
 ## Pages

@@ -1,6 +1,13 @@
 ---
 import DocLayout from '../layouts/DocLayout.astro';
-import { SUPPORT_EMAIL, APPS } from '../lib/site';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_HREF,
+  LEGAL_NAME,
+  ADDRESS_LINES,
+  APPS,
+} from '../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
 
 /**
@@ -130,6 +137,26 @@ const retained = [
         </svg>
       </a>
     </p>
+
+    {/* Play review asked for a reachable number wherever we invite contact. */}
+    <dl class="doc-meta" style="margin-top:1.75rem">
+      <div>
+        <dt>Company</dt>
+        <dd>{LEGAL_NAME}</dd>
+      </div>
+      <div>
+        <dt>Phone</dt>
+        <dd><a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a></dd>
+      </div>
+      <div>
+        <dt>Address</dt>
+        <dd>
+          {ADDRESS_LINES.map((line, i) => (
+            <>{i > 0 && <br />}{line}</>
+          ))}
+        </dd>
+      </div>
+    </dl>
   </section>
 
   {/* ── What goes, what stays ────────────────────────────────────────────── */}

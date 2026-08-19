@@ -1,17 +1,31 @@
 ---
 import DocLayout from '../layouts/DocLayout.astro';
-import { SUPPORT_EMAIL, appNames } from '../lib/site';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_HREF,
+  LEGAL_NAME,
+  ADDRESS_LINES,
+  APPS,
+  appNames,
+} from '../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
 
 /**
  * PORTED from the previous build. Every term, limit and obligation is unchanged —
  * including governing law and the liability cap, which are substantive claims.
- * The only edit is the studio's standing no-legal-entity rule: the invented legal entity
- * "HSR Energy Private Limited" and the postal address are gone. "Nasheeds" is
- * likewise replaced with "ringtones" to match what the apps actually ship.
+ * Edits since:
+ *   - "Nasheeds" -> "ringtones", to match what the apps actually ship.
+ *   - 2026-08-13: the registered company and postal address are back in the preamble
+ *     and contact block — owner-confirmed as real, after an earlier pass removed them
+ *     as invented, and Play review asked for both in every policy.
+ *   - 2026-08-19: owner replaced the company name, registered address and support
+ *     email. All three read from src/lib/site.ts; none are written here. Governing
+ *     law (§11) moved Bengaluru -> Mumbai to follow the new registered office, and
+ *     lastUpdated bumped to August 2026 — both owner-approved in that same pass.
  */
 
-const lastUpdated = 'July 2026';
+const lastUpdated = 'August 2026';
 
 const description =
   'Terms of Service for Pakiza and Arul by HSR Utility: your rights and responsibilities, premium subscriptions, content submissions, and how to contact us.';
@@ -85,7 +99,8 @@ const subscriptionPoints = [
   <section>
     <p>
       These Terms of Service ("Terms") are an agreement between you and
-      <strong>HSR Utility</strong> ("we", "us", or "our"), and govern your use of our Android
+      <strong>{LEGAL_NAME}</strong>, which operates as HSR Utility ("we", "us",
+      or "our"), and govern your use of our Android
       applications <strong>{appNames()}</strong> (each, "the App") and related services.
     </p>
     <p>
@@ -225,8 +240,8 @@ const subscriptionPoints = [
   <section>
     <h2 id="liability">10. Limitation of Liability</h2>
     <p>
-      To the fullest extent permitted by law, HSR Utility and its team will not be liable for
-      indirect, incidental, special, consequential, or punitive damages, or for loss of data or
+      To the fullest extent permitted by law, {LEGAL_NAME} and its team will not be liable
+      for indirect, incidental, special, consequential, or punitive damages, or for loss of data or
       profits, arising from your use of the App. Our total aggregate liability for any claim
       relating to the App is limited to the amount you paid us in the 12 months before the claim
       arose (or ₹1,000 if you paid nothing). Nothing in these Terms limits liability that cannot
@@ -238,8 +253,8 @@ const subscriptionPoints = [
     <h2 id="law">11. Governing Law &amp; Disputes</h2>
     <p>
       These Terms are governed by the laws of India. Any dispute arising out of or relating to
-      these Terms or the App is subject to the exclusive jurisdiction of the courts of Bengaluru,
-      Karnataka. Before going to court, please contact us first — most issues can be resolved
+      these Terms or the App is subject to the exclusive jurisdiction of the courts of Mumbai,
+      Maharashtra. Before going to court, please contact us first — most issues can be resolved
       quickly by email.
     </p>
   </section>
@@ -260,16 +275,28 @@ const subscriptionPoints = [
       <p>If you have questions about these Terms, please contact us:</p>
       <dl class="doc-meta">
         <div>
+          <dt>Company</dt>
+          <dd>{LEGAL_NAME}</dd>
+        </div>
+        <div>
           <dt>Email</dt>
           <dd><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></dd>
         </div>
         <div>
-          <dt>Studio</dt>
-          <dd>HSR Utility</dd>
+          <dt>Phone</dt>
+          <dd><a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a></dd>
+        </div>
+        <div>
+          <dt>Address</dt>
+          <dd>
+            {ADDRESS_LINES.map((line, i) => (
+              <>{i > 0 && <br />}{line}</>
+            ))}
+          </dd>
         </div>
         <div>
           <dt>Applies to</dt>
-          <dd>Pakiza · Arul</dd>
+          <dd>{APPS.map((app) => app.name).join(' · ')}</dd>
         </div>
       </dl>
     </div>

@@ -1,17 +1,29 @@
 ---
 import DocLayout from '../layouts/DocLayout.astro';
-import { SUPPORT_EMAIL, appNames } from '../lib/site';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_HREF,
+  LEGAL_NAME,
+  ADDRESS_LINES,
+  APPS,
+  appNames,
+} from '../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
 
 /**
  * PORTED from the previous build (reviewed for Play Store compliance). Every promise
- * and claim is unchanged. Two edits, both required by the studio's standing facts rules:
- *   - the invented legal entity "HSR Energy Private Limited" and the Bengaluru postal
- *     address are gone; the studio is "HSR Utility" and has neither.
+ * and claim is unchanged. Edits since:
  *   - "nasheeds" -> "ringtones", matching the app's actual curated ringtone library.
+ *   - 2026-08-13: the registered company (HSR Energy Private Limited), its address and
+ *     a phone number are back in §1 and the contact block — owner-confirmed as real,
+ *     and Play review asked for a reachable number in the policy. All five facts read
+ *     from src/lib/site.ts; none are written here.
+ *   - 2026-08-19: owner replaced the company name, registered address and support
+ *     email. Still all read from src/lib/site.ts.
  */
 
-const lastUpdated = 'July 2026';
+const lastUpdated = 'August 2026';
 
 const description =
   "Privacy policy for Pakiza and Arul by HSR Utility: what data each app collects, the services it uses, how it's protected, and how to delete your account at any time.";
@@ -174,7 +186,8 @@ const rights = [
 >
   <section>
     <p>
-      This Privacy Policy explains how <strong>HSR Utility</strong> ("we", "us", or "our")
+      This Privacy Policy explains how <strong>{LEGAL_NAME}</strong>, which
+      operates as HSR Utility ("we", "us", or "our"),
       collects, uses, and protects information when you use our Android applications
       <strong>{appNames()}</strong> (each, "the App").
     </p>
@@ -381,16 +394,28 @@ const rights = [
       <p>If you have questions or concerns about this Privacy Policy, please contact us:</p>
       <dl class="doc-meta">
         <div>
+          <dt>Company</dt>
+          <dd>{LEGAL_NAME}</dd>
+        </div>
+        <div>
           <dt>Email</dt>
           <dd><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></dd>
         </div>
         <div>
-          <dt>Studio</dt>
-          <dd>HSR Utility</dd>
+          <dt>Phone</dt>
+          <dd><a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a></dd>
+        </div>
+        <div>
+          <dt>Address</dt>
+          <dd>
+            {ADDRESS_LINES.map((line, i) => (
+              <>{i > 0 && <br />}{line}</>
+            ))}
+          </dd>
         </div>
         <div>
           <dt>Applies to</dt>
-          <dd>Pakiza · Arul</dd>
+          <dd>{APPS.map((app) => app.name).join(' · ')}</dd>
         </div>
       </dl>
     </div>

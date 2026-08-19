@@ -10,15 +10,30 @@
  *     ^-- publisher -- MobileApplication (Arul)
  *     ^-- about ------ WebPage (per page)
  *
+ * Organization carries legalName, address and telephone: HSR Utility Apps Private
+ * Limited is the registered company behind the HSR Utility brand (owner-confirmed
+ * 2026-08-13; name, address and email replaced 2026-08-19). `name` stays the brand
+ * — that is what users search for — and legalName carries the registration, which
+ * is exactly how schema.org splits them.
+ *
  * Deliberate omissions (do NOT "fix" these without real data):
- *   - Organization.legalName / .address — no registered entity or published address
- *     exists. The previous build invented both; they are gone and stay gone.
  *   - Organization.sameAs — no social profiles exist yet.
  *   - aggregateRating / review — only with real Play Store numbers. Inventing one to
  *     force a rich result violates Google's structured-data policy.
  */
 
-import { SITE_URL, SUPPORT_EMAIL, ORG_DESCRIPTION, abs, PAKIZA, ARUL, type AppFact } from './site';
+import {
+  SITE_URL,
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  LEGAL_NAME,
+  ADDRESS,
+  ORG_DESCRIPTION,
+  abs,
+  PAKIZA,
+  ARUL,
+  type AppFact,
+} from './site';
 
 const ORG_ID = `${SITE_URL}/#organization`;
 const SITE_ID = `${SITE_URL}/#website`;
@@ -30,9 +45,15 @@ export const organizationSchema = {
   '@type': 'Organization',
   '@id': ORG_ID,
   name: 'HSR Utility',
+  legalName: LEGAL_NAME,
   url: `${SITE_URL}/`,
   logo: abs('/icon-512.png'),
   email: SUPPORT_EMAIL,
+  telephone: SUPPORT_PHONE,
+  address: {
+    '@type': 'PostalAddress',
+    ...ADDRESS,
+  },
   foundingDate: '2026',
   description: ORG_DESCRIPTION,
 };

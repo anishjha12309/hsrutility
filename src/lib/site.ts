@@ -11,9 +11,19 @@
  *    "Pakiza and Arul" into copy — adding a third app should be an edit to this
  *    file and nothing else.
  *
- * 2. HSR Utility has no registered legal entity name and no published postal
- *    address. Do not add `legalName`, `address`, or a "Pvt Ltd" anywhere — the
- *    previous build carried an invented one and it was removed deliberately.
+ * 2. HSR Utility is the BRAND; `LEGAL_NAME` (HSR Utility Apps Private Limited) is
+ *    the registered company behind it. Confirmed by the owner on 2026-08-13, after a
+ *    Play review note asked for the full company name and a reachable phone number
+ *    in every policy — an earlier pass had removed both as invented. The company
+ *    name, postal address and phone belong on the legal pages and in the
+ *    Organization JSON-LD only. Nav, hero, footer, page titles and meta stay
+ *    branded "HSR Utility" — do not swap those. The legal name now contains the
+ *    brand string; that does not merge the two — `LEGAL_NAME` still stays out of
+ *    nav, hero, footer and titles.
+ *
+ *    Company name, registered address and support email were all replaced by the
+ *    owner on 2026-08-19 (HSR Energy Private Limited / Bengaluru / support@hsrapps.com
+ *    are all dead). The phone number was confirmed unchanged in that same pass.
  *
  * Facts here are verified against the app repos (`c:\Anish\Pakiza`,
  * `c:\Anish\Arul`). Do not add a capability you have not found in that code —
@@ -23,6 +33,28 @@
 export const SITE_URL = 'https://hsrutility.com';
 export const SUPPORT_EMAIL = 'support@hsrutility.com';
 export const COPYRIGHT_YEAR = 2026;
+
+/** Registered company. Legal pages and JSON-LD only — see hard rule 2 above. */
+export const LEGAL_NAME = 'HSR Utility Apps Private Limited';
+
+/** Display form, and the `tel:` form, which must carry no spaces. */
+export const SUPPORT_PHONE = '+91 7827100871';
+export const SUPPORT_PHONE_HREF = 'tel:+917827100871';
+
+/** Registered address. Field names mirror schema.org PostalAddress. */
+export const ADDRESS = {
+  streetAddress: 'A3002, Adonia Hiranandani, Garden, South AvenuePowai, Mumbai, Mumbai',
+  addressLocality: 'Mumbai',
+  addressRegion: 'Maharashtra',
+  postalCode: '400076',
+  addressCountry: 'IN',
+};
+
+/** One entry per rendered line, so pages never hand-assemble the address. */
+export const ADDRESS_LINES = [
+  ADDRESS.streetAddress,
+  `${ADDRESS.addressLocality}, ${ADDRESS.addressRegion}, ${ADDRESS.postalCode}`,
+];
 
 /** Canonical descriptor. Reused verbatim in copy and schema — entity resolution
  *  rewards exact repetition, and it keeps the two from drifting. */
