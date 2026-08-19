@@ -1,55 +1,51 @@
 ---
 name: deploy
-description: Ship the HSR Utility site to hsrutility.com. Builds, commits, pushes to master, and verifies the live result. Use when asked to deploy, publish, ship, push live, or release the site — and when asked whether something is deployed yet. Covers the Cloudflare Pages git integration and the verification traps that produce false readings.
+description: Ship the HSR Utility site to hsrutility.com. Builds, commits, pushes to master, and confirms the live result. Use when asked to deploy, publish, ship, push live, or release the site — and when asked whether something is deployed yet. Covers the Cloudflare Pages git integration and the traps that make a live check report the wrong thing.
 ---
 
 # Deploy hsrutility.com
 
-## How this site actually deploys
+Scope: build, commit, push, confirm it landed. Changing site content is not part of
+this skill — if a deploy needs a content fix first, make the fix as its own task.
+
+## How this site deploys
 
 The Cloudflare Pages project **`hsrutility`** serves `hsrutility.com` (and
 `hsrutility-b9y.pages.dev`). It is **git-connected** to
 `github.com/anishjha12309/hsrutility`, watching branch **`master`**.
 
 **Pushing to `master` is the deploy.** Cloudflare detects the push, builds, and
-promotes to production automatically. Every deployment in the project history is
-tied to a commit SHA.
+promotes to production. Every deployment is tied to a commit SHA.
 
-> **Never run `wrangler pages deploy`.** This is a git-connected project. A direct
-> upload sidesteps the integration and creates a deployment with no commit behind
-> it, so the dashboard history stops matching the repo. `wrangler` is still the
-> right tool for *reading* deploy state — see Verify.
+`wrangler pages deploy` is the wrong tool here — on a git-connected project a
+direct upload bypasses the integration and produces a deployment with no commit
+behind it, so the dashboard history stops matching the repo. Wrangler is still how
+you read deploy state.
 
 There is no `wrangler.toml`, no deploy script in `package.json`, and no CI
-workflow. Do not add one to "fix" the absence — the git integration is the design.
+workflow. Their absence is the design, not a gap to fill.
 
-## Preflight
+## Before pushing
 
-1. **Build must pass.** `npm run build` and confirm the exit code is `0`.
-   Astro prints `Complete!` even on some non-fatal paths, so check the code, not
-   the text:
-   ```bash
-   npm run build 2>&1 | tail -3; echo "EXIT: ${PIPESTATUS[0]}"
-   ```
-   Do not push a tree whose build you have not run.
+`dist/` is committed to this repo and is not ignored, so it must be rebuilt before
+the commit or the shipped HTML disagrees with the source it came from.
 
-2. **`dist/` is committed to this repo.** It is not ignored. Always rebuild before
-   committing, or you ship stale HTML alongside fresh source and the two disagree.
-
-3. **Read `git status` before staging.** This working tree has a history of
-   carrying uncommitted work from earlier sessions. `git add -A` will sweep it
-   into your commit. Diff anything you did not personally edit, and if it is
-   unrelated to the task, say so in the commit message or ask before including it.
-
-4. **Confirm before pushing.** A push publishes to a live site whose legal pages
-   are what Google Play review reads. Get the user's go-ahead unless they have
-   already said to deploy in this session.
-
-## Deploy
+Astro prints `Complete!` on some non-fatal paths, so the exit code is the signal:
 
 ```bash
-npm run build                       # exit 0, verified above
-git add -A                          # after reviewing status
+npm run build 2>&1 | tail -3; echo "EXIT: ${PIPESTATUS[0]}"
+```
+
+This working tree has repeatedly carried uncommitted work from earlier sessions, so
+`git add -A` can sweep unrelated changes into the commit. Diff anything you did not
+edit yourself, and account for it in the commit message or leave it out.
+
+A push publishes to a live site whose legal pages are what Google Play review
+reads. Get the user's go-ahead before pushing unless they have already said to
+deploy in this session — approval for one push is not approval for the next.
+
+```bash
+git add -A
 git commit -F - <<'MSG'
 <subject>
 
@@ -58,76 +54,68 @@ MSG
 git push origin master
 ```
 
-Cloudflare picks it up within a few seconds; the build takes a minute or two.
-
-## Verify
-
-Confirm the deployment exists and is `Active`:
+## Confirming it landed
 
 ```bash
-npx wrangler pages deployment list --project-name hsrutility 2>&1 | sed -n '4,8p'
+npx wrangler pages deployment list --project-name hsrutility 2>&1 | grep -F "<sha>"
 ```
 
-The top row's **Source** column must show the SHA you just pushed, and Status
-must read `Active`. `npx` installs wrangler on demand — it is not a project
-dependency, and that is fine.
+The row carries the commit SHA, a permanent `*.pages.dev` URL, and a status;
+`Active` means it is the current production deployment. `npx` fetches wrangler on
+demand — it is deliberately not a project dependency.
 
-Then verify the live HTML. **Four traps make this give false readings:**
+Four things make a live check report something false:
 
 - **Trailing-slash redirect.** `/terms` returns `308` to `/terms/`. Without
-  `curl -L` the body is empty and every grep silently finds nothing. Use
-  `curl -sL` and prefer the trailing-slash URL.
-- **Propagation lag.** The custom domain can still serve the previous deployment
-  for a short window after the new one flips to `Active`. A stale read right after
-  a push is usually timing, not a failed deploy. Re-check before concluding
-  anything, or hit the deployment's own `*.pages.dev` URL, which is never stale.
-- **Cloudflare email obfuscation.** Mailto links on the live site are rewritten to
-  `/cdn-cgi/l/email-protection#<hex>`. Grepping live HTML for `support@…` will
-  miss them even when the page is correct. Check the email in the JSON-LD block or
-  in `llms.txt` instead, which are not rewritten.
-- **`dist/` in git ≠ what is live.** The committed `dist/` only matches production
-  if it was rebuilt before the commit that shipped. Never infer live content from
-  `git show HEAD:dist/...`; fetch the site.
+  `curl -L` the body is empty and every grep silently finds nothing — which reads
+  identically to "the change is missing".
+- **Propagation lag.** The custom domain can serve the previous deployment for a
+  window after the new one goes `Active`, and can serve a *mix* across pages
+  mid-switch. The deployment's own `*.pages.dev` URL is immutable and never stale,
+  so it separates "not deployed" from "not propagated yet".
+- **Cloudflare email obfuscation.** Live mailto links are rewritten to
+  `/cdn-cgi/l/email-protection#<hex>`, so grepping live HTML for `support@…` misses
+  them on a correct page. The JSON-LD block and `llms.txt` are not rewritten.
+- **Committed `dist/` is not evidence.** It matches production only if it was
+  rebuilt before the commit that shipped. `git show HEAD:dist/...` describes the
+  repo, not the site.
 
-A verification sweep that avoids all four:
+A sweep that avoids all four, adjusted to whatever the deploy changed:
 
 ```bash
 for p in terms privacy support delete-account; do
   echo "── /$p/"
   B=$(curl -sL "https://hsrutility.com/$p/")
   echo "  company: $(echo "$B" | grep -oE 'HSR Utility Apps Private Limited' | sort -u)"
-  echo "  stale?   $(echo "$B" | grep -coE 'hsrapps|HSR Energy|HARALURU|Bengaluru|Karnataka') hit(s)"
+  echo "  stale?   $(echo "$B" | grep -coE 'hsrapps|HSR Energy|HARALURU|Bengaluru') hit(s)"
 done
 curl -sL https://hsrutility.com/llms.txt | grep -E 'support@|Contact:'
 ```
 
-Adjust the greps to whatever this deploy changed. Report what you actually
-fetched — never call a deploy verified on the strength of the build passing.
+## Previewing the build
 
-## Preview locally before shipping
-
-`astro preview` serves the built `dist/` on a port of your choosing:
+`astro preview` serves the built `dist/`; `astro dev` does not show you what
+deploys.
 
 ```bash
 npx astro preview --port 4331
 ```
 
-Redirect its output to a real path — `$TMPDIR` is unset in this environment's Git
-Bash and `> $TMPDIR/log` silently fails with `Permission denied`. Use the session
-scratchpad directory instead. Note `astro dev` will not show you what deploys;
-only `preview` serves the actual build.
+`$TMPDIR` is unset in this environment's Git Bash, so `> $TMPDIR/log` fails with
+`Permission denied` and the server never starts. Redirect to the session scratchpad
+path instead. Stop it by port when done:
 
-## Rollback
+```powershell
+Get-NetTCPConnection -LocalPort 4331 -State Listen |
+  Select-Object -ExpandProperty OwningProcess -Unique |
+  ForEach-Object { Stop-Process -Id $_ -Force }
+```
 
-Deployments are immutable and each has a permanent URL. To roll back, either
-promote a previous deployment from the dashboard (link is in the `deployment
-list` output), or revert the commit and push — the latter keeps git and the
-deploy history in agreement, which is the reason this project is git-connected.
+## Rolling back
 
-## Facts, once
+Deployments are immutable and each keeps a permanent URL. Promote an earlier one
+from the dashboard, or revert the commit and push — the latter keeps git and the
+deploy history in agreement, which is the point of the git integration.
 
-Company name, address, phone, support email and app details all live in
-[`src/lib/site.ts`](../../../src/lib/site.ts). Every page, the JSON-LD in
-`src/lib/schema.ts`, and `public/llms.txt` read from it. If a deploy is about
-changing one of those, change it there — never in a page. `public/llms.txt` is
-the one file that restates them by hand, so it needs a matching edit.
+Report what you actually fetched. A passing build says nothing about what the site
+is serving.
