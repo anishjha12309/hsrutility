@@ -50,9 +50,17 @@ export const ADDRESS = {
   addressCountry: 'IN',
 };
 
-/** One entry per rendered line, so pages never hand-assemble the address. */
+/**
+ * One entry per rendered line, so pages never hand-assemble the address.
+ *
+ * Every line but the last carries a trailing comma. The address is one continuous
+ * string broken across lines, not a list of independent items — without the comma
+ * the street line's final "Mumbai" runs straight into the next line's "Mumbai" and
+ * reads as "Mumbai Mumbai". Display-only: ADDRESS itself stays punctuation-free so
+ * the schema.org PostalAddress fields are clean.
+ */
 export const ADDRESS_LINES = [
-  ADDRESS.streetAddress,
+  `${ADDRESS.streetAddress},`,
   `${ADDRESS.addressLocality}, ${ADDRESS.addressRegion}, ${ADDRESS.postalCode}`,
 ];
 
