@@ -1,5 +1,7 @@
 ---
 import DocLayout from '../layouts/DocLayout.astro';
+import Email from '../components/Email.astro';
+import '../styles/doc-steps.css';
 import {
   SUPPORT_EMAIL,
   SUPPORT_PHONE,
@@ -34,13 +36,13 @@ const structuredData = [
 const inAppSteps = [
   'Open the app and go to the <strong>Settings</strong> tab.',
   'Tap <strong>Delete account</strong> at the bottom of the screen.',
-  'Confirm on the prompt. Your account and its data are deleted <strong>immediately</strong>, your premium subscription and its UPI mandate are cancelled, and you are signed out. If we cannot reach the payment provider to cancel the mandate, the deletion is refused outright rather than half-applied — nothing is deleted and you can try again.',
+  'Confirm. Your account and data are deleted <strong>immediately</strong>, your subscription and its UPI mandate are cancelled, and you are signed out. If we cannot reach the payment provider to cancel the mandate, the deletion is refused outright rather than half-applied — nothing is deleted and you can try again.',
 ];
 
 const emailSteps = [
-  `Send an email to <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a> with the subject line naming the app you use: <span class="mono-inline">Delete my account — Pakiza (or Arul)</span>`,
+  `Send an email to <!--email_off--><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><!--/email_off--> with the subject line naming the app you use: <span class="mono-inline">Delete my account — Pakiza (or Arul)</span>`,
   'Include the <strong>Google account email</strong> you used to sign in, so we can locate and verify your data.',
-  'We will process your request within <strong>7 business days</strong> and send a confirmation email once your account and data have been permanently deleted.',
+  'We process it within <strong>7 business days</strong> and email you a confirmation.',
 ];
 
 /**
@@ -130,12 +132,7 @@ const retained = [
     </ol>
 
     <p style="margin-top:1.75rem">
-      <a href={`mailto:${SUPPORT_EMAIL}?subject=Delete%20my%20account`} class="btn btn-primary">
-        Email to delete
-        <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </a>
+      <Email label="Email to delete" subject="Delete my account" class="btn btn-primary" arrow />
     </p>
 
     {/* Play review asked for a reachable number wherever we invite contact. */}
@@ -183,14 +180,13 @@ const retained = [
   <section>
     <h2 id="premium">If you are a premium subscriber</h2>
     <p>
-      Deleting your account is <strong>not</strong> the same as cancelling. Deletion ends premium
-      access immediately: any time remaining on the period you already paid for is lost, with no
-      refund, along with any referral reward days. Signing up again will not restore it, and will
-      not give you another free trial.
+      Deleting is <strong>not</strong> cancelling. It ends premium access immediately: time left on the
+      period you paid for is lost, with no refund, along with any referral reward days. Signing up
+      again restores none of it and grants no new free trial.
     </p>
     <p>
-      If you only want to stop future charges and keep premium until the period runs out, cancel
-      instead — Settings → your plan → Cancel. You can always delete the account later.
+      To stop future charges while keeping premium to the end of the period, cancel instead — Settings
+      → your plan → Cancel — and delete later if you still want to.
     </p>
   </section>
 
@@ -215,105 +211,7 @@ const retained = [
 
   <nav class="doc-foot-links" aria-label="Related pages">
     <a href="/support" class="link">Support &amp; FAQ</a>
-    <a href="/privacy" class="link">Privacy Policy</a>
+    <a href="/privacy-policy" class="link">Privacy Policy</a>
     <a href="/terms" class="link">Terms of Service</a>
   </nav>
 </DocLayout>
-
-<style is:global>
-  .applies {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .applies-label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-right: 0.25rem;
-  }
-
-  .applies-chip {
-    padding: 0.3rem 0.85rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--surface);
-    font-size: 0.875rem;
-    color: var(--text);
-  }
-
-  .method-flag {
-    display: inline-block;
-    margin: 0 0 0.75rem;
-    padding: 0.3rem 0.75rem;
-    border: 1px solid var(--accent-soft);
-    border-radius: 999px;
-    background: var(--accent-wash);
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  /* Numbered steps. The counter lives in CSS so the markup stays a plain <ol> and
-     screen readers still announce "list of 3 items" with real numbering. */
-  .steps {
-    counter-reset: step;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin: 1.5rem 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .steps li {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    color: var(--muted);
-  }
-
-  .step-num {
-    counter-increment: step;
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 50%;
-    background: var(--surface);
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    color: var(--text);
-  }
-
-  .step-num::before {
-    content: counter(step);
-  }
-
-  .step-num.accent {
-    border-color: var(--accent-soft);
-    background: var(--accent-wash);
-    color: var(--accent);
-  }
-
-  .mono-inline {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.35rem 0.7rem;
-    border: 1px solid var(--line);
-    border-radius: 0.5rem;
-    background: var(--surface);
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    color: var(--text);
-    user-select: all;
-  }
-</style>

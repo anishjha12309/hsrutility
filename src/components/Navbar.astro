@@ -1,24 +1,69 @@
 ---
 import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { APPS } from '../lib/site';
+import { APPS, LEGAL_DOCS, legalPath, type AppFact } from '../lib/site';
+
+/**
+ * Two navs, one component.
+ *
+ * Unscoped it is the studio nav: Home, an Apps menu, Support. Scoped to an app it
+ * becomes that app's own nav — Overview and that app's five legal documents, with
+ * no route out to the studio and no mention of the other app. See LEGAL_DOCS in
+ * lib/site.ts for why the sub-sites are kept apart.
+ *
+ * `data-nav` and `#mobile-menu` are load-bearing beyond this file: both Flutter
+ * apps open the policy pages in an in-app WebView and inject
+ * `.skip-link,[data-nav],#mobile-menu,footer.foot{display:none}` to strip the
+ * site's chrome (`policy_screen.dart`, `_applyAppChrome`). Rename either hook and
+ * every in-app policy suddenly renders with a website navbar on top of it.
+ */
+interface Props {
+  scope?: AppFact;
+}
+
+const { scope } = Astro.props;
 
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
-const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
-const appsActive = APPS.some((app) => isActive(`/${app.slug}`));
+const isActive = (href: string) => {
+  const clean = href.replace(/\/+$/, '') || '/';
+  return clean === '/' ? path === '/' : path === clean || path.startsWith(`${clean}/`);
+};
+
+/** The dropdown's contents, and the label above it. */
+const menuLabel = scope ? 'Legal' : 'Apps';
+const menuItems = scope
+  ? LEGAL_DOCS.map((doc) => ({
+      href: legalPath(scope, doc),
+      name: doc.label,
+      note: `${scope.name} — ${doc.short.toLowerCase()}`,
+      sheetNote: doc.short,
+    }))
+  : APPS.map((app) => ({
+      href: `/${app.slug}`,
+      name: app.name,
+      note: app.tagline,
+      sheetNote: app.statusLabel,
+    }));
+
+const menuActive = menuItems.some((item) => isActive(item.href));
+
+/** Home for this nav: the studio root, or the app's own root. */
+const homeHref = scope ? `/${scope.slug}` : '/';
+const homeLabel = scope ? 'Overview' : 'Home';
+const brandWord = scope ? scope.name : 'HSR Utility';
 ---
 
 <header class="nav-wrap" data-nav>
   <nav class="nav-bar shell" aria-label="Primary">
-    <a href="/" class="brand" aria-label="HSR Utility — home">
+    <a href={homeHref} class="brand" aria-label={`${brandWord} — home`}>
       <Logo size={28} class="brand-mark" />
-      <span class="brand-word">HSR&nbsp;Utility</span>
+      <span class="brand-word">{brandWord}</span>
     </a>
 
     <ul class="nav-links">
       <li>
-        <a href="/" class="nav-link" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+        <a href={homeHref} class="nav-link" aria-current={isActive(homeHref) && !menuActive ? 'page' : undefined}>{homeLabel}</a>
       </li>
 
       <li class="has-menu">
@@ -28,27 +73,29 @@ const appsActive = APPS.some((app) => isActive(`/${app.slug}`));
           aria-expanded="false"
           aria-controls="apps-menu"
           data-menu-trigger
-          aria-current={appsActive ? 'page' : undefined}
+          aria-current={menuActive ? 'page' : undefined}
         >
-          Apps
+          {menuLabel}
           <svg class="chev" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
         </button>
 
         <div class="menu" id="apps-menu" data-menu hidden>
-          {APPS.map((app) => (
-            <a href={`/${app.slug}`} class="menu-item" aria-current={isActive(`/${app.slug}`) ? 'page' : undefined}>
-              <span class="menu-item-name">{app.name}</span>
-              <span class="menu-item-note">{app.tagline}</span>
+          {menuItems.map((item) => (
+            <a href={item.href} class="menu-item" aria-current={isActive(item.href) ? 'page' : undefined}>
+              <span class="menu-item-name">{item.name}</span>
+              <span class="menu-item-note">{item.note}</span>
             </a>
           ))}
         </div>
       </li>
 
-      <li>
-        <a href="/support" class="nav-link" aria-current={isActive('/support') ? 'page' : undefined}>Support</a>
-      </li>
+      {!scope && (
+        <li>
+          <a href="/support" class="nav-link" aria-current={isActive('/support') ? 'page' : undefined}>Support</a>
+        </li>
+      )}
     </ul>
 
     <div class="nav-end">
@@ -76,12 +123,12 @@ const appsActive = APPS.some((app) => isActive(`/${app.slug}`));
   <div class="sheet-inner">
     <ul class="sheet-links">
       <li class="sheet-item">
-        <a href="/" class="sheet-link" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+        <a href={homeHref} class="sheet-link" aria-current={isActive(homeHref) && !menuActive ? 'page' : undefined}>{homeLabel}</a>
       </li>
 
       <li class="sheet-item">
         <button type="button" class="sheet-link sheet-sub-trigger" aria-expanded="false" aria-controls="sheet-apps" data-sub-trigger>
-          Apps
+          {menuLabel}
           <svg class="chev chev-lg" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
@@ -89,19 +136,21 @@ const appsActive = APPS.some((app) => isActive(`/${app.slug}`));
 
         <div class="sheet-sub" id="sheet-apps" data-sub>
           <div class="sheet-sub-inner">
-            {APPS.map((app) => (
-              <a href={`/${app.slug}`} class="sheet-sublink" aria-current={isActive(`/${app.slug}`) ? 'page' : undefined}>
-                {app.name}
-                <span class="sheet-sublink-note">{app.statusLabel}</span>
+            {menuItems.map((item) => (
+              <a href={item.href} class="sheet-sublink" aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.name}
+                <span class="sheet-sublink-note">{item.sheetNote}</span>
               </a>
             ))}
           </div>
         </div>
       </li>
 
-      <li class="sheet-item">
-        <a href="/support" class="sheet-link" aria-current={isActive('/support') ? 'page' : undefined}>Support</a>
-      </li>
+      {!scope && (
+        <li class="sheet-item">
+          <a href="/support" class="sheet-link" aria-current={isActive('/support') ? 'page' : undefined}>Support</a>
+        </li>
+      )}
     </ul>
 
     <div class="sheet-foot sheet-item">

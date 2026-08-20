@@ -1,310 +1,181 @@
 ---
 import DocLayout from '../layouts/DocLayout.astro';
-import {
-  SUPPORT_EMAIL,
-  SUPPORT_PHONE,
-  SUPPORT_PHONE_HREF,
-  LEGAL_NAME,
-  ADDRESS_LINES,
-  APPS,
-  appNames,
-} from '../lib/site';
+import LegalContact from '../components/LegalContact.astro';
+import LegalFootLinks from '../components/LegalFootLinks.astro';
+import { APPS, LEGAL_NAME, SITE_URL, legalPath } from '../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
 
 /**
- * PORTED from the previous build. Every term, limit and obligation is unchanged —
- * including governing law and the liability cap, which are substantive claims.
- * Edits since:
- *   - "Nasheeds" -> "ringtones", to match what the apps actually ship.
- *   - 2026-08-13: the registered company and postal address are back in the preamble
- *     and contact block — owner-confirmed as real, after an earlier pass removed them
- *     as invented, and Play review asked for both in every policy.
- *   - 2026-08-19: owner replaced the company name, registered address and support
- *     email. All three read from src/lib/site.ts; none are written here. Governing
- *     law (§11) moved Bengaluru -> Mumbai to follow the new registered office, and
- *     lastUpdated bumped to August 2026 — both owner-approved in that same pass.
+ * The WEBSITE's terms. Re-scoped from the studio-wide app terms on 2026-08-20, when
+ * each app got its own set under its own slug.
+ *
+ * Everything about accounts, subscriptions, billing and submissions moved to those —
+ * none of it happens here. What is left is what a brochure site actually needs, and
+ * it stays short on purpose: padding it back out with clauses about services this
+ * site does not offer is how the app terms and these two drift apart.
  */
-
+const host = SITE_URL.replace(/^https?:\/\//, '');
 const lastUpdated = 'August 2026';
 
-const description =
-  'Terms of Service for Pakiza and Arul by HSR Utility: your rights and responsibilities, premium subscriptions, content submissions, and how to contact us.';
+const description = `Terms & Conditions for the ${host} website: permitted use, intellectual property, third-party links and liability. Each of our Android apps has its own separate terms.`;
 
 const structuredData = [
   organizationSchema,
   websiteSchema,
-  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms of Service' }]),
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms & Conditions' }]),
   webPageSchema({
     path: '/terms',
-    name: 'Terms of Service — Pakiza & Arul | HSR Utility',
+    name: 'Terms & Conditions — hsrutility.com | HSR Utility',
     description,
   }),
 ];
 
-const acceptableUse = [
-  'Copy, extract, scrape, or redistribute wallpapers or ringtones outside the App, or resell them in any form.',
-  'Reverse engineer, decompile, or tamper with the App, its APIs, or its content protection.',
-  'Bypass or attempt to bypass premium gating, subscription checks, or signed media URLs.',
-  'Use bots, automation, or bulk downloading against our services.',
-  'Submit content you do not own or do not have the right to share.',
-  'Submit content that is unlawful, hateful, sexually explicit, violent, or that disrespects any religion or community.',
-  'Abuse referral or reward programs (fake accounts, self-referral loops, or automated redemptions).',
-  'Use the App in any way that violates applicable law.',
+const permitted = [
+  'Reading about our apps and what they do.',
+  'Following our links to the Google Play Store to install an app.',
+  'Reading and printing our legal documents for your own reference.',
+  'Contacting us for support, or about a copyright or privacy matter.',
 ];
 
-const subscriptionPoints = [
-  {
-    title: 'What premium unlocks',
-    body: 'Browsing and previewing content is free. A premium subscription unlocks applying and sharing wallpapers, and setting ringtones. This is the same in every one of our apps.',
-  },
-  {
-    title: 'Billing',
-    body: 'Subscriptions are billed in Indian Rupees through PhonePe using a UPI AutoPay mandate that you approve in your UPI app. The price, billing period, and any free trial are shown clearly before you subscribe.',
-  },
-  {
-    title: 'Setting up the mandate',
-    body: 'Approving a UPI AutoPay mandate requires a small verification debit (currently ₹2), which is reversed automatically. It is a bank requirement for authorising the mandate, not a charge for the subscription.',
-  },
-  {
-    title: 'Free trial',
-    body: 'Where offered, a free trial is available once per user — if you have used one before, you are charged when you subscribe rather than starting another trial. When a trial ends, your mandate is charged automatically unless you cancel first. As UPI AutoPay rules require, PhonePe sends a pre-debit notification to your UPI app before each debit.',
-  },
-  {
-    title: 'Cancellation',
-    body: 'You can cancel anytime from the app (Settings → your plan → Cancel). Cancelling stops future charges; you keep premium access until the end of the period you already paid for. No partial-period refunds are given for the remaining days.',
-  },
-  {
-    title: 'Deleting your account is not cancelling',
-    body: 'Deleting your account cancels your subscription immediately and ends premium access at once. Any time remaining on the period you paid for is lost, with no refund, along with any referral reward days. Signing up again does not restore it and does not give you another free trial.',
-  },
-  {
-    title: 'Refunds',
-    body: 'Charges already made are generally non-refundable, except where required by law or where a charge was made in error. If you believe you were charged incorrectly, contact us within 7 days and we will investigate in good faith.',
-  },
-  {
-    title: 'Price changes',
-    body: 'We may change subscription prices. Changes never apply retroactively and will only take effect from your next billing period, with prior notice inside the App.',
-  },
+const prohibited = [
+  'Use the site for anything unlawful, or in breach of any applicable regulation.',
+  'Copy, republish or mirror its text, design or code as your own.',
+  'Scrape it at a volume that burdens it, or run automated tools against it.',
+  'Attempt to gain unauthorised access to it, or to probe or disrupt the systems behind it.',
+  'Present yourself as us, or imply an association or endorsement that does not exist.',
 ];
 ---
 
 <DocLayout
-  title="Terms of Service — Pakiza & Arul"
-  heading="Terms of Service"
-  eyebrow="Legal"
+  title="Terms & Conditions — hsrutility.com"
+  heading="Terms &amp; Conditions"
+  eyebrow="Website — legal"
   description={description}
   lastUpdated={lastUpdated}
+  intro={`These terms cover the ${host} website. Using one of our Android apps is governed by that app's own terms instead — the links are at the bottom of this page.`}
   structuredData={structuredData}
 >
   <section>
     <p>
-      These Terms of Service ("Terms") are an agreement between you and
-      <strong>{LEGAL_NAME}</strong>, which operates as HSR Utility ("we", "us",
-      or "our"), and govern your use of our Android
-      applications <strong>{appNames()}</strong> (each, "the App") and related services.
+      These Terms &amp; Conditions govern your use of the website at <strong>{host}</strong>, operated
+      by <strong>{LEGAL_NAME}</strong>, which trades as HSR Utility ("we", "us" or "our"). By using
+      the site you accept them. If you do not, please stop using the site.
     </p>
-    <p>
-      By creating an account or using either App, you accept these Terms and our
-      <a href="/privacy">Privacy Policy</a>. If you do not agree, please do not use the App.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="eligibility">1. Eligibility &amp; Your Account</h2>
-    <p>
-      You must be at least 13 years old to use the App, and old enough to enter a binding
-      agreement under the laws of your country. If you subscribe to a paid plan, you confirm you
-      are legally able to authorise payments (in India, UPI AutoPay mandates require you to be at
-      least 18 or have the consent of a guardian who holds the payment account).
-    </p>
-    <p>
-      You sign in with your Google account. You are responsible for activity that happens under
-      your account and for keeping access to your Google account secure. Your account is personal
-      to you — do not sell, share, or transfer it.
-    </p>
-    <p>
-      You can delete your account at any time from within the App (Settings → Delete account) or
-      via our <a href="/delete-account">account deletion page</a>.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="licence">2. Licence to Use the App</h2>
-    <p>
-      We grant you a personal, limited, non-exclusive, non-transferable, revocable licence to use
-      the App on Android devices you own or control, for your own personal, non-commercial use.
-    </p>
-    <p>
-      All content in the App — wallpapers, ringtones, artwork, designs, and software — is owned by
-      us or licensed to us and is protected by copyright and other laws. Setting a wallpaper or
-      ringtone on your own device is exactly what the App is for; redistributing that content
-      outside the App is not.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="subscriptions">3. Premium Subscriptions</h2>
-    {subscriptionPoints.map((point) => (
-      <div class="doc-card">
-        <p class="doc-card-title">{point.title}</p>
-        <p>{point.body}</p>
-      </div>
-    ))}
-    <p style="margin-top:1rem">
-      Payments are processed by PhonePe under its own terms. We never see or store your card,
-      bank, or UPI credentials.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="submissions">4. Content You Submit</h2>
-    <p>
-      Our apps let you submit content for consideration — wallpapers in every app, and ringtone
-      audio in Pakiza. When you submit content, you confirm that you own it or have every right
-      needed to share it, and you grant us a worldwide, royalty-free licence to review, store,
-      adapt (for example, crop or re-encode), and — if approved — publish it inside the App.
-    </p>
-    <p>
-      All submissions are reviewed by our team before they can appear in the App. We may reject or
-      remove any submission at our discretion, and we may remove published content at any time.
-      You can ask us to take down content you submitted by contacting support. Note that if a
-      submission of yours has already been published, deleting your account does not remove it
-      from the App — it stays as anonymous content with no link to you, and you can email us to
-      have it taken down.
-    </p>
-    <p>
-      Submissions must respect the religious and cultural nature of each app and must never
-      include content you do not have rights to, watermarks belonging to others, or anything
-      listed under Acceptable Use below.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="acceptable-use">5. Acceptable Use</h2>
-    <p>You agree that you will <strong>not</strong>:</p>
-    <ul>
-      {acceptableUse.map((item) => <li>{item}</li>)}
-    </ul>
-  </section>
-
-  <section>
-    <h2 id="referrals">6. Referrals &amp; Rewards</h2>
-    <p>
-      Our apps offer referral rewards: free premium days for each friend who subscribes using your
-      link. Rewards are credited when the friend's first payment goes through, not when they
-      install. They are a goodwill benefit, have no cash value, cannot be transferred or
-      exchanged, and may be adjusted or withdrawn if we detect abuse. Any reward balance is
-      forfeited when your account is deleted.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="availability">7. Availability &amp; Changes to the Service</h2>
-    <p>
-      Content is streamed from our servers, so the App needs an internet connection for most
-      features. We work hard to keep the service available, but we do not guarantee uninterrupted
-      or error-free operation — maintenance, network issues, and third-party outages can occur.
-    </p>
-    <p>
-      The catalogue of wallpapers and ringtones changes over time: we add new content regularly
-      and may occasionally retire items. We may also add, change, or remove App features. If we
-      ever discontinue an App entirely, we will give reasonable notice and stop future
-      subscription charges.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="termination">8. Suspension &amp; Termination</h2>
-    <p>
-      We may suspend or terminate your account if you materially breach these Terms — for example,
-      by attempting to bypass premium gating, abusing referrals, or misusing our services. Where
-      practical, we will warn you first.
-    </p>
-    <p>
-      You may stop using the App at any time, and you can delete your account whenever you wish.
-      Sections of these Terms that by their nature should survive termination (such as
-      intellectual property, disclaimers, and limitation of liability) survive it.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="disclaimers">9. Disclaimers</h2>
-    <p>
-      The App and its content are provided <strong>"as is" and "as available"</strong>. To the
-      fullest extent permitted by law, we disclaim all warranties, express or implied, including
-      merchantability, fitness for a particular purpose, and non-infringement. We do not warrant
-      that the App will meet your requirements or that content will always be available.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="liability">10. Limitation of Liability</h2>
-    <p>
-      To the fullest extent permitted by law, {LEGAL_NAME} and its team will not be liable
-      for indirect, incidental, special, consequential, or punitive damages, or for loss of data or
-      profits, arising from your use of the App. Our total aggregate liability for any claim
-      relating to the App is limited to the amount you paid us in the 12 months before the claim
-      arose (or ₹1,000 if you paid nothing). Nothing in these Terms limits liability that cannot
-      be limited under applicable law.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="law">11. Governing Law &amp; Disputes</h2>
-    <p>
-      These Terms are governed by the laws of India. Any dispute arising out of or relating to
-      these Terms or the App is subject to the exclusive jurisdiction of the courts of Mumbai,
-      Maharashtra. Before going to court, please contact us first — most issues can be resolved
-      quickly by email.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="changes">12. Changes to These Terms</h2>
-    <p>
-      We may update these Terms from time to time. When we do, we will update the "Last updated"
-      date at the top of this page, and for material changes we will provide notice inside the
-      App. Continued use of an App after changes take effect constitutes acceptance of the
-      updated Terms.
-    </p>
-  </section>
-
-  <section>
-    <h2 id="contact">13. Contact Us</h2>
     <div class="doc-card">
-      <p>If you have questions about these Terms, please contact us:</p>
-      <dl class="doc-meta">
-        <div>
-          <dt>Company</dt>
-          <dd>{LEGAL_NAME}</dd>
-        </div>
-        <div>
-          <dt>Email</dt>
-          <dd><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></dd>
-        </div>
-        <div>
-          <dt>Phone</dt>
-          <dd><a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a></dd>
-        </div>
-        <div>
-          <dt>Address</dt>
-          <dd>
-            {ADDRESS_LINES.map((line, i) => (
-              <>{i > 0 && <br />}{line}</>
-            ))}
-          </dd>
-        </div>
-        <div>
-          <dt>Applies to</dt>
-          <dd>{APPS.map((app) => app.name).join(' · ')}</dd>
-        </div>
-      </dl>
+      <p class="doc-card-title">These are not your app's terms</p>
+      <p>
+        Accounts, premium subscriptions, billing, refunds and content submissions all belong to the
+        apps, and each app has its own Terms &amp; Conditions covering them:
+        {APPS.map((app, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={legalPath(app, 'terms')}>{app.name}</a>
+          </>
+        ))}.
+      </p>
     </div>
   </section>
 
-  <nav class="doc-foot-links" aria-label="Related pages">
-    <a href="/privacy" class="link">Privacy Policy</a>
-    <a href="/delete-account" class="link">Delete your account</a>
-    <a href="/support" class="link">Support &amp; FAQ</a>
-  </nav>
+  <section>
+    <h2 id="site">1. What This Website Is</h2>
+    <p>
+      A brochure for our Android apps and the home for their legal documents. There is nothing to sign
+      up for here, nothing to buy and no account to hold — all of that happens inside an app, if at all.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="use">2. Using the Site</h2>
+    <h3>What you may do</h3>
+    <ul>{permitted.map((item) => <li>{item}</li>)}</ul>
+
+    <h3>What you may not do</h3>
+    <ul>{prohibited.map((item) => <li>{item}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2 id="ip">3. Intellectual Property</h2>
+    <p>
+      The name HSR Utility, our app names and logos, and this site's text, design, artwork and code
+      belong to us or are licensed to us. You may read the site and print pages for your own reference;
+      that is the whole licence granted here. Reproducing its content or design elsewhere, or using our
+      names in a way that implies endorsement, requires our written permission.
+    </p>
+    <p>
+      Google Play and the Google Play logo are trademarks of Google LLC. Other names here belong to
+      their owners and appear because our apps rely on those services, not as endorsements.
+    </p>
+    <p>
+      If you believe something here or in one of our apps infringes your copyright, tell us at the
+      address below — name the app and identify the work — and we will look into it.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="links">4. Links to Other Sites</h2>
+    <p>
+      We link out to the Google Play Store and to the privacy policies of the services our apps use.
+      Those sites are not ours: we do not control them, are not responsible for them, and a link is not
+      an endorsement. Once you leave, their terms and privacy policy apply instead of ours.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="availability">5. Availability &amp; Accuracy</h2>
+    <p>
+      The site is provided <strong>"as is" and "as available"</strong>. We keep it as accurate as we
+      can, but apps change and a page may briefly describe a feature as it was. Nothing here is a
+      warranty or a commitment about how an app behaves — the app's own terms govern that. We do not
+      promise the site will be uninterrupted or error-free, and may change or remove any page.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="liability">6. Limitation of Liability</h2>
+    <p>
+      To the fullest extent the law permits, {LEGAL_NAME} and its team will not be liable for any
+      indirect, incidental, special, consequential or punitive damages, or for loss of data, profits
+      or goodwill, arising from your use of this website or from your inability to use it. Nothing
+      here limits liability that cannot be limited under applicable law.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="changes">7. Changes to These Terms</h2>
+    <p>
+      We may update these terms. The "Last updated" date moves when we do, the new version applies from
+      publication, and continuing to use the site means you accept it.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="law">8. Governing Law &amp; Severability</h2>
+    <p>
+      These terms are governed by the laws of India, and any dispute is subject to the exclusive
+      jurisdiction of the courts of Mumbai, Maharashtra. If any provision is unenforceable, the rest
+      stays in force and that part is read as narrowly as needed to give it effect.
+    </p>
+    <p>
+      Together with our <a href="/privacy-policy">Privacy Policy</a> and
+      <a href="/cookie-policy">Cookie Policy</a>, these terms are the entire agreement between you
+      and us in respect of this website.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">9. Contact Us</h2>
+    <LegalContact
+      appliesTo={`The ${host} website`}
+      intro="If you have a question about these terms, please contact us:"
+    />
+  </section>
+
+  <LegalFootLinks
+    links={[
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Cookie Policy', href: '/cookie-policy' },
+      { label: 'Refund Policy', href: '/refund-policy' },
+      { label: 'Support & FAQ', href: '/support' },
+    ]}
+  />
 </DocLayout>

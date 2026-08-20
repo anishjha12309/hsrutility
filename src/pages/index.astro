@@ -1,9 +1,7 @@
 ---
-import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import SplitText from '../components/SplitText.astro';
 import AppIcon from '../components/AppIcon.astro';
-import { shotImage } from '../lib/media';
 import { APPS, FREEMIUM_LINE, FREEMIUM_SHORT } from '../lib/site';
 import {
   organizationSchema,
@@ -30,12 +28,26 @@ const structuredData = [
 
 /** What the studio actually ships, as hero chips. */
 const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline reminders'];
+
+/**
+ * NO APP ARTWORK ON THIS PAGE. Every screenshot and store graphic belongs to the
+ * app's own sub-site and appears only there.
+ *
+ * This is the one page where both app names sit together, and it used to sit them
+ * together as a designed pair: a hero fan that placed Pakiza's mosque graphic beside
+ * Arul's deity graphic, then a full-width themed slab each. One serves an Islamic
+ * audience and the other a Hindu one, and that composition invited a reading neither
+ * app asks for. What replaces it is a plain card per app on one neutral surface —
+ * the apps are the focus, the facts do the work, and no layout decision implies a
+ * relationship between them. Do not reintroduce a shot, a shared strip or a
+ * side-by-side comparison here.
+ */
 ---
 
 <Layout title="Indie Android studio" description={description} structuredData={structuredData}>
-  {/* ── Hero — copy left, capped screenshot fan right. The fan shows one shot
-      per app up to three; past that a "+N more" chip absorbs the rest, so a
-      fifth app never breaks this layout. ─────────────────────────────────── */}
+  {/* ── Hero — copy only. The screenshot fan that sat to its right showed one
+      graphic per app side by side; see the note in the frontmatter for why it is
+      gone rather than merely reordered. ──────────────────────────────────── */}
   <section class="hero" data-hero aria-labelledby="hero-heading">
     <div class="shell hero-inner">
       <div class="hero-copy">
@@ -71,115 +83,66 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
         </div>
       </div>
 
-      <div class="hero-fan" data-hero-tail style="--ti:1">
-        <div class="fan-stage" data-count={Math.min(APPS.length, 3)} data-parallax>
-          {APPS.slice(0, 3).map((app, i) => {
-            const [shot] = app.shots;
-            return (
-              <a href={`/${app.slug}`} class="fan-card" aria-label={`${app.name} — see the app`}>
-                <Picture
-                  src={shotImage(shot.file)}
-                  alt=""
-                  formats={['avif', 'webp']}
-                  fallbackFormat="webp"
-                  quality={55}
-                  width={420}
-                  widths={[260, 340, 420]}
-                  sizes="(min-width: 900px) 220px, 40vw"
-                  loading="eager"
-                  fetchpriority={i === 0 ? 'high' : 'auto'}
-                  decoding="async"
-                  class="fan-img"
-                />
-              </a>
-            );
-          })}
-          {APPS.length > 3 && (
-            <a href="#apps" class="chip fan-more">+{APPS.length - 3} more</a>
-          )}
-        </div>
-      </div>
     </div>
 
     {/* Marks where the hero ends; the navbar condenses once this leaves the viewport. */}
     <div data-nav-sentinel aria-hidden="true"></div>
   </section>
 
-  {/* ── One mega-panel per app: ink, then blue. Rendered from APPS. ────────── */}
-  <div id="apps" class="shell apps">
-    {APPS.map((app, i) => {
-      {/* The hero fan already shows shots[0]; the panel takes the next graphic
-          so the page never repeats an asset above and below the fold. */}
-      const panelShot = app.shots[1] ?? app.shots[0];
-      return (
-        <section
-          class:list={['panel', i % 2 === 1 ? 'panel-blue' : 'panel-ink', 'app-panel', 'reveal']}
-          aria-labelledby={`${app.slug}-heading`}
-        >
-          <div class="app-copy">
-            <p class="eyebrow app-status">{app.statusLabel}</p>
+  {/* ── One card per app, on one neutral surface. Rendered from APPS. ─────── */}
+  <section id="apps" class="shell apps-section" aria-labelledby="apps-heading">
+    <header class="apps-head reveal">
+      <p class="eyebrow">Our apps</p>
+      <h2 id="apps-heading" class="display-2">Built for one audience each.</h2>
+    </header>
 
-            <div class="app-title">
-              <AppIcon app={app} size={64} class="app-title-icon" />
-              <h2 id={`${app.slug}-heading`} class="display-2">{app.name}</h2>
-            </div>
+    <div class="apps-grid">
+      {APPS.map((app) => (
+        <article class="app-card reveal" aria-labelledby={`${app.slug}-heading`}>
+          <p class="eyebrow app-status">{app.statusLabel}</p>
 
-            <p class="app-tagline">{app.tagline}.</p>
-            <p class="app-desc">{app.description}</p>
+          <div class="app-title">
+            <AppIcon app={app} size={52} class="app-title-icon" />
+            <h3 id={`${app.slug}-heading`} class="app-name">{app.name}</h3>
+          </div>
 
-            <p class="eyebrow app-cap-label">Inside the app</p>
-            <ul class="check-list app-caps">
-              {app.features.slice(0, 5).map((feature) => (
-                <li>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                    <path d="M2.5 7.5 5.5 10.5 11.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                  {feature.title}
-                </li>
-              ))}
-            </ul>
+          <p class="app-tagline">{app.tagline}.</p>
+          <p class="app-desc">{app.description}</p>
 
-            <div class="app-actions">
-              {app.playUrl ? (
-                <a href={app.playUrl} class="btn btn-primary" rel="noopener noreferrer" target="_blank">
-                  Get it on Google Play
-                  <span class="sr-only">(opens in a new tab)</span>
-                  <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </a>
-              ) : (
-                <span class="chip app-soon">Coming soon to Google Play</span>
-              )}
+          <ul class="check-list app-caps">
+            {app.features.slice(0, 3).map((feature) => (
+              <li>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2.5 7.5 5.5 10.5 11.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                {feature.title}
+              </li>
+            ))}
+          </ul>
 
-              <a href={`/${app.slug}`} class="btn btn-ghost">
-                More about {app.name}
+          {/* Pushed to the card's foot so two cards of unequal copy still line up. */}
+          <div class="app-actions">
+            <a href={`/${app.slug}`} class="btn btn-primary">
+              More about {app.name}
+              <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+
+            {app.playUrl && (
+              <a href={app.playUrl} class="btn btn-ghost" rel="noopener noreferrer" target="_blank">
+                Google Play
+                <span class="sr-only">(opens in a new tab)</span>
                 <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
               </a>
-            </div>
+            )}
           </div>
-
-          <div class="app-shot" data-parallax>
-            <Picture
-              src={shotImage(panelShot.file)}
-              alt={panelShot.alt}
-              formats={['avif', 'webp']}
-              fallbackFormat="webp"
-              quality={55}
-              width={520}
-              widths={[300, 420, 520]}
-              sizes="(min-width: 900px) 380px, 78vw"
-              loading="lazy"
-              decoding="async"
-              class="app-shot-img"
-            />
-          </div>
-        </section>
-      );
-    })}
-  </div>
+        </article>
+      ))}
+    </div>
+  </section>
 
   {/* ── Trust strip — short, factual, no card theatre. ─────────────────────── */}
   <div class="shell strip-section">
@@ -217,15 +180,6 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
-  }
-
-  @media (min-width: 900px) {
-    .hero-inner {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      align-items: center;
-      gap: clamp(2rem, 4vw, 4rem);
-    }
   }
 
   .hero-copy {
@@ -267,93 +221,41 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
     gap: 0.75rem;
   }
 
-  /* ── Screenshot fan ─────────────────────────────────────────────────────
-     data-hero-tail lives on the wrapper and data-parallax on the stage —
-     both animate transform, and stacking them on one element would leave the
-     CSS entrance keyframe (fill: both) fighting GSAP's inline transform. */
-  .fan-stage {
-    position: relative;
-    height: clamp(19rem, 42vw, 27rem);
+  /* ── App cards ──────────────────────────────────────────────────────────
+     One neutral surface for every app, not the alternating ink/blue slabs that
+     were here before. Two apps of different faiths on one page should read as a
+     list of products; giving each its own themed full-width panel made them read
+     as a matched pair, which is exactly the impression to avoid. */
+  .apps-section {
+    padding-block: clamp(2rem, 4vw, 4rem) 0;
   }
 
-  .fan-card {
-    position: absolute;
-    display: block;
-    width: 47%;
-    border-radius: 1rem;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-card);
-    transition:
-      transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.25s ease;
-  }
-
-  @media (hover: hover) {
-    .fan-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-pop);
-      z-index: 3;
-    }
-  }
-
-  .fan-card :global(.fan-img) {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 9 / 15;
-    object-fit: cover;
-    object-position: top;
-    display: block;
-  }
-
-  /* Two apps: a relaxed pair. */
-  [data-count='2'] .fan-card:nth-child(1) { left: 2%; top: 0; }
-  [data-count='2'] .fan-card:nth-child(2) { right: 2%; top: 12%; }
-
-  /* Three or more: a tighter fan; the centre card leads. */
-  [data-count='3'] .fan-card { width: 38%; }
-  [data-count='3'] .fan-card:nth-child(1) { left: 0; top: 8%; }
-  [data-count='3'] .fan-card:nth-child(2) { left: 31%; top: 0; z-index: 2; }
-  [data-count='3'] .fan-card:nth-child(3) { right: 0; top: 14%; }
-
-  .fan-more {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    text-decoration: none;
-  }
-
-  /* ── App mega-panels ────────────────────────────────────────────────────── */
-  .apps {
+  /* 40ch, not 28: `ch` measures the display serif's narrow zero, so 28 broke a
+     28-character heading across three ragged lines. */
+  .apps-head {
     display: flex;
     flex-direction: column;
-    gap: clamp(1rem, 2vw, 1.5rem);
-    padding-block: clamp(1.5rem, 3vw, 3rem) 0;
+    gap: 0.6rem;
+    max-width: 40ch;
+    margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
   }
 
-  .app-panel {
+  .apps-grid {
     display: grid;
-    gap: clamp(2rem, 4vw, 3.5rem);
-    padding: clamp(1.75rem, 4vw, 3.5rem);
-    grid-template-columns: 1fr;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    /* auto-fit, so a third app wraps into the same rhythm with no edit here. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   }
 
-  @media (min-width: 900px) {
-    .app-panel {
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-      align-items: center;
-      /* The shot column hangs to the panel's bottom edge. */
-      padding-bottom: 0;
-    }
-  }
-
-  .app-copy {
+  .app-card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
-    /* Restores the breathing room the grid gave up for the hanging shot. */
-    padding-bottom: clamp(0.25rem, 2vw, 3.5rem);
+    gap: 0.85rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    background: var(--surface);
   }
 
   .app-status {
@@ -363,17 +265,22 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
   .app-title {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.9rem;
     flex-wrap: wrap;
   }
 
-  .app-title h2 {
+  .app-name {
     margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
   }
 
   .app-tagline {
     margin: 0;
-    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.4375rem);
+    font-size: 1.0625rem;
     font-weight: 500;
     letter-spacing: -0.01em;
     color: var(--text);
@@ -381,49 +288,26 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
 
   .app-desc {
     margin: 0;
-    max-width: 52ch;
+    max-width: 48ch;
+    font-size: 0.9375rem;
     color: var(--muted);
   }
 
-  .app-cap-label {
-    margin: 0.75rem 0 -0.25rem;
-  }
-
   .app-caps {
+    margin: 0.25rem 0 0;
+    font-size: 0.9375rem;
     color: var(--text);
   }
 
+  /* margin-top:auto — the actions sit on the card's floor, so cards holding
+     different amounts of copy still line their buttons up across the row. */
   .app-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
-    margin-top: 1rem;
-  }
-
-  /* "Coming soon" is a statement, not a control. */
-  .app-soon {
-    min-height: 3rem;
-  }
-
-  /* ── Panel screenshot — bottom-bleeds out of the panel like a product shot. */
-  .app-shot {
-    align-self: end;
-    justify-self: center;
-    width: min(78vw, 380px);
-  }
-
-  .app-shot :global(.app-shot-img) {
-    width: 100%;
-    height: auto;
-    /* Top ~4:5 of the tall store graphic; the panel edge crops the rest. */
-    aspect-ratio: 4 / 4.6;
-    object-fit: cover;
-    object-position: top;
-    border-radius: 1rem 1rem 0 0;
-    border: 1px solid var(--line);
-    border-bottom: 0;
-    box-shadow: var(--shadow-card);
+    margin-top: auto;
+    padding-top: 1rem;
   }
 
   /* ── Trust strip ────────────────────────────────────────────────────────── */

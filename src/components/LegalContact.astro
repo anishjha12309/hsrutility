@@ -1,0 +1,69 @@
+---
+import Email from './Email.astro';
+import {
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_HREF,
+  LEGAL_NAME,
+  ADDRESS_LINES,
+  APPS,
+  type AppFact,
+} from '../lib/site';
+
+/**
+ * The contact block every legal document ends on.
+ *
+ * Company name, postal address and a reachable phone number are here because Play
+ * review asked for all three in every policy — see hard rule 2 in lib/site.ts. None
+ * of the five facts is written in this file; they all read from site.ts, so the
+ * owner's next change to any of them is one edit.
+ *
+ * `app` scopes the "Applies to" row. Unset, it lists every app — correct on the
+ * studio-level documents and wrong on an app's own, where naming the other app is
+ * exactly what the sub-sites are separated to avoid.
+ */
+interface Props {
+  app?: AppFact;
+  /** Overrides the "Applies to" value outright — for the website-scoped documents. */
+  appliesTo?: string;
+  intro?: string;
+}
+
+const { app, appliesTo, intro = 'If you have questions about this document, please contact us:' } =
+  Astro.props;
+
+const applies = appliesTo ?? (app ? `${app.name} (${app.packageId})` : APPS.map((a) => a.name).join(' · '));
+---
+
+<div class="doc-card">
+  <p>{intro}</p>
+  <dl class="doc-meta">
+    <div>
+      <dt>Company</dt>
+      <dd>{LEGAL_NAME}</dd>
+    </div>
+    <div>
+      <dt>Email</dt>
+      <dd><Email /></dd>
+    </div>
+    <div>
+      <dt>Phone</dt>
+      <dd><a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a></dd>
+    </div>
+    <div>
+      <dt>Address</dt>
+      <dd>
+        {ADDRESS_LINES.map((line, i) => (
+          <>{i > 0 && <br />}{line}</>
+        ))}
+      </dd>
+    </div>
+    <div>
+      <dt>Applies to</dt>
+      <dd>{applies}</dd>
+    </div>
+    <div>
+      <dt>Response time</dt>
+      <dd>We aim to reply within 48 hours.</dd>
+    </div>
+  </dl>
+</div>

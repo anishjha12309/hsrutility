@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { ORG_DESCRIPTION } from '../lib/site';
+import { ORG_DESCRIPTION, appNames, type AppFact } from '../lib/site';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 
@@ -12,6 +12,12 @@ interface Props {
   image?: string;
   /** JSON-LD objects for this page. Built with the helpers in ../lib/schema.ts */
   structuredData?: object[];
+  /**
+   * Set on every page under /<app-slug>/ and nowhere else. It swaps the nav and
+   * footer for that app's own, and keeps the other app's name out of the share-card
+   * alt text — which otherwise names both apps on all of them.
+   */
+  scope?: AppFact;
 }
 
 const {
@@ -19,6 +25,7 @@ const {
   description = ORG_DESCRIPTION,
   image = '/og.png',
   structuredData = [],
+  scope,
 } = Astro.props;
 
 const fullTitle = `${title} | HSR Utility`;
@@ -27,6 +34,11 @@ const fullTitle = `${title} | HSR Utility`;
 // URLs — required for canonical and og:image (a relative og:image is ignored by scrapers).
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
+
+// Named apps in the alt text follow the scope. On /pakiza/* it must not say Arul.
+const imageAlt = scope
+  ? `HSR Utility — the indie Android studio behind ${scope.name}`
+  : `HSR Utility — an indie Android studio behind the apps ${appNames()}`;
 ---
 
 <!doctype html>
@@ -109,7 +121,7 @@ const socialImageURL = new URL(image, Astro.site);
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="HSR Utility — an indie Android studio behind the apps Pakiza and Arul"
+      content={imageAlt}
     />
     <meta property="og:locale" content="en_US" />
 
@@ -121,13 +133,25 @@ const socialImageURL = new URL(image, Astro.site);
     <meta name="twitter:image" content={socialImageURL} />
     <meta
       name="twitter:image:alt"
-      content="HSR Utility — an indie Android studio behind the apps Pakiza and Arul"
+      content={imageAlt}
     />
 
-    {/* is:inline is explicit here: these are data blocks, not code to bundle. */}
+    {/*
+      is:inline is explicit here: these are data blocks, not code to bundle.
+
+      Fenced against Cloudflare's Email Address Obfuscation like every other address
+      on the site (see components/Email.astro), with a LITERAL comment — routing it
+      through set:html gets it escaped, which ships visible markup and fences nothing.
+      Script bodies are not HTML text and should be left alone by the obfuscator
+      anyway; this is belt and braces, because the Organization schema carries the
+      support address and a rewritten JSON-LD block is invalid JSON, which fails
+      silently and takes the whole entity down with it.
+    */}
+    <!--email_off-->
     {structuredData.map((schema) => (
       <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
     ))}
+    <!--/email_off-->
 
     <ClientRouter />
   </head>
@@ -135,13 +159,13 @@ const socialImageURL = new URL(image, Astro.site);
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
 
-    <Navbar />
+    <Navbar scope={scope} />
 
     <main id="main" tabindex="-1">
       <slot />
     </main>
 
-    <Footer />
+    <Footer scope={scope} />
 
     <script>
       import { initMotion } from '../scripts/motion';

@@ -1,0 +1,293 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import LegalContact from '../../components/LegalContact.astro';
+import LegalFootLinks from '../../components/LegalFootLinks.astro';
+import {
+  APPS,
+  LEGAL_NAME,
+  MONTHLY_PRICE,
+  MANDATE_VERIFY_AMOUNT,
+  PAYMENT_PROVIDER,
+  legalPath,
+  type AppFact,
+} from '../../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
+
+/**
+ * One set of terms per app, from one template.
+ *
+ * Condensed on 2026-08-20 — SHORTER WORDING, IDENTICAL OBLIGATIONS. Every clause
+ * that does legal work is still here and still says the same thing: eligibility,
+ * the licence grant, all eight subscription terms, the no-refund position, the
+ * submission licence and the published-content consequence, acceptable use,
+ * referrals, availability, termination, disclaimers, the liability cap, governing
+ * law, changes, and acceptance.
+ *
+ * Two clauses are substantive and were not touched in either pass: the liability cap
+ * (12 months of payments, or ₹1,000) and the jurisdiction (Mumbai). Do not reword
+ * them for rhythm.
+ *
+ * The refund position is strictly no-refund, set by the owner on 2026-08-20,
+ * replacing an earlier "generally non-refundable, contact us within 7 days".
+ */
+export function getStaticPaths() {
+  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppFact;
+}
+
+const { app } = Astro.props;
+const lastUpdated = 'August 2026';
+
+const description = `Terms & Conditions for ${app.name}: eligibility, your account, the premium subscription and how it is billed, content submissions, acceptable use, and how to contact us.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: app.name, path: `/${app.slug}` }, { name: 'Terms & Conditions' }]),
+  webPageSchema({
+    path: legalPath(app, 'terms'),
+    name: `Terms & Conditions — ${app.name} | HSR Utility`,
+    description,
+  }),
+];
+
+const serviceDescription = [
+  'A vertical feed of still and live (video) wallpapers, previewing in place.',
+  'A curated ringtone library to browse, preview and set.',
+  app.legal.applyBehaviour,
+  `Reminders — ${app.legal.reminders} — scheduled entirely on your device.`,
+  `An upload screen for submitting ${app.legal.submissions} for review.`,
+  `Localisation into ${app.legal.languages}, with light, dark and system theming.`,
+];
+
+/** Every term that governs the money. Each is load-bearing; cut words, not rows. */
+const subscriptionPoints = [
+  {
+    title: 'What premium unlocks',
+    body: 'Browsing and previewing stay free. Premium unlocks applying and sharing wallpapers, and setting ringtones.',
+  },
+  {
+    title: 'Price & billing',
+    body: `${MONTHLY_PRICE} per month in Indian Rupees, through ${PAYMENT_PROVIDER}, on a UPI Autopay mandate you approve in your own UPI app. Price and period are shown before you subscribe. This is not Google Play billing, so a Play Store refund request will not reach us.`,
+  },
+  {
+    title: 'The mandate',
+    body: `Approving it takes a verification debit — currently ${MANDATE_VERIFY_AMOUNT} — reversed automatically by your bank. It authorises the mandate; it is not the price of anything.`,
+  },
+  {
+    title: 'Free trial',
+    body: 'One per person. If you have used yours, subscribing charges you straight away instead. When a trial ends the mandate is charged unless you cancel first, and UPI rules require a pre-debit notification before each debit.',
+  },
+  {
+    title: 'Auto-renewal',
+    body: 'Renews monthly until cancelled, taken against your mandate and never above the maximum it authorised.',
+  },
+  {
+    title: 'Cancellation',
+    body: 'Any time, from Settings → your plan → Cancel. It stops future charges and leaves premium running to the end of the period you paid for. It refunds nothing already paid.',
+  },
+  {
+    title: 'Deleting ≠ cancelling',
+    body: 'Deleting your account cancels the subscription and ends access at once. Time left on the paid period is lost, along with any referral reward days, with no refund. Signing up again restores none of it and grants no new trial.',
+  },
+  {
+    title: 'Price changes',
+    body: 'Never retroactive. A change takes effect from your next billing period, with notice in the app first.',
+  },
+];
+
+const acceptableUse = [
+  'Copy, scrape, redistribute or resell wallpapers or ringtones outside the app.',
+  'Reverse engineer, decompile or tamper with the app, its APIs or its content protection.',
+  'Bypass premium gating, subscription checks or signed media URLs.',
+  'Run bots, automation or bulk downloading against our services.',
+  'Submit content you do not own or have no right to share.',
+  'Submit content that is unlawful, hateful, sexually explicit, violent, or that disrespects any religion or community.',
+  'Abuse referrals — fake accounts, self-referral loops, automated redemptions.',
+  'Use the app in any way that breaks applicable law.',
+];
+---
+
+<DocLayout
+  title={`Terms & Conditions — ${app.name}`}
+  heading="Terms &amp; Conditions"
+  eyebrow={`${app.name} — legal`}
+  description={description}
+  lastUpdated={lastUpdated}
+  structuredData={structuredData}
+  scope={app}
+>
+  <section>
+    <p>
+      An agreement between you and <strong>{LEGAL_NAME}</strong>, trading as HSR Utility ("we", "us",
+      "our"), governing <strong>{app.name}</strong> (package <code>{app.packageId}</code>) — "the
+      app" below — and the services behind it. Using the app means you accept these Terms and our
+      <a href={legalPath(app, 'privacy-policy')}>Privacy Policy</a>. If you do not agree, please do
+      not use the app.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="service">1. What the App Provides</h2>
+    <ul>{serviceDescription.map((item) => <li>{item}</li>)}</ul>
+    <p>
+      Content is served from our systems, so most of it needs a connection, and the catalogue changes
+      over time.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="eligibility">2. Eligibility &amp; Your Account</h2>
+    <p>
+      You must be at least 13, and old enough to enter a binding agreement where you live. To
+      subscribe you must be able to authorise payments — in India a UPI Autopay mandate requires you
+      to be 18, or to have the consent of the guardian holding the payment account.
+    </p>
+    <p>
+      You sign in with Google, and you are responsible for activity under your account and for
+      keeping that Google account secure. The account is personal to you: do not sell, share or
+      transfer it. You can
+      <a href={legalPath(app, 'how-to-delete-account')}>delete it</a> whenever you want.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="licence">3. Licence</h2>
+    <p>
+      We grant you a personal, limited, non-exclusive, non-transferable, revocable licence to use the
+      app on Android devices you own or control, for your own non-commercial use.
+    </p>
+    <p>
+      Everything in the app — wallpapers, ringtones, artwork, designs, software — is owned by or
+      licensed to us and protected by copyright. Setting a wallpaper or ringtone on your own device is
+      what the app is for; redistributing it outside the app is not. If you believe something in the
+      app infringes your copyright, write to us at the address below.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="subscriptions">4. Premium Subscription</h2>
+    {subscriptionPoints.map((point) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{point.title}</p>
+        <p>{point.body}</p>
+      </div>
+    ))}
+    <p style="margin-top:1rem">
+      {PAYMENT_PROVIDER} processes payments under its own terms. We never see or store your card,
+      bank or UPI credentials.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="refunds">5. Refunds</h2>
+    <p>
+      <strong>All payments are final and non-refundable.</strong> Not for a change of mind, an unused
+      part of a period, cancelling early, forgetting to cancel before a renewal, or simply stopping.
+      The <a href={legalPath(app, 'refund-policy')}>Refund Policy</a> sets this out in full, together
+      with the one thing that is not a refund question: a charge taken in error.
+    </p>
+    <p>
+      Nothing here removes a right you hold under Indian consumer law that cannot be given up by
+      agreement.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="submissions">6. Content You Submit</h2>
+    <p>
+      Submitting {app.legal.submissions} confirms you own it or hold every right needed to share it,
+      and grants us a worldwide, royalty-free licence to review, store, adapt and, if approved,
+      publish it in the app. Everything is reviewed before it appears; we may reject or remove any of
+      it, and you can ask us to take yours down.
+    </p>
+    <p>
+      One consequence is worth stating plainly: <strong>if a submission of yours has already been
+      published, deleting your account does not pull it from the app.</strong> It stays as anonymous
+      content with no link to you, and you can email us to have it removed.
+    </p>
+    <p>
+      Submissions must respect the religious and cultural nature of the app, and must never carry
+      someone else's watermark.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="acceptable-use">7. Acceptable Use</h2>
+    <p>You agree that you will <strong>not</strong>:</p>
+    <ul>{acceptableUse.map((item) => <li>{item}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2 id="referrals">8. Referrals &amp; Rewards</h2>
+    <p>
+      Free premium days for each friend who subscribes through your link, credited on their first
+      payment rather than on install. Rewards are a goodwill benefit: no cash value, not transferable,
+      withdrawable where we detect abuse, and forfeited when an account is deleted.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="availability">9. Availability &amp; Termination</h2>
+    <p>
+      We work to keep the service up but do not guarantee uninterrupted or error-free operation. We
+      may add, change or remove features, and if we ever discontinue the app we will give reasonable
+      notice and stop future charges.
+    </p>
+    <p>
+      We may suspend or terminate your account for a material breach — bypassing premium gating,
+      abusing referrals, misusing our services — warning you first where practical, and with no
+      refund. You may stop using the app or delete your account at any time. Clauses that by their
+      nature outlive the agreement — intellectual property, disclaimers, limitation of liability —
+      survive it.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="disclaimers">10. Disclaimers &amp; Liability</h2>
+    <p>
+      The app and its content are provided <strong>"as is" and "as available"</strong>. To the
+      fullest extent the law permits we disclaim all warranties, express or implied, including
+      merchantability, fitness for a particular purpose and non-infringement — including that the app
+      will meet your requirements, run on every device, or keep any particular content available.
+    </p>
+    <p>
+      To the fullest extent the law permits, {LEGAL_NAME} and its team will not be liable for
+      indirect, incidental, special, consequential or punitive damages, or for loss of data or
+      profits. Our total aggregate liability for any claim relating to the app is limited to what you
+      paid us in the 12 months before the claim arose, or ₹1,000 if you paid nothing. Nothing here
+      limits liability that cannot be limited under applicable law.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="law">11. Governing Law &amp; Changes</h2>
+    <p>
+      These Terms are governed by the laws of India, and any dispute is subject to the exclusive
+      jurisdiction of the courts of Mumbai, Maharashtra. Please contact us before going to court.
+    </p>
+    <p>
+      We may update these Terms. The "Last updated" date moves when we do, a material change is
+      notified inside the app, and continuing to use the app after that means you accept the updated
+      Terms.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">12. Contact Us</h2>
+    <LegalContact app={app} intro="Questions about these Terms:" />
+  </section>
+
+  <section>
+    <h2 id="acceptance">Acceptance</h2>
+    <p>
+      Using {app.name} confirms you have read and understood these Terms &amp; Conditions and agree
+      to be bound by them.
+    </p>
+  </section>
+
+  <LegalFootLinks app={app} current="terms" />
+</DocLayout>

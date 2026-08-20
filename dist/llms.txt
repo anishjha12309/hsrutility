@@ -22,7 +22,11 @@
     **Status: live on Google Play** —
     https://play.google.com/store/apps/details?id=com.hsrutility.arul
 - **Model:** browsing and previewing is always free. Applying wallpapers, setting
-  ringtones and sharing are premium, billed via UPI Autopay after a one-time free trial.
+  ringtones and sharing are premium — ₹199/month, billed via a PhonePe UPI Autopay
+  mandate rather than Google Play billing. New accounts get a one-day free trial;
+  approving the mandate takes a ₹2 verification debit that the bank reverses
+  automatically. **Payments already taken are strictly non-refundable**; cancelling
+  is instant from inside the app and stops all future charges.
 - **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
 - **Account deletion:** instant from inside either app (Settings → Delete account);
   email support@hsrutility.com as a fallback if the app is already uninstalled.
@@ -31,10 +35,34 @@
 
 ## Pages
 
-- [Home](https://hsrutility.com/): HSR Utility and its two apps — positioning and overview.
-- [Pakiza](https://hsrutility.com/pakiza): Features, screens and availability for the Islamic lifestyle app.
-- [Arul](https://hsrutility.com/arul): Features, screens and Google Play link for the South Indian wallpapers app.
+Each app is a self-contained sub-site. Its pages describe that app alone and link
+only to that app's other pages; the apps are documented separately and deliberately
+do not cross-reference one another. This home page and llms.txt are the only places
+both are listed.
+
+- [Home](https://hsrutility.com/): HSR Utility and its apps — positioning and overview.
 - [Support & FAQ](https://hsrutility.com/support): Questions about content, pricing, sign-in, Android support, and reporting bugs.
-- [Privacy Policy](https://hsrutility.com/privacy): What data Pakiza and Arul collect, how it is used, and how it is protected.
-- [Terms of Service](https://hsrutility.com/terms): Account terms, premium subscriptions, content submissions, acceptable use.
 - [Delete My Account](https://hsrutility.com/delete-account): How to permanently delete an account and its data.
+
+### Website policies (about hsrutility.com itself, not the apps)
+
+- [Privacy Policy](https://hsrutility.com/privacy-policy/): The website collects nothing — no analytics, no cookies, no third-party requests.
+- [Terms & Conditions](https://hsrutility.com/terms/): Permitted use, intellectual property, third-party links, liability.
+- [Cookie Policy](https://hsrutility.com/cookie-policy/): No cookies are set; one local-storage key holds the theme preference.
+- [Refund Policy](https://hsrutility.com/refund-policy/): The studio-wide no-refund position and how to cancel.
+
+### Pakiza
+
+- [Pakiza](https://hsrutility.com/pakiza): Features, screens and availability for the Islamic lifestyle app.
+- [Privacy Policy](https://hsrutility.com/pakiza/privacy-policy/)
+- [Terms & Conditions](https://hsrutility.com/pakiza/terms/)
+- [Refund Policy](https://hsrutility.com/pakiza/refund-policy/)
+- [How to Delete Your Account](https://hsrutility.com/pakiza/how-to-delete-account/)
+
+### Arul
+
+- [Arul](https://hsrutility.com/arul): Features, screens and Google Play link for the South Indian wallpapers app.
+- [Privacy Policy](https://hsrutility.com/arul/privacy-policy/)
+- [Terms & Conditions](https://hsrutility.com/arul/terms/)
+- [Refund Policy](https://hsrutility.com/arul/refund-policy/)
+- [How to Delete Your Account](https://hsrutility.com/arul/how-to-delete-account/)

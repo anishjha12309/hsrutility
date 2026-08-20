@@ -1,0 +1,113 @@
+/*
+ * Shared by every page that renders a numbered how-to: the studio-level
+ * /delete-account and each app's own /<slug>/how-to-delete-account/.
+ *
+ * These rules used to live in a `<style is:global>` on the delete-account page.
+ * Astro bundles page CSS per page, so a second page reusing the markup got the
+ * markup and none of the styling — hence a real stylesheet both can import.
+ */
+
+.applies {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.applies-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 0.25rem;
+}
+
+.applies-chip {
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.method-flag {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px;
+  background: var(--accent-wash);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Numbered steps. The counter lives in CSS so the markup stays a plain <ol> and
+   screen readers still announce "list of 3 items" with real numbering. */
+.steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  color: var(--muted);
+}
+
+.step-num {
+  counter-increment: step;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.step-num::before {
+  content: counter(step);
+}
+
+.step-num.accent {
+  border-color: var(--accent-soft);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+.mono-inline {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text);
+  user-select: all;
+}
+
+/* Used by the retained-data grid on both deletion pages. */
+.doc-card-period {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  line-height: 1.1;
+  color: var(--accent);
+}

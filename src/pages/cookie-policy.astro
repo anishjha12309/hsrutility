@@ -1,0 +1,166 @@
+---
+import DocLayout from '../layouts/DocLayout.astro';
+import LegalContact from '../components/LegalContact.astro';
+import LegalFootLinks from '../components/LegalFootLinks.astro';
+import { APPS, LEGAL_NAME, SITE_URL, legalPath } from '../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
+
+/**
+ * The site sets no cookies, so this page's job is to say so credibly and then be
+ * useful about the one thing it does store.
+ *
+ * The honest version is stronger than the boilerplate one and much shorter, but it
+ * is only true as long as nobody adds a script. The single stored key is
+ * `hsr-theme`, written by the no-flash theme block in Layout.astro. If an embed, a
+ * tag manager or an analytics snippet ever lands, this page and /privacy-policy have
+ * to change in that same commit — not afterwards.
+ */
+const host = SITE_URL.replace(/^https?:\/\//, '');
+const lastUpdated = 'August 2026';
+
+const description = `Cookie policy for the ${host} website: it sets no cookies at all. The one thing stored in your browser is your light or dark theme preference.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Cookie Policy' }]),
+  webPageSchema({
+    path: '/cookie-policy',
+    name: 'Cookie Policy — hsrutility.com | HSR Utility',
+    description,
+  }),
+];
+
+const absent = [
+  {
+    label: 'Analytics cookies',
+    note: 'There is no Google Analytics, no Firebase, no PostHog and no equivalent on this website. Visits are not counted or profiled here.',
+  },
+  {
+    label: 'Advertising cookies',
+    note: 'No ad network, no retargeting pixel, no conversion tag. Nothing follows you from this site to another one.',
+  },
+  {
+    label: 'Third-party cookies',
+    note: 'No embedded video, no social widget, no comment system, no chat bubble, no externally hosted font — so no other company gets a request from your browser at all.',
+  },
+  {
+    label: 'Consent banner',
+    note: 'There is no cookie banner because there is nothing to consent to. A banner asking permission to set nothing would be theatre.',
+  },
+];
+---
+
+<DocLayout
+  title="Cookie Policy — hsrutility.com"
+  heading="Cookie Policy"
+  eyebrow="Website — legal"
+  description={description}
+  lastUpdated={lastUpdated}
+  intro="Short version: this website sets no cookies. The one thing it stores in your browser is whether you asked for the light or the dark theme, and that never leaves your device."
+  structuredData={structuredData}
+>
+  <section>
+    <p>
+      This policy explains what <strong>{LEGAL_NAME}</strong>, trading as HSR Utility, stores in your
+      browser when you visit <strong>{host}</strong>, and what it does not.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="what-is-a-cookie">1. What a Cookie Is</h2>
+    <p>
+      A cookie is a small file a website asks your browser to keep and send back on every later request
+      — it is what lets a site recognise a returning visitor. Local storage is related, with one
+      important difference: the browser keeps it but never attaches it to a request, so a site sees it
+      only if its own code goes looking.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="none">2. Cookies We Set</h2>
+    <p>
+      <strong>None.</strong> Not one, of any kind — not essential, not functional, not analytical, not
+      advertising. Specifically absent:
+    </p>
+    <div class="doc-grid">
+      {absent.map((item) => (
+        <div class="doc-card">
+          <p class="doc-card-title">{item.label}</p>
+          <p>{item.note}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 id="theme">3. The One Thing We Do Store</h2>
+    <div class="doc-card">
+      <p class="doc-card-title">hsr-theme — local storage, not a cookie</p>
+      <p>
+        Set when you use the theme toggle, holding one of three words: <em>light</em>, <em>dark</em> or
+        <em>auto</em>. The site reads it before the first paint so the page does not flash the wrong
+        colour scheme on the way in.
+      </p>
+    </div>
+    <p style="margin-top:1rem">
+      It is never sent to us or anyone else, and identifies nothing about you beyond a colour
+      preference. It stays until you clear this domain's site data. Blocking or clearing it costs you
+      nothing except that the site follows your operating system's setting instead of your choice.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="control">4. Controlling It</h2>
+    <p>
+      Every browser lets you clear site data and block storage per site, under Settings → Privacy. Here
+      that removes the theme preference and nothing else, because there is nothing else. You can also
+      just use the toggle again, or set it back to <em>auto</em>.
+    </p>
+    <p>
+      There is no opt-out to offer and no vendor list to work through, for the same reason there is no
+      banner: nothing is collected to opt out of.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="apps">5. Our Apps Are a Separate Matter</h2>
+    <p>
+      The Android apps are not browsers and set no cookies either, but they do use analytics and
+      advertising identifiers, which do a comparable job on a phone. Each app discloses which services
+      those are, and you can reset or limit the advertising identifier in Android settings at any time:
+      {APPS.map((app, i) => (
+        <>
+          {i > 0 && ' · '}
+          <a href={legalPath(app, 'privacy-policy')}>{app.name}</a>
+        </>
+      ))}.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="changes">6. Changes to This Policy</h2>
+    <p>
+      If we ever add something that sets a cookie — an embedded video, an analytics script, a chat
+      widget — this page changes in the same release and the "Last updated" date moves. A policy that
+      says "no cookies" while the site quietly sets some is worse than no policy at all.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">7. Contact Us</h2>
+    <LegalContact
+      appliesTo={`The ${host} website`}
+      intro="If you have a question about this policy, please contact us:"
+    />
+  </section>
+
+  <LegalFootLinks
+    links={[
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms & Conditions', href: '/terms' },
+      { label: 'Refund Policy', href: '/refund-policy' },
+      { label: 'Support & FAQ', href: '/support' },
+    ]}
+  />
+</DocLayout>

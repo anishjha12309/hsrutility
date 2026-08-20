@@ -1,0 +1,309 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import Email from '../../components/Email.astro';
+import LegalContact from '../../components/LegalContact.astro';
+import LegalFootLinks from '../../components/LegalFootLinks.astro';
+import { APPS, LEGAL_NAME, legalPath, type AppFact } from '../../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
+
+/**
+ * One privacy policy per app, from one template.
+ *
+ * Condensed on 2026-08-20 on the owner's instruction — SHORTER WORDING, IDENTICAL
+ * SUBSTANCE. Nothing disclosed was dropped: every data category, every third party
+ * and its policy link, every permission, every retention period and every right is
+ * still here. What went was throat-clearing, repetition and editorialising.
+ *
+ * That constraint is not stylistic. This page is what a Play data-safety review gets
+ * compared against, so a category trimmed for brevity is a discrepancy rather than a
+ * tidier page. Shortening it further means cutting sentences, never items.
+ *
+ * The permission list was audited against the MERGED Android manifests, not the
+ * hand-written source manifests — the shipped app declares more than the source file
+ * does, because libraries add their own. Asymmetries between the apps read from
+ * `app.legal` so they cannot drift.
+ *
+ * The cookie paragraph names the website's cookie policy but does NOT link to it:
+ * that page is studio-level and names every app, so a link there is a single click
+ * from this app's policy to the other app's name.
+ */
+export function getStaticPaths() {
+  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppFact;
+}
+
+const { app } = Astro.props;
+const lastUpdated = 'August 2026';
+
+const description = `Privacy policy for ${app.name}: what the app collects, the services it relies on, how long data is kept, and how to delete your account at any time.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: app.name, path: `/${app.slug}` }, { name: 'Privacy Policy' }]),
+  webPageSchema({
+    path: legalPath(app, 'privacy-policy'),
+    name: `Privacy Policy — ${app.name} | HSR Utility`,
+    description,
+  }),
+];
+
+/** Every category the app collects, one line each. Items are load-bearing. */
+const collected = [
+  {
+    title: 'Account',
+    body: 'You sign in with Google. We receive your name, email address and Google account ID — not your profile photo, and no phone number or password.',
+  },
+  {
+    title: 'Content you submit',
+    body: `If you upload ${app.legal.submissions}, we store the file and its details so our team can review it before it may appear. Ask us any time and we will remove it.`,
+  },
+  {
+    title: 'Referrals',
+    body: 'The link between your account and anyone joining through your invite, so rewards can be credited. Your referrals screen shows their display name or a partly masked email; they see nothing about you.',
+  },
+  {
+    title: 'Subscription',
+    body: 'Your subscription status and its dates, so the app knows what to unlock. Payments run through PhonePe — we never see or store card, bank or UPI credentials.',
+  },
+  {
+    title: 'Usage & device',
+    body: 'Device type, OS version, language, app version, advertising ID and which features you open, read in aggregate. Subscription events also carry an app-installation ID, so a payment can be matched to the install that produced it.',
+  },
+  {
+    title: 'Crashes & performance',
+    body: 'Anonymised reports describing the device state when something failed. No personally identifiable information.',
+  },
+  {
+    title: 'Install attribution',
+    body: 'The Google Play Install Referrer, to see which campaign or referral led to an install.',
+  },
+  {
+    title: 'Not collected',
+    body: `No location — the app never requests the permission. Its ${app.legal.reminders} are built and scheduled entirely on your device, reading only the local time zone: no push service, no server, nothing leaves the phone.`,
+  },
+];
+
+const thirdParties = [
+  { name: 'Google Sign-In & Play Services', purpose: 'Sign-in, distribution, core Android functionality.', url: 'https://policies.google.com/privacy' },
+  { name: 'Google Firebase — Analytics, Crashlytics, Performance', purpose: 'Aggregated usage analytics, crash reports, performance monitoring.', url: 'https://firebase.google.com/support/privacy' },
+  { name: 'PostHog', purpose: 'Product analytics, from a small sample of installations.', url: 'https://posthog.com/privacy' },
+  { name: 'Meta App Events', purpose: 'Advertising and conversion measurement, where we run campaigns.', url: 'https://www.facebook.com/privacy/policy' },
+  { name: 'PhonePe', purpose: 'Subscription payments and the UPI Autopay mandate.', url: 'https://www.phonepe.com/privacy-policy/' },
+  { name: 'Cloudflare', purpose: 'Hosting, media delivery, edge security.', url: 'https://www.cloudflare.com/privacypolicy/' },
+  { name: 'Neon', purpose: 'The managed PostgreSQL database holding your account.', url: 'https://neon.tech/privacy-policy' },
+  // Only for the app that actually makes the request — see LegalFacts.googleFontsCdn.
+  ...(app.legal.googleFontsCdn
+    ? [{ name: 'Google Fonts', purpose: `${app.name} loads one display typeface from Google's CDN on first run — a request from your device to Google before you sign in.`, url: 'https://policies.google.com/privacy' }]
+    : []),
+];
+
+const permissions = [
+  ['Internet & network state', 'Loading wallpapers, ringtones and your account.'],
+  ['Set wallpaper', 'Applying a wallpaper when you choose to.'],
+  ['Modify system settings', 'Setting a ringtone when you choose to. Nothing else is touched.'],
+  ['Notifications', 'Showing reminders you switch on. Asked for then, never at launch.'],
+  ['Run at startup', 'Re-arming your scheduled reminders after a restart.'],
+  [
+    'Photos & media (Android 9 and below)',
+    `Registering a ringtone you set, and picking a file when you submit ${app.legal.submissions}. Unused on Android 10 and newer.`,
+  ],
+  ['Advertising ID', 'Used by our analytics partners. Reset or limit it in Android settings any time.'],
+];
+
+const uses = [
+  'Running the app, syncing your account and premium status, and improving both.',
+  'Authenticating you and keeping your account secure.',
+  'Processing subscriptions and managing the Autopay mandate.',
+  'Reviewing content you submit before it may appear.',
+  'Diagnosing crashes and fixing bugs.',
+  'Measuring our advertising and installs.',
+];
+
+const sharing = [
+  'With the service providers listed above, to operate the app on our behalf.',
+  'Where the law requires it, or to protect our users and our service.',
+  'In a merger or acquisition, where this policy continues to apply.',
+];
+
+const retention = [
+  { period: 'Until deleted', label: 'Account & app data', note: 'Removed promptly on a valid deletion request.' },
+  { period: '14 months', label: 'Aggregated analytics', note: 'Cannot be linked back to you after deletion.' },
+  { period: '90 days', label: 'Crash logs', note: 'No personal identifiers once your account is gone.' },
+  {
+    // Disclosed because it deliberately SURVIVES account deletion. A stable,
+    // re-derivable hash of a Google account is pseudonymous personal data, not
+    // anonymous data, and leaving it undisclosed is the kind of gap that costs you.
+    period: 'Indefinite',
+    label: 'One-off trial marker',
+    note: 'A one-way hash of your Google account ID, so the one-trial-per-person limit survives deleting and re-registering. No name, no email, nothing reversible or contactable.',
+  },
+];
+
+const rights = [
+  'Access the personal data we hold about you.',
+  'Have inaccurate or incomplete data corrected.',
+  'Have your account and its data permanently deleted.',
+  'Receive a copy of your data in a portable format.',
+  'Reset or limit your advertising ID in Android settings.',
+];
+---
+
+<DocLayout
+  title={`Privacy Policy — ${app.name}`}
+  heading="Privacy Policy"
+  eyebrow={`${app.name} — legal`}
+  description={description}
+  lastUpdated={lastUpdated}
+  structuredData={structuredData}
+  scope={app}
+>
+  <section>
+    <p>
+      How <strong>{LEGAL_NAME}</strong>, trading as HSR Utility ("we", "us", "our"), handles your
+      information in <strong>{app.name}</strong> (package <code>{app.packageId}</code>) — "the app"
+      below. It covers this app and nothing else. If you do not agree with it, please do not use the
+      app.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="collect">1. What We Collect</h2>
+    {collected.map((item) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{item.title}</p>
+        <p>{item.body}</p>
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2 id="use">2. What We Use It For</h2>
+    <ul>{uses.map((item) => <li>{item}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2 id="permissions">3. Permissions</h2>
+    <p>Each is requested when you choose an action that needs it, not at launch:</p>
+    {permissions.map(([name, why]) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{name}</p>
+        <p>{why}</p>
+      </div>
+    ))}
+    <p style="margin-top:1rem">
+      Libraries we build on — video playback, secure storage, analytics — declare common Android
+      permissions of their own, such as network state and wake lock. We use them for nothing beyond
+      what this policy describes.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="third-parties">4. Third-Party Services</h2>
+    <p>Each processes data under its own privacy policy, linked in full:</p>
+    {thirdParties.map((service) => (
+      <div class="doc-card">
+        <p class="doc-card-title">{service.name}</p>
+        <p>{service.purpose}</p>
+        <p><a href={service.url} target="_blank" rel="noopener noreferrer">{service.url}</a></p>
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2 id="sharing">5. Sharing</h2>
+    <p>
+      We do <strong>not</strong> sell your personal information, and we give nobody your account
+      contents for their own advertising. We share data only:
+    </p>
+    <ul>{sharing.map((item) => <li>{item}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2 id="security">6. Storage &amp; Security</h2>
+    <p>
+      Your data sits in a managed PostgreSQL database (Neon), with media delivered through
+      Cloudflare. Connections use HTTPS/TLS and access is restricted to our own backend services. No
+      method of storage or transmission is ever completely secure, but these are the reasonable steps
+      available and we take them.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="retention">7. How Long We Keep It</h2>
+    <div class="doc-grid">
+      {retention.map((item) => (
+        <div class="doc-card">
+          <p class="doc-card-period">{item.period}</p>
+          <p class="doc-card-title">{item.label}</p>
+          <p>{item.note}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 id="rights">8. Your Rights</h2>
+    <ul>{rights.map((item) => <li>{item}</li>)}</ul>
+    <p>
+      Deletion you can do yourself, immediately —
+      <a href={legalPath(app, 'how-to-delete-account')}>the steps are here</a>. For anything else,
+      email <Email />.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="children">9. Children</h2>
+    <p>
+      The app is not directed at children under 13, and we do not knowingly collect their
+      information. If you believe a child has given us data, contact us and we will delete it
+      promptly.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="cookies">10. Cookies &amp; Tracking</h2>
+    <p>
+      The app is not a browser and sets no cookies. The services above use device and advertising
+      identifiers instead, which you can reset or limit in Android settings. Our website is a
+      separate matter and carries its own cookie policy, published there.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="changes">11. Changes</h2>
+    <p>
+      We may update this policy. The "Last updated" date at the top moves when we do, and a
+      significant change is announced inside the app. Continuing to use the app after that means you
+      accept it.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">12. Contact Us</h2>
+    <LegalContact app={app} intro="Questions about this policy, or about your data:" />
+  </section>
+
+  <section>
+    <h2 id="consent">Consent</h2>
+    <p>
+      Using {app.name} means you consent to this policy. If you would rather not, stop using the app
+      and, if you wish, delete your account — it takes under a minute from inside it.
+    </p>
+  </section>
+
+  <LegalFootLinks app={app} current="privacy-policy" />
+</DocLayout>
+
+<style is:global>
+  .doc-card-period {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    line-height: 1.1;
+    color: var(--accent);
+  }
+</style>

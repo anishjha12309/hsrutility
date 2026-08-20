@@ -1,0 +1,40 @@
+---
+import { SUPPORT_EMAIL } from '../lib/site';
+import { fenceEmail } from '../lib/email';
+
+/**
+ * The support address as a mailto link, fenced against Cloudflare's Email Address
+ * Obfuscation. Every address rendered on the site goes through here.
+ *
+ * The whole thing is emitted as one `set:html` string rather than as markup with a
+ * slot, because that is the only shape Astro carries the fence comments through
+ * intact — see lib/email.ts, which has the three ways this can be written and the
+ * two that quietly fail.
+ *
+ * `label` and `arrow` exist so a button can render through here too: it is the
+ * `mailto:` href that Cloudflare rewrites, not just visible address text, so a
+ * button reading "Email to delete" needs the fence exactly as much as the address
+ * itself does.
+ */
+interface Props {
+  /** Visible text. Defaults to the address, which is the common case. */
+  label?: string;
+  /** Pre-fills the subject line. Encoded here so no call site has to. */
+  subject?: string;
+  class?: string;
+  /** Appends the standard button arrow, for the `btn` call sites. */
+  arrow?: boolean;
+}
+
+const { label = SUPPORT_EMAIL, subject, class: className, arrow = false } = Astro.props;
+
+const href = `mailto:${SUPPORT_EMAIL}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`;
+
+const arrowSvg = arrow
+  ? '<svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>'
+  : '';
+
+const link = `<a href="${href}"${className ? ` class="${className}"` : ''}>${label}${arrowSvg}</a>`;
+---
+
+<Fragment set:html={fenceEmail(link)} />

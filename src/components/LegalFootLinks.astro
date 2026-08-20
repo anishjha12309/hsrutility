@@ -1,0 +1,31 @@
+---
+import { legalSiblings, type AppFact } from '../lib/site';
+
+/**
+ * The related-links row at the foot of a legal document.
+ *
+ * Scoped to an app it lists that app's other four documents and a route back to the
+ * app's own page — the pattern the benchmark uses, and the reason a reader who lands
+ * on a refund policy from a store listing can reach the terms without a nav. It never
+ * links out to the studio pages or to the other app.
+ */
+interface Props {
+  app?: AppFact;
+  /** Slug of the document being rendered, so it does not link to itself. */
+  current?: string;
+  /** Studio-level pages pass their own set. */
+  links?: { label: string; href: string }[];
+}
+
+const { app, current = '', links } = Astro.props;
+
+const items =
+  links ??
+  (app
+    ? [...legalSiblings(app, current), { label: `Back to ${app.name}`, href: `/${app.slug}` }]
+    : []);
+---
+
+<nav class="doc-foot-links" aria-label="Related pages">
+  {items.map((item) => <a href={item.href} class="link">{item.label}</a>)}
+</nav>

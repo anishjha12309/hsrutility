@@ -1,0 +1,174 @@
+---
+import DocLayout from '../layouts/DocLayout.astro';
+import LegalContact from '../components/LegalContact.astro';
+import LegalFootLinks from '../components/LegalFootLinks.astro';
+import { APPS, LEGAL_NAME, SITE_URL, legalPath } from '../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
+
+/**
+ * The WEBSITE's privacy policy. Not the apps' — each app has its own, under its own
+ * slug, and this page's job is largely to send people there.
+ *
+ * It says the site collects nothing because the site collects nothing: Layout.astro
+ * loads no analytics, no tag manager and no third-party script, the fonts are
+ * self-hosted out of /public/fonts, and the only thing written to the browser is the
+ * `hsr-theme` key in localStorage. Before softening any of that into the usual
+ * "we may collect" hedging, check whether it stopped being true — and if a script
+ * ever is added, this page and /cookie-policy have to change in the same commit.
+ */
+const host = SITE_URL.replace(/^https?:\/\//, '');
+const lastUpdated = 'August 2026';
+
+const description = `Privacy policy for the ${host} website: what it does and does not collect. Each of our Android apps has its own separate privacy policy.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy' }]),
+  webPageSchema({
+    path: '/privacy-policy',
+    name: 'Privacy Policy — hsrutility.com | HSR Utility',
+    description,
+  }),
+];
+
+const notCollected = [
+  'No analytics, no tag manager, no pixel and no session recording.',
+  'No cookies of any kind, first-party or third-party.',
+  'No advertising or tracking identifiers.',
+  'No fonts, scripts, stylesheets or images loaded from another company’s servers.',
+  'No contact form, no newsletter sign-up and no account to create.',
+];
+---
+
+<DocLayout
+  title="Privacy Policy — hsrutility.com"
+  heading="Privacy Policy"
+  eyebrow="Website — legal"
+  description={description}
+  lastUpdated={lastUpdated}
+  intro={`This policy covers the ${host} website. Our Android apps each have a separate privacy policy of their own — the links are at the bottom of this page.`}
+  structuredData={structuredData}
+>
+  <section>
+    <p>
+      <strong>{LEGAL_NAME}</strong>, which operates as HSR Utility ("we", "us" or "our"), runs the
+      website at <strong>{host}</strong>. This policy explains what happens to information when you
+      visit it.
+    </p>
+    <div class="doc-card">
+      <p class="doc-card-title">This page is not your app's privacy policy</p>
+      <p>
+        The apps collect and process real data — an account, a subscription, analytics — and each
+        discloses it separately, in a policy written for that app alone:
+        {APPS.map((app, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={legalPath(app, 'privacy-policy')}>{app.name}</a>
+          </>
+        ))}.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="what-we-collect">1. What This Website Collects</h2>
+    <p>
+      Nothing that identifies you. It is a set of static pages with no back end of its own, and carries:
+    </p>
+    <ul>{notCollected.map((item) => <li>{item}</li>)}</ul>
+    <p>
+      There is no sign-in, nothing to submit and no visitor profile to build. We could not tell you who
+      has read this page.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="hosting">2. What Our Host Sees</h2>
+    <p>
+      The site is hosted on Cloudflare Pages. As with any web server, a request reveals your IP address,
+      the page, the time, and the browser and operating system your device reports. Cloudflare processes
+      that as our hosting and security provider — serving pages and defending against abuse — under
+      <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">
+        its own privacy policy</a>. We add no logging of our own and build no picture of individual
+      visitors.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="storage">3. What Is Stored on Your Device</h2>
+    <p>
+      One thing: your light or dark theme preference, in local storage under the key
+      <span class="mono-inline">hsr-theme</span>, so the site does not flash the wrong colour scheme on
+      your next visit. It is not a cookie, never leaves your device and is never sent with a request.
+      Clearing site data removes it. The <a href="/cookie-policy">Cookie Policy</a> has the detail.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="links">4. Links That Leave This Site</h2>
+    <p>
+      Some pages link out — to the Google Play Store, and to the privacy policies of the services our
+      apps rely on. Follow one and you are on someone else's site, under their terms and their privacy
+      policy. We do not control what they collect or endorse their practices.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="rights">5. Your Rights</h2>
+    <p>
+      Indian data protection law gives you rights over personal data held about you — access,
+      correction, deletion. For this website there is nothing to exercise them against, because we hold
+      nothing. For an app account they are real, and each app's own privacy policy sets them out along
+      with the route to delete your account.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="children">6. Children</h2>
+    <p>
+      This website is not directed at children under 13, and it collects no personal information from
+      anyone of any age.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="changes">7. Changes to This Policy</h2>
+    <p>
+      If the site ever changes in a way that affects this policy — an analytics script, an embedded
+      video, a contact form — this page changes in the same release and the "Last updated" date moves.
+      We will not quietly add tracking behind a policy that says there is none.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">8. Contact Us</h2>
+    <LegalContact
+      appliesTo={`The ${host} website`}
+      intro="If you have a question about this policy or about the website, please contact us:"
+    />
+  </section>
+
+  <LegalFootLinks
+    links={[
+      { label: 'Terms & Conditions', href: '/terms' },
+      { label: 'Cookie Policy', href: '/cookie-policy' },
+      { label: 'Refund Policy', href: '/refund-policy' },
+      { label: 'Support & FAQ', href: '/support' },
+    ]}
+  />
+</DocLayout>
+
+<style is:global>
+  .mono-inline {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid var(--line);
+    border-radius: 0.4rem;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text);
+    user-select: all;
+  }
+</style>

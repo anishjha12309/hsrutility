@@ -1,0 +1,173 @@
+---
+import DocLayout from '../layouts/DocLayout.astro';
+import Email from '../components/Email.astro';
+import LegalContact from '../components/LegalContact.astro';
+import LegalFootLinks from '../components/LegalFootLinks.astro';
+import {
+  APPS,
+  LEGAL_NAME,
+  SUPPORT_EMAIL,
+  MONTHLY_PRICE,
+  MANDATE_VERIFY_AMOUNT,
+  PAYMENT_PROVIDER,
+  legalPath,
+  allAppsPhrase,
+} from '../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
+
+/**
+ * The studio-wide refund position. Every app follows it, and each app also publishes
+ * it under its own slug — which is the copy a Play listing or a store field should
+ * point at, because it names the package and the app.
+ *
+ * This page exists so there is one URL that states the position for the studio as a
+ * whole, and so nobody has to infer from one app's policy what another app does.
+ * Strict no-refund, set by the owner on 2026-08-20.
+ */
+const lastUpdated = 'August 2026';
+
+const description = `Refund and cancellation policy for HSR Utility apps: how to cancel a premium subscription, and our no-refund position on payments already taken.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Refund Policy' }]),
+  webPageSchema({
+    path: '/refund-policy',
+    name: 'Refund Policy | HSR Utility',
+    description,
+  }),
+];
+
+const noRefundFor = [
+  'A change of mind after subscribing.',
+  'The unused part of a billing period already paid for.',
+  'Cancelling partway through a period, which is never pro-rated.',
+  'Forgetting to cancel before a renewal date.',
+  'Not using the app, or not using the premium features it unlocked.',
+  'Finding another app you prefer.',
+  'Content already applied, set or downloaded.',
+  'An account suspended or terminated for breaking our terms.',
+  'Deleting an account, which ends premium access immediately and forfeits the rest of the period.',
+];
+---
+
+<DocLayout
+  title="Refund Policy"
+  heading="Refund &amp; Cancellation Policy"
+  eyebrow="Legal"
+  description={description}
+  lastUpdated={lastUpdated}
+  intro="One position across every app we publish: cancelling is immediate and costs nothing, and payments already taken are not refunded."
+  structuredData={structuredData}
+>
+  <section>
+    <p>
+      This policy applies to premium subscriptions in every Android app published by
+      <strong>{LEGAL_NAME}</strong>, trading as HSR Utility. {allAppsPhrase()} also publish it under
+      their own address, naming the app and its package — those are the copies to cite in a store
+      listing or a support ticket:
+      {APPS.map((app, i) => (
+        <>
+          {i > 0 && ' · '}
+          <a href={legalPath(app, 'refund-policy')}>{app.name}</a>
+        </>
+      ))}.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="how-billing-works">1. How Billing Works</h2>
+    <p>
+      Browsing and previewing stay free in every app. Premium unlocks applying and sharing wallpapers
+      and setting ringtones, at <strong>{MONTHLY_PRICE} per month</strong>, renewing until cancelled.
+    </p>
+    <div class="doc-card">
+      <p class="doc-card-title">UPI Autopay, not the Google Play Store</p>
+      <p>
+        A subscription is a UPI Autopay mandate approved in your own UPI app and processed by
+        {PAYMENT_PROVIDER} — not a Play in-app purchase. It has no Play Store subscription entry and no
+        Play refund route. Cancel inside the app.
+      </p>
+    </div>
+    <div class="doc-card">
+      <p class="doc-card-title">The {MANDATE_VERIFY_AMOUNT} verification is not a charge</p>
+      <p>
+        Setting up a mandate takes a {MANDATE_VERIFY_AMOUNT} debit that your bank reverses
+        automatically. It authorises the mandate and is not the price of anything. If the reversal has
+        not landed after a few working days, email us and we will chase it.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="cancel">2. Cancelling</h2>
+    <p>
+      Settings → your plan → Cancel. It takes effect at once and needs no reason. A mandate can also be
+      paused or revoked from the UPI app you approved it in.
+    </p>
+    <p>
+      Cancelling stops future charges and leaves premium running to the end of the period already paid
+      for. Deleting an account is different: it also ends access immediately, forfeiting the rest.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="no-refunds">3. No Refunds</h2>
+    <p>
+      <strong>Payments already taken are final and non-refundable</strong>, and cancelling does not
+      refund them. No refund is given for:
+    </p>
+    <ul>{noRefundFor.map((item) => <li>{item}</li>)}</ul>
+    <p>
+      Subscribing acknowledges this. Browsing and previewing are free, and the trial is free once per
+      person, precisely so the app can be judged before any money moves.
+    </p>
+    <p>
+      Nothing in this policy removes a right you hold under Indian consumer law that cannot be given
+      up by agreement.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="errors">4. Charges Taken in Error</h2>
+    <p>
+      A charge that should never have been taken is not a refund request and is not treated as one.
+      Billed twice for one period, billed after a cancellation, or billed an amount that does not match
+      the paywall — write to <Email /> with your registered email, the date and the amount, and we will
+      investigate and correct anything that proves to be our error.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="disputes">5. Before You Raise a Dispute</h2>
+    <p>
+      Please come to us before raising a chargeback with your bank or UPI provider. A dispute runs for
+      weeks and usually suspends the subscription while it does; an email usually gets an answer the
+      same day. Disputes under this policy are governed by the laws of India and subject to the
+      exclusive jurisdiction of the courts of Mumbai, Maharashtra.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="changes">6. Changes to This Policy</h2>
+    <p>
+      We may update this policy for legal, operational or regulatory reasons. The "Last updated" date
+      moves when we do, and no change ever applies retroactively to a payment already taken.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">7. Contact Us</h2>
+    <LegalContact intro="If you have a question about this policy, about a charge, or about cancelling:" />
+  </section>
+
+  <LegalFootLinks
+    links={[
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms & Conditions', href: '/terms' },
+      { label: 'Cookie Policy', href: '/cookie-policy' },
+      { label: 'Support & FAQ', href: '/support' },
+    ]}
+  />
+</DocLayout>

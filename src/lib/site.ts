@@ -85,6 +85,9 @@ export interface Shot {
 export interface AppFact {
   slug: string;
   name: string;
+  /** Android applicationId. Named in the app's own legal pages, the way a Play
+   *  reviewer expects a policy to identify which package it governs. */
+  packageId: string;
   /** Sits under the name in nav and hero. Short. */
   tagline: string;
   /** One sentence. Used for meta description, schema, and the home card. */
@@ -102,11 +105,42 @@ export interface AppFact {
   /** Short chips under the hero. Every one must be verifiable in the app repo. */
   chips: string[];
   shots: Shot[];
+  /** The asymmetries the legal pages have to state accurately. See LegalFacts. */
+  legal: LegalFacts;
+}
+
+/**
+ * The handful of facts where the apps genuinely differ, pulled out so the legal
+ * templates can stay app-agnostic instead of branching on `slug`.
+ *
+ * Every field is audited against the app repo. The apps are NOT symmetric and the
+ * differences are deliberate — flattening them into one sentence is how a policy
+ * ends up describing a feature the app does not have.
+ */
+export interface LegalFacts {
+  /** What the in-app upload screen accepts. Pakiza's has two tabs, Arul's one. */
+  submissions: string;
+  /** What the offline reminder scheduler actually produces. */
+  reminders: string;
+  /** How a wallpaper gets applied — the target-sheet vs system-chooser split. */
+  applyBehaviour: string;
+  /** Localisations, spelled out for prose. */
+  languages: string;
+  /**
+   * True where the app fetches a display face from Google's font CDN on first
+   * launch, which discloses the device IP before sign-in. Pakiza does; Arul
+   * bundles its faces and makes no such request. Disclosed because it is true
+   * today — if Pakiza ever bundles too, flip this and the entry disappears.
+   */
+  googleFontsCdn: boolean;
+  /** What the catalogue consists of, for the refund policy's free-tier line. */
+  catalogue: string;
 }
 
 export const PAKIZA: AppFact = {
   slug: 'pakiza',
   name: 'Pakiza',
+  packageId: 'com.hsrutility.pakiza',
   tagline: 'Where every unlock feels considered',
   description:
     'Pakiza is an Islamic lifestyle app for Android — a shorts-style feed of still and live wallpapers, a curated ringtone library, and offline Jummah and Islamic-calendar reminders.',
@@ -145,6 +179,15 @@ export const PAKIZA: AppFact = {
       body: 'Found something worth sharing? Submit a wallpaper or a ringtone from inside the app. Every submission is reviewed by hand before it can appear.',
     },
   ],
+  legal: {
+    submissions: 'a wallpaper or a ringtone',
+    reminders: 'Jummah and Islamic-calendar reminders',
+    applyBehaviour:
+      'Still wallpapers are applied through the app; live wallpapers hand off to Android’s own wallpaper chooser, which asks you where they should go.',
+    languages: 'eleven Indian languages',
+    googleFontsCdn: true,
+    catalogue: 'Islamic wallpapers, live video wallpapers and ringtones',
+  },
   shots: [
     {
       file: 'pakiza-sacred-islamic-wallpapers',
@@ -177,6 +220,7 @@ export const PAKIZA: AppFact = {
 export const ARUL: AppFact = {
   slug: 'arul',
   name: 'Arul',
+  packageId: 'com.hsrutility.arul',
   tagline: 'Six collections, endlessly scrollable',
   description:
     'Arul is an Android app for South Indian devotional wallpapers — a shorts-style feed of still and live wallpapers across six collections, plus ringtones and a place to send in your own.',
@@ -220,6 +264,15 @@ export const ARUL: AppFact = {
       body: 'Localised into six Indian languages, so the app speaks the language the art belongs to.',
     },
   ],
+  legal: {
+    submissions: 'a wallpaper',
+    reminders: 'weekly and festival reminders',
+    applyBehaviour:
+      'Still wallpapers let you pick home screen, lock screen or both before you apply; live wallpapers hand off to Android’s own wallpaper chooser, which asks you there.',
+    languages: 'six Indian languages',
+    googleFontsCdn: false,
+    catalogue: 'South Indian devotional wallpapers, live video wallpapers and ringtones',
+  },
   shots: [
     {
       file: 'arul-sacred-wallpaper-collections',
@@ -289,8 +342,32 @@ export const liveApps = () => APPS.filter((a) => a.status === 'live');
 export const upcomingApps = () => APPS.filter((a) => a.status === 'coming-soon');
 
 /**
- * The freemium line, worded identically wherever it appears. Stays off price and
- * billing period by design.
+/* ── Billing ──────────────────────────────────────────────────────────────────
+   Verified against BOTH app repos, 2026-08-20. Do not restate these numbers in a
+   page — every one of them is wrong somewhere the moment it exists twice.
+
+   The subscription is a PhonePe UPI Autopay mandate: `maxAmount: 19900` in
+   `workers/src/lib/phonepe.ts` in each repo, and `TRIAL_DAYS = 1` in
+   `workers/src/routes/payments.ts`. A first-time subscriber goes through a ₹2
+   PENNY_DROP that the bank auto-reverses; someone who has already used their one
+   trial is charged the full amount as a TRANSACTION instead, with no trial.
+
+   Pakiza's `db/seed.sql` carried ₹49/₹499 until 2026-08-20 — stale values that
+   never matched the Worker's real debit, and that nothing in the app read (its
+   own fallback was already ₹199). Corrected in the repo, not worked around here. */
+
+export const MONTHLY_PRICE = '₹199';
+export const TRIAL_DAYS = 1;
+
+/** The mandate-setup debit. Named on every page that mentions the trial: the user
+ *  SEES ₹2 leave the account on a screen that said "free", and an unexplained
+ *  debit reads as a scam however well the rest of the page is written. */
+export const MANDATE_VERIFY_AMOUNT = '₹2';
+
+export const PAYMENT_PROVIDER = 'PhonePe';
+
+/**
+ * The freemium line, worded identically wherever it appears.
  *
  * Two words are load-bearing. "Sharing" is scoped to wallpapers because ringtone
  * sharing is not a gated action — it does not exist. And it says "new accounts get
@@ -298,6 +375,48 @@ export const upcomingApps = () => APPS.filter((a) => a.status === 'coming-soon')
  * user: someone who subscribed before is charged straight away with no trial.
  */
 export const FREEMIUM_LINE =
-  'Browsing and previewing is always free. Applying wallpapers, sharing them and setting ringtones are premium, billed through UPI Autopay. New accounts get a free trial.';
+  `Browsing and previewing is always free. Applying wallpapers, sharing them and setting ringtones are premium — ${MONTHLY_PRICE} a month, billed through UPI Autopay. New accounts get a free trial; setting up the mandate takes a ${MANDATE_VERIFY_AMOUNT} verification debit that is reversed automatically.`;
 
 export const FREEMIUM_SHORT = 'Free to browse, premium to apply.';
+
+/* ── Per-app legal pages ──────────────────────────────────────────────────────
+   Each app is a self-contained sub-site: /<slug> plus the five documents below.
+
+   The apps DO NOT link to one another. Pakiza serves an Islamic audience and Arul
+   a Hindu one, and a page that puts the two one click apart invites a reading
+   neither app is asking for. The studio home is the single page where both names
+   appear — everything under /<slug> carries that app's chrome, that app's legal
+   links and nothing else. `Layout`'s `scope` prop is what enforces it.
+
+   Order is deliberate: it is the order the footer and the related-links row render
+   in, and privacy leads because it is the one a Play reviewer opens first. */
+
+export interface LegalDoc {
+  /** Path segment under /<app-slug>/. Matches the slugs the Play Console fields
+   *  and store listings point at — spell them out, never abbreviate. */
+  slug: string;
+  label: string;
+  /** Used in <title> and the related-links row. */
+  short: string;
+}
+
+export const LEGAL_DOCS: LegalDoc[] = [
+  { slug: 'privacy-policy', label: 'Privacy Policy', short: 'Privacy' },
+  { slug: 'terms', label: 'Terms & Conditions', short: 'Terms' },
+  { slug: 'refund-policy', label: 'Refund Policy', short: 'Refunds' },
+  { slug: 'how-to-delete-account', label: 'How to Delete Your Account', short: 'Delete account' },
+];
+
+/** Trailing slash on purpose. Astro serves these as directories and 308s the
+ *  slash-less form — an in-app WebView that follows the redirect shows the user a
+ *  URL that is not the one the app asked for, and `curl` without `-L` finds
+ *  nothing at all. Every reference to these paths goes through this helper. */
+export const legalPath = (app: AppFact, doc: LegalDoc | string) =>
+  `/${app.slug}/${typeof doc === 'string' ? doc : doc.slug}/`;
+
+/** The related-links row at the foot of one legal page: its siblings, never itself. */
+export const legalSiblings = (app: AppFact, current: string) =>
+  LEGAL_DOCS.filter((d) => d.slug !== current).map((d) => ({
+    label: d.label,
+    href: legalPath(app, d),
+  }));

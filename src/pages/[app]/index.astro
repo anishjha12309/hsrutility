@@ -1,0 +1,328 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SplitText from '../../components/SplitText.astro';
+import AppIcon from '../../components/AppIcon.astro';
+import Gallery from '../../components/Gallery.astro';
+import StatusPill from '../../components/StatusPill.astro';
+import { APPS, FREEMIUM_LINE, LEGAL_DOCS, legalPath, type AppFact } from '../../lib/site';
+import {
+  organizationSchema,
+  websiteSchema,
+  appSchema,
+  breadcrumbSchema,
+  webPageSchema,
+} from '../../lib/schema';
+
+/**
+ * Two pages, one template. Adding a third app is a change to lib/site.ts alone.
+ *
+ * This is the root of the app's own sub-site: everything below it — the nav, the
+ * footer, the closing slab's legal links — stays inside /{slug}/. The page does not
+ * link back to the studio home, and the studio home links down to it. That is
+ * deliberate and one-directional; see LEGAL_DOCS in lib/site.ts.
+ */
+export function getStaticPaths() {
+  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppFact;
+}
+
+const { app } = Astro.props;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  appSchema(app),
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: app.name }]),
+  webPageSchema({
+    path: `/${app.slug}`,
+    name: `${app.name} — ${app.tagline} | HSR Utility`,
+    description: app.description,
+  }),
+];
+---
+
+<Layout title={app.name} description={app.description} structuredData={structuredData} scope={app}>
+  {/* ── Hero ─────────────────────────────────────────────────────────────── */}
+  <section class="hero" data-hero aria-labelledby="app-heading">
+    <div class="shell hero-inner">
+      <p class="eyebrow reveal-fade">
+        HSR Utility — {app.slug === 'pakiza' ? 'Islamic lifestyle' : 'South Indian wallpapers'}
+      </p>
+
+      <div class="hero-title">
+        <AppIcon app={app} size={96} glow class="hero-icon" />
+        <h1 id="app-heading" class="display-1">
+          <SplitText text={app.name} />
+        </h1>
+      </div>
+
+      <p class="hero-tagline" data-hero-tail style="--ti:0">{app.tagline}.</p>
+      <p class="lede hero-lede" data-hero-tail style="--ti:1">{app.description}</p>
+
+      <div class="hero-meta" data-hero-tail style="--ti:2">
+        <StatusPill app={app} />
+        {app.chips.map((chip) => <span class="chip">{chip}</span>)}
+      </div>
+
+      {/*
+        The "coming soon" label is short on purpose: the status pill directly above
+        already reads "Coming soon to Google Play", and repeating it verbatim two
+        rows apart reads as a bug rather than as emphasis.
+      */}
+      <div class="hero-actions" data-hero-tail style="--ti:3">
+        {app.playUrl ? (
+          <a href={app.playUrl} class="btn btn-primary" rel="noopener noreferrer" target="_blank">
+            Get it on Google Play
+            <span class="sr-only">(opens in a new tab)</span>
+            <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        ) : (
+          <span class="btn btn-ghost is-static" aria-disabled="true">Coming soon</span>
+        )}
+
+        <a href="#features" class="btn btn-ghost">
+          What’s inside
+          <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div data-nav-sentinel aria-hidden="true"></div>
+  </section>
+
+  {/* ── Features — an ink mega-panel, the reference's capability slab. ────── */}
+  <div id="features" class="shell feature-wrap">
+    <section class="panel panel-ink feature-panel reveal" aria-labelledby="features-heading">
+      <header class="feature-head">
+        <p class="eyebrow">What’s inside</p>
+        <h2 id="features-heading" class="display-2">{app.featuresHeading}</h2>
+      </header>
+
+      <ul class="features">
+        {app.features.map((feature, i) => (
+          <li class="feature">
+            <span class="feature-num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="feature-title">{feature.title}</h3>
+            <p class="feature-body">{feature.body}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  {/* ── Gallery ──────────────────────────────────────────────────────────── */}
+  <div class="shell section shots-section">
+    <header class="shots-head reveal">
+      <p class="eyebrow">Screens</p>
+      <h2 class="display-3">See it before you install it.</h2>
+    </header>
+
+    <div class="reveal">
+      <Gallery app={app} />
+    </div>
+  </div>
+
+  {/* ── Pricing + legal — a blue slab to close. ──────────────────────────── */}
+  <div class="shell">
+    <aside class="panel panel-blue closing reveal" aria-label={`${app.name} pricing, account and legal links`}>
+      <div class="closing-pricing">
+        <p class="eyebrow">Free to browse, premium to apply</p>
+        <p class="closing-body">{FREEMIUM_LINE}</p>
+      </div>
+
+      <nav class="closing-legal" aria-label={`${app.name} legal and account links`}>
+        <p class="eyebrow">Your account &amp; your data</p>
+        <ul>
+          {LEGAL_DOCS.map((doc) => (
+            <li><a href={legalPath(app, doc)} class="link">{doc.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</Layout>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(8rem, 6rem + 8vh, 10.5rem) clamp(2rem, 5vw, 4rem);
+  }
+
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .hero-title {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.5vw, 1.75rem);
+    flex-wrap: wrap;
+  }
+
+  /* :global() — passed into <AppIcon>, so it lands on the child component's
+     root and carries its scope id, not this page's. */
+  .hero-title :global(.hero-icon) {
+    margin-block: 0.25rem;
+  }
+
+  .hero h1 {
+    margin: 0;
+  }
+
+  .hero-tagline {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem);
+    line-height: 1.15;
+    color: var(--accent);
+  }
+
+  .hero-lede {
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* A statement of availability, not a button. */
+  .is-static {
+    cursor: default;
+    background: var(--surface);
+    color: var(--muted);
+    border-color: var(--line-strong);
+  }
+
+  .is-static:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── Feature panel ──────────────────────────────────────────────────────── */
+  .feature-wrap {
+    padding-block: clamp(1rem, 2vw, 2rem);
+  }
+
+  .feature-panel {
+    padding: clamp(1.75rem, 4vw, 3.5rem);
+  }
+
+  .feature-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 24ch;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .features {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .feature-num {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+  }
+
+  .feature-title {
+    margin: 0;
+    font-size: 1.1875rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  .feature-body {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  /* ── Gallery ────────────────────────────────────────────────────────────── */
+  .shots-section {
+    padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem) 0;
+  }
+
+  .shots-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  /* ── Closing slab ───────────────────────────────────────────────────────── */
+  .closing {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    align-items: start;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    margin-top: clamp(3rem, 5vw, 5rem);
+  }
+
+  .closing-pricing,
+  .closing-legal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .closing-body {
+    max-width: 56ch;
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .closing-legal ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 900px) {
+    .closing {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    }
+  }
+</style>

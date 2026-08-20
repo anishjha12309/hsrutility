@@ -1,24 +1,46 @@
 ---
 import Logo from './Logo.astro';
-import { APPS, COPYRIGHT_YEAR } from '../lib/site';
+import { APPS, COPYRIGHT_YEAR, LEGAL_DOCS, legalPath, type AppFact } from '../lib/site';
 
 /**
- * A single blue panel bar: mark, links, copyright, theme toggle.
- * The app links are generated from APPS, so a third app needs no edit here.
+ * A single blue panel bar: mark, links, copyright.
+ *
+ * Unscoped it is the studio footer, and its app links are generated from APPS so a
+ * third app needs no edit here. Scoped to an app it carries that app's own five
+ * legal documents and nothing else — no other app's name, and no route back into
+ * the studio pages. See LEGAL_DOCS in lib/site.ts for why.
+ *
+ * `footer.foot` is one of the four selectors both Flutter apps hide when they open
+ * a policy in their in-app WebView (`policy_screen.dart`, `_applyAppChrome`).
+ * Renaming the class puts a website footer at the bottom of every in-app policy.
  */
-const links = [
-  ...APPS.map((app) => ({ label: app.name, href: `/${app.slug}` })),
-  { label: 'Support', href: '/support' },
-  { label: 'Delete account', href: '/delete-account' },
-  { label: 'Privacy', href: '/privacy' },
-  { label: 'Terms', href: '/terms' },
-];
+interface Props {
+  scope?: AppFact;
+}
+
+const { scope } = Astro.props;
+
+const links = scope
+  ? [
+      { label: 'Overview', href: `/${scope.slug}` },
+      ...LEGAL_DOCS.map((doc) => ({ label: doc.short, href: legalPath(scope, doc) })),
+    ]
+  : [
+      ...APPS.map((app) => ({ label: app.name, href: `/${app.slug}` })),
+      { label: 'Support', href: '/support' },
+      { label: 'Delete account', href: '/delete-account' },
+      { label: 'Privacy', href: '/privacy-policy' },
+      { label: 'Terms', href: '/terms' },
+    ];
+
+const brandHref = scope ? `/${scope.slug}` : '/';
+const brandLabel = scope ? `${scope.name} — overview` : 'HSR Utility — home';
 ---
 
 <footer class="foot shell">
   <div class="panel panel-blue foot-panel">
     <div class="foot-top">
-      <a href="/" class="brand" aria-label="HSR Utility — home">
+      <a href={brandHref} class="brand" aria-label={brandLabel}>
         <Logo size={30} class="brand-mark" />
       </a>
 

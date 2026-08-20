@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+import { type AppFact } from '../lib/site';
 
 /**
  * Shell for the long-form pages: privacy, terms, delete-account, support.
@@ -15,12 +16,16 @@ interface Props {
   lastUpdated?: string;
   intro?: string;
   structuredData?: object[];
+  /** Set on the per-app legal documents. Forwarded to Layout, which swaps the
+   *  chrome for that app's own — see its `scope` prop. */
+  scope?: AppFact;
 }
 
-const { title, heading, eyebrow, description, lastUpdated, intro, structuredData } = Astro.props;
+const { title, heading, eyebrow, description, lastUpdated, intro, structuredData, scope } =
+  Astro.props;
 ---
 
-<Layout title={title} description={description} structuredData={structuredData}>
+<Layout title={title} description={description} structuredData={structuredData} scope={scope}>
   <article class="doc">
     {/* data-hero marks this as the page's above-the-fold block: its entrance runs
         from CSS keyframes on first paint, not from GSAP after a network round trip. */}

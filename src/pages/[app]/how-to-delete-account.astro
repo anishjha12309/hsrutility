@@ -1,0 +1,202 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import Email from '../../components/Email.astro';
+import LegalContact from '../../components/LegalContact.astro';
+import LegalFootLinks from '../../components/LegalFootLinks.astro';
+import '../../styles/doc-steps.css';
+import { APPS, SUPPORT_EMAIL, legalPath, type AppFact } from '../../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
+
+/**
+ * The account-deletion route Google Play requires every app to publish at a URL of
+ * its own. One page per app, from one template.
+ *
+ * The SHAPE is load-bearing for Play review and survived the 2026-08-20 condensing
+ * pass unchanged: in-app instant deletion leads, email is the documented fallback,
+ * and the deleted/retained split is stated with real retention periods rather than
+ * rounded off to "everything is erased".
+ *
+ * Both lists were verified line by line against the DELETE /me handler in each
+ * backend. Two entries that once appeared on them were never true — "saved
+ * favourites" (no app has ever had a favourites feature) and the Google profile
+ * photo (sign-in only ever returns name, email and account id). Do not put them back.
+ */
+export function getStaticPaths() {
+  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppFact;
+}
+
+const { app } = Astro.props;
+
+const description = `How to permanently delete your ${app.name} account and its data — instantly inside the app (Settings → Delete account), or by email if you have already uninstalled it.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: app.name, path: `/${app.slug}` }, { name: 'Delete Your Account' }]),
+  webPageSchema({
+    path: legalPath(app, 'how-to-delete-account'),
+    name: `How to Delete Your Account — ${app.name} | HSR Utility`,
+    description,
+  }),
+];
+
+const inAppSteps = [
+  `Open ${app.name} and go to <strong>Settings</strong>.`,
+  'Tap <strong>Delete account</strong> at the bottom.',
+  'Confirm. Your account and data are deleted <strong>immediately</strong>, your subscription and its UPI mandate are cancelled, and you are signed out. If we cannot reach the payment provider to cancel the mandate, the deletion is refused outright rather than half-applied — nothing is deleted and you can try again.',
+];
+
+const emailSteps = [
+  `Email <!--email_off--><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><!--/email_off--> with the subject <span class="mono-inline">Delete my account — ${app.name}</span>`,
+  'Include the <strong>Google account email</strong> you signed in with, so we can find and verify your data.',
+  'We process it within <strong>7 business days</strong> and email you a confirmation.',
+];
+
+const deleted = [
+  'Your account — the Google name and email from sign-in, and your display name',
+  'Your referral code and records, and any premium reward days',
+  'Your subscription record, and the UPI Autopay mandate, which is cancelled',
+  'Any submission of yours not yet published',
+  'The analytics and advertising identifiers linked to your account on that device',
+  'All cached app data, once you uninstall',
+];
+
+const retained = [
+  {
+    label: 'Published submissions',
+    period: 'Stays in the app',
+    note: 'Anything already reviewed and published stays as anonymous content with no link to you. Email us to have it taken down.',
+  },
+  {
+    // Deliberately survives deletion — see the trial marker in the privacy policy.
+    label: 'One-off trial marker',
+    period: 'Indefinite',
+    note: 'A one-way hash of your Google account ID, so the one-trial-per-person limit survives deleting and re-registering. No name, no email, nothing reversible.',
+  },
+  {
+    label: 'Aggregated analytics',
+    period: '14 months',
+    note: 'Already anonymous — it cannot be linked back to you.',
+  },
+  {
+    label: 'Crash logs',
+    period: '90 days',
+    note: 'Error tracking only; no personal identifiers once the account is gone.',
+  },
+];
+---
+
+<DocLayout
+  title={`How to Delete Your Account — ${app.name}`}
+  heading="How to delete your account"
+  eyebrow={`${app.name} — account & data`}
+  description={description}
+  intro="Permanently delete your account and its data at any time — instantly inside the app, or by email if you no longer have it installed. This cannot be undone."
+  structuredData={structuredData}
+  scope={app}
+>
+  <section>
+    <p class="applies">
+      <span class="applies-label">Applies to</span>
+      <span class="applies-chip">{app.name}</span>
+      <span class="applies-chip">{app.packageId}</span>
+    </p>
+  </section>
+
+  {/* ── Primary path: in-app ─────────────────────────────────────────────── */}
+  <section>
+    <p class="method-flag">Fastest</p>
+    <h2 id="in-app">Delete it in the app</h2>
+    <p>Immediate — no waiting and no email.</p>
+
+    <ol class="steps">
+      {inAppSteps.map((step) => (
+        <li>
+          <span class="step-num accent" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {/* ── Fallback: email ──────────────────────────────────────────────────── */}
+  <section>
+    <h2 id="by-email">Already uninstalled it?</h2>
+    <p>If you cannot open the app, we will handle it for you.</p>
+
+    <ol class="steps">
+      {emailSteps.map((step) => (
+        <li>
+          <span class="step-num" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+
+    <p style="margin-top:1.75rem">
+      <Email
+        label="Email to delete"
+        subject={`Delete my account — ${app.name}`}
+        class="btn btn-primary"
+        arrow
+      />
+    </p>
+  </section>
+
+  {/* ── What goes, what stays ────────────────────────────────────────────── */}
+  <section>
+    <h2 id="what-happens">What gets deleted</h2>
+    <ul>{deleted.map((item) => <li>{item}</li>)}</ul>
+  </section>
+
+  <section>
+    <h2 id="retained">What we have to retain</h2>
+    <div class="doc-grid">
+      {retained.map((item) => (
+        <div class="doc-card">
+          <p class="doc-card-period">{item.period}</p>
+          <p class="doc-card-title">{item.label}</p>
+          <p>{item.note}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 id="premium">If you subscribe to premium</h2>
+    <p>
+      Deleting is <strong>not</strong> cancelling. It ends premium access immediately: time left on
+      the period you paid for is lost, with no refund, along with any referral reward days. Signing
+      up again restores none of it and grants no new free trial.
+    </p>
+    <p>
+      To stop future charges while keeping premium to the end of the period, cancel instead —
+      Settings → your plan → Cancel — and delete later if you still want to. The
+      <a href={legalPath(app, 'refund-policy')}>Refund Policy</a> covers what each does.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="new-account">Starting again later</h2>
+    <p>
+      You can create a new account any time, with the same Google account or another. It starts
+      empty: previous preferences, referral rewards and subscription history do not return, and the
+      one free trial per person is not reissued.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">Need help?</h2>
+    <LegalContact app={app} intro="Trouble deleting, or a question about what happens to your data:" />
+    <p style="margin-top:1rem">
+      What we collect in the first place, and how long each category is kept, is in the
+      <a href={legalPath(app, 'privacy-policy')}>Privacy Policy</a>.
+    </p>
+  </section>
+
+  <LegalFootLinks app={app} current="how-to-delete-account" />
+</DocLayout>

@@ -1,5 +1,7 @@
 ---
 import DocLayout from '../layouts/DocLayout.astro';
+import Email from '../components/Email.astro';
+import { fenceEmail } from '../lib/email';
 import { SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_PHONE_HREF, LEGAL_NAME, ADDRESS_LINES } from '../lib/site';
 import {
   organizationSchema,
@@ -116,7 +118,7 @@ const structuredData = [
             </span>
           </summary>
           <div class="faq-a">
-            <p>{faq.a}</p>
+            <p set:html={fenceEmail(faq.a)} />
             {faq.link && (
               <p>
                 <a
@@ -140,12 +142,7 @@ const structuredData = [
       <h2 id="contact" class="support-close-title">Still need help?</h2>
       <p>Email us and we'll get back to you within 48 hours, or call us.</p>
       <p style="margin-top:1.5rem">
-        <a href={`mailto:${SUPPORT_EMAIL}`} class="btn btn-primary">
-          {SUPPORT_EMAIL}
-          <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        </a>
+        <Email class="btn btn-primary" arrow />
       </p>
       <dl class="doc-meta" style="margin-top:1.75rem">
         <div>
@@ -169,7 +166,7 @@ const structuredData = [
   </section>
 
   <nav class="doc-foot-links" aria-label="Related pages">
-    <a href="/privacy" class="link">Privacy Policy</a>
+    <a href="/privacy-policy" class="link">Privacy Policy</a>
     <a href="/terms" class="link">Terms of Service</a>
     <a href="/delete-account" class="link">Delete your account</a>
   </nav>
@@ -283,6 +280,20 @@ const structuredData = [
 
   .support-close {
     text-align: center;
+  }
+
+  /* Centred as a block, left-aligned inside it — a label/value grid cannot be
+     centre-aligned and still line up, and the postal address is long enough that
+     the ragged edge reads as broken rather than as styling.
+
+     No `:global()` here: this block is already `is:global`, and Astro passes the
+     selector through verbatim rather than compiling it away, so the rule ships as
+     invalid CSS and every browser drops the whole thing silently. */
+  .support-close .doc-meta {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    text-align: left;
   }
 
   .support-close-title {
