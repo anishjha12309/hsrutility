@@ -2,7 +2,7 @@
 import DocLayout from '../layouts/DocLayout.astro';
 import Email from '../components/Email.astro';
 import { fenceEmail } from '../lib/email';
-import { SUPPORT_EMAIL, SUPPORT_PHONE, PHONE_SCOPE_NOTE, LEGAL_NAME, ADDRESS_LINES } from '../lib/site';
+import { SUPPORT_EMAIL, SUPPORT_PHONE, LEGAL_NAME, ADDRESS_LINES } from '../lib/site';
 import {
   organizationSchema,
   websiteSchema,
@@ -151,7 +151,7 @@ const structuredData = [
         </div>
         <div>
           <dt>Phone</dt>
-          <dd>{SUPPORT_PHONE}<br />{PHONE_SCOPE_NOTE}</dd>
+          <dd>{SUPPORT_PHONE}</dd>
         </div>
         <div>
           <dt>Address</dt>

@@ -48,11 +48,6 @@ export const LEGAL_NAME = 'HSR Utility Apps Private Limited';
  */
 export const SUPPORT_PHONE = '+91 8009191175';
 
-/** Rendered directly under the number in every contact block. Without it the
- *  number reads as a support line and gets dialled as one. */
-export const PHONE_SCOPE_NOTE =
-  'Legal and compliance notices only — app support is by email.';
-
 /** Registered address. Field names mirror schema.org PostalAddress. */
 export const ADDRESS = {
   streetAddress: 'A3002, Adonia Hiranandani, Garden, South AvenuePowai, Mumbai, Mumbai',

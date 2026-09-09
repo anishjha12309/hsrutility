@@ -2,7 +2,6 @@
 import Email from './Email.astro';
 import {
   SUPPORT_PHONE,
-  PHONE_SCOPE_NOTE,
   LEGAL_NAME,
   ADDRESS_LINES,
   APPS,
@@ -14,8 +13,8 @@ import {
  *
  * Company name, postal address and a reachable phone number are here because Play
  * review asked for all three in every policy — see hard rule 2 in lib/site.ts. The
- * phone is plain text, never a `tel:` link, and carries PHONE_SCOPE_NOTE: one tap
- * to dial is what turned the owner's personal number into a support line. None
+ * phone is plain text, never a `tel:` link — one tap to dial is what turned the
+ * owner's personal number into a support line. None
  * of the five facts is written in this file; they all read from site.ts, so the
  * owner's next change to any of them is one edit.
  *
@@ -49,7 +48,7 @@ const applies = appliesTo ?? (app ? `${app.name} (${app.packageId})` : APPS.map(
     </div>
     <div>
       <dt>Phone</dt>
-      <dd>{SUPPORT_PHONE}<br />{PHONE_SCOPE_NOTE}</dd>
+      <dd>{SUPPORT_PHONE}</dd>
     </div>
     <div>
       <dt>Address</dt>
