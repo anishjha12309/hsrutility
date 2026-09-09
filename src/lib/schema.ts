@@ -10,13 +10,17 @@
  *     ^-- publisher -- MobileApplication (Arul)
  *     ^-- about ------ WebPage (per page)
  *
- * Organization carries legalName, address and telephone: HSR Utility Apps Private
- * Limited is the registered company behind the HSR Utility brand (owner-confirmed
+ * Organization carries legalName and address: HSR Utility Apps Private Limited
+ * is the registered company behind the HSR Utility brand (owner-confirmed
  * 2026-08-13; name, address and email replaced 2026-08-19). `name` stays the brand
  * — that is what users search for — and legalName carries the registration, which
  * is exactly how schema.org splits them.
  *
  * Deliberate omissions (do NOT "fix" these without real data):
+ *   - Organization.telephone — removed 2026-09-09. It is the field lead-gen
+ *     scrapers harvest and it put a one-tap Call button in Google's knowledge
+ *     panel, which is how a personal number became a support hotline. The number
+ *     still appears on the policy pages, which is where compliance wants it.
  *   - Organization.sameAs — no social profiles exist yet.
  *   - aggregateRating / review — only with real Play Store numbers. Inventing one to
  *     force a rich result violates Google's structured-data policy.
@@ -25,7 +29,6 @@
 import {
   SITE_URL,
   SUPPORT_EMAIL,
-  SUPPORT_PHONE,
   LEGAL_NAME,
   ADDRESS,
   ORG_DESCRIPTION,
@@ -49,7 +52,6 @@ export const organizationSchema = {
   url: `${SITE_URL}/`,
   logo: abs('/icon-512.png'),
   email: SUPPORT_EMAIL,
-  telephone: SUPPORT_PHONE,
   address: {
     '@type': 'PostalAddress',
     ...ADDRESS,

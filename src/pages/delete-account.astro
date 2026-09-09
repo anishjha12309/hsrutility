@@ -5,7 +5,7 @@ import '../styles/doc-steps.css';
 import {
   SUPPORT_EMAIL,
   SUPPORT_PHONE,
-  SUPPORT_PHONE_HREF,
+  PHONE_SCOPE_NOTE,
   LEGAL_NAME,
   ADDRESS_LINES,
   APPS,
@@ -135,7 +135,8 @@ const retained = [
       <Email label="Email to delete" subject="Delete my account" class="btn btn-primary" arrow />
     </p>
 
-    {/* Play review asked for a reachable number wherever we invite contact. */}
+    {/* Play review asked for a reachable number wherever we invite contact. Plain
+        text, not a `tel:` link — see SUPPORT_PHONE in lib/site.ts. */}
     <dl class="doc-meta" style="margin-top:1.75rem">
       <div>
         <dt>Company</dt>
@@ -143,7 +144,7 @@ const retained = [
       </div>
       <div>
         <dt>Phone</dt>
-        <dd><a href={SUPPORT_PHONE_HREF}>{SUPPORT_PHONE}</a></dd>
+        <dd>{SUPPORT_PHONE}<br />{PHONE_SCOPE_NOTE}</dd>
       </div>
       <div>
         <dt>Address</dt>

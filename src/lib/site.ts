@@ -23,7 +23,8 @@
  *
  *    Company name, registered address and support email were all replaced by the
  *    owner on 2026-08-19 (HSR Energy Private Limited / Bengaluru / support@hsrapps.com
- *    are all dead). The phone number was confirmed unchanged in that same pass.
+ *    are all dead). The phone number was replaced on 2026-09-09 — the previous one
+ *    was the owner's personal line, and users found it and rang it for app support.
  *
  * Facts here are verified against the app repos (`c:\Anish\Pakiza`,
  * `c:\Anish\Arul`). Do not add a capability you have not found in that code —
@@ -37,9 +38,20 @@ export const COPYRIGHT_YEAR = 2026;
 /** Registered company. Legal pages and JSON-LD only — see hard rule 2 above. */
 export const LEGAL_NAME = 'HSR Utility Apps Private Limited';
 
-/** Display form, and the `tel:` form, which must carry no spaces. */
-export const SUPPORT_PHONE = '+91 7827100871';
-export const SUPPORT_PHONE_HREF = 'tel:+917827100871';
+/**
+ * Published support phone. Display form only — there is deliberately no `tel:`
+ * href and no `telephone` in the JSON-LD. The number this replaced was the owner's
+ * personal line: it was harvested from both, and one-tap dialling turned every
+ * policy page into a support hotline the studio has never offered. It is published
+ * because Play review and the payment aggregator want a reachable number on the
+ * policy pages — not because it is a channel for app questions.
+ */
+export const SUPPORT_PHONE = '+91 8009191175';
+
+/** Rendered directly under the number in every contact block. Without it the
+ *  number reads as a support line and gets dialled as one. */
+export const PHONE_SCOPE_NOTE =
+  'Legal and compliance notices only — app support is by email.';
 
 /** Registered address. Field names mirror schema.org PostalAddress. */
 export const ADDRESS = {

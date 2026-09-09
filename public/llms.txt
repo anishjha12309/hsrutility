@@ -30,7 +30,7 @@
 - **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
 - **Account deletion:** instant from inside either app (Settings → Delete account);
   email support@hsrutility.com as a fallback if the app is already uninstalled.
-- **Contact:** support@hsrutility.com — replies within 48 hours. Phone: +91 7827100871.
+- **Contact:** support@hsrutility.com — replies within 48 hours. Support is email-only.
 - **This website:** no analytics, no cookies, no third-party requests of any kind.
 
 ## Pages
