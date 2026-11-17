@@ -38,7 +38,8 @@ interface Props {
 }
 
 const { app } = Astro.props;
-const lastUpdated = 'August 2026';
+const extra = app.legal.privacy;
+const lastUpdated = extra?.updated ?? 'August 2026';
 
 const description = `Privacy policy for ${app.name}: what the app collects, the services it relies on, how long data is kept, and how to delete your account at any time.`;
 
@@ -63,14 +64,19 @@ const collected = [
     title: 'Content you submit',
     body: `If you upload ${app.legal.submissions}, we store the file and its details so our team can review it before it may appear. Ask us any time and we will remove it.`,
   },
-  {
-    title: 'Referrals',
-    body: 'The link between your account and anyone joining through your invite, so rewards can be credited. Your referrals screen shows their display name or a partly masked email; they see nothing about you.',
-  },
+  ...(app.legal.referrals
+    ? [
+        {
+          title: 'Referrals',
+          body: 'The link between your account and anyone joining through your invite, so rewards can be credited. Your referrals screen shows their display name or a partly masked email; they see nothing about you.',
+        },
+      ]
+    : []),
   {
     title: 'Subscription',
     body: 'Your subscription status and its dates, so the app knows what to unlock. Payments run through PhonePe — we never see or store card, bank or UPI credentials.',
   },
+  ...(extra?.collected ?? []),
   {
     title: 'Usage & device',
     body: 'Device type, OS version, language, app version, advertising ID and which features you open, read in aggregate. Subscription events also carry an app-installation ID, so a payment can be matched to the install that produced it.',
@@ -81,37 +87,42 @@ const collected = [
   },
   {
     title: 'Install attribution',
-    body: 'The Google Play Install Referrer, to see which campaign or referral led to an install.',
+    body: `The Google Play Install Referrer, to see which campaign or ${app.legal.referrals ? 'referral' : 'link'} led to an install.`,
   },
   {
     title: 'Not collected',
-    body: `No location — the app never requests the permission. Its ${app.legal.reminders} are built and scheduled entirely on your device, reading only the local time zone: no push service, no server, nothing leaves the phone.`,
+    body:
+      extra?.notCollected ??
+      `No location — the app never requests the permission. Its ${app.legal.reminders} are built and scheduled entirely on your device, reading only the local time zone: no push service, no server, nothing leaves the phone.`,
   },
 ];
 
 const thirdParties = [
   { name: 'Google Sign-In & Play Services', purpose: 'Sign-in, distribution, core Android functionality.', url: 'https://policies.google.com/privacy' },
   { name: 'Google Firebase — Analytics, Crashlytics, Performance', purpose: 'Aggregated usage analytics, crash reports, performance monitoring.', url: 'https://firebase.google.com/support/privacy' },
-  { name: 'PostHog', purpose: 'Product analytics, from a small sample of installations.', url: 'https://posthog.com/privacy' },
+  { name: 'PostHog', purpose: extra?.posthog ?? 'Product analytics, from a small sample of installations.', url: 'https://posthog.com/privacy' },
   { name: 'Meta App Events', purpose: 'Advertising and conversion measurement, where we run campaigns.', url: 'https://www.facebook.com/privacy/policy' },
   { name: 'PhonePe', purpose: 'Subscription payments and the UPI Autopay mandate.', url: 'https://www.phonepe.com/privacy-policy/' },
   { name: 'Cloudflare', purpose: 'Hosting, media delivery, edge security.', url: 'https://www.cloudflare.com/privacypolicy/' },
   { name: 'Neon', purpose: 'The managed PostgreSQL database holding your account.', url: 'https://neon.tech/privacy-policy' },
+  ...(extra?.thirdParties ?? []),
   // Only for the app that actually makes the request — see LegalFacts.googleFontsCdn.
   ...(app.legal.googleFontsCdn
     ? [{ name: 'Google Fonts', purpose: `${app.name} loads one display typeface from Google's CDN on first run — a request from your device to Google before you sign in.`, url: 'https://policies.google.com/privacy' }]
     : []),
 ];
 
-const permissions = [
-  ['Internet & network state', 'Loading wallpapers, ringtones and your account.'],
+const permissions: [string, string][] = [
+  ['Internet & network state', extra?.loads ?? 'Loading wallpapers, ringtones and your account.'],
   ['Set wallpaper', 'Applying a wallpaper when you choose to.'],
   ['Modify system settings', 'Setting a ringtone when you choose to. Nothing else is touched.'],
-  ['Notifications', 'Showing reminders you switch on. Asked for then, never at launch.'],
-  ['Run at startup', 'Re-arming your scheduled reminders after a restart.'],
+  ['Notifications', extra?.notifications ?? 'Showing reminders you switch on. Asked for then, never at launch.'],
+  ['Run at startup', extra?.startup ?? 'Re-arming your scheduled reminders after a restart.'],
+  ...(extra?.permissions ?? []),
   [
     'Photos & media (Android 9 and below)',
-    `Registering a ringtone you set, and picking a file when you submit ${app.legal.submissions}. Unused on Android 10 and newer.`,
+    extra?.media ??
+      `Registering a ringtone you set, and picking a file when you submit ${app.legal.submissions}. Unused on Android 10 and newer.`,
   ],
   ['Advertising ID', 'Used by our analytics partners. Reset or limit it in Android settings any time.'],
 ];
@@ -121,6 +132,7 @@ const uses = [
   'Authenticating you and keeping your account secure.',
   'Processing subscriptions and managing the Autopay mandate.',
   'Reviewing content you submit before it may appear.',
+  ...(extra?.uses ?? []),
   'Diagnosing crashes and fixing bugs.',
   'Measuring our advertising and installs.',
 ];
@@ -189,7 +201,7 @@ const rights = [
 
   <section>
     <h2 id="permissions">3. Permissions</h2>
-    <p>Each is requested when you choose an action that needs it, not at launch:</p>
+    <p>{extra?.permissionsIntro ?? 'Each is requested when you choose an action that needs it, not at launch:'}</p>
     {permissions.map(([name, why]) => (
       <div class="doc-card">
         <p class="doc-card-title">{name}</p>

@@ -60,7 +60,7 @@ const serviceDescription = [
   'A vertical feed of still and live (video) wallpapers, previewing in place.',
   'A curated ringtone library to browse, preview and set.',
   app.legal.applyBehaviour,
-  `Reminders — ${app.legal.reminders} — scheduled entirely on your device.`,
+  ...(app.legal.reminders ? [`Reminders — ${app.legal.reminders} — scheduled entirely on your device.`] : []),
   `An upload screen for submitting ${app.legal.submissions} for review.`,
   `Localisation into ${app.legal.languages}, with light, dark and system theming.`,
 ];

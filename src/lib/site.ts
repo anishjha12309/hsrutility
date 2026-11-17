@@ -153,8 +153,36 @@ export type WallpaperApp = AppFact & { legal: LegalFacts };
 export interface LegalFacts {
   /** What the in-app upload screen accepts. Pakiza's has two tabs, Arul's one. */
   submissions: string;
-  /** What the offline reminder scheduler actually produces. */
-  reminders: string;
+  /** What the offline reminder scheduler actually produces. Absent where the app has none. */
+  reminders?: string;
+  /** True where the invite-and-reward scheme exists. Arul retired its scheme. */
+  referrals: boolean;
+  /**
+   * Privacy-policy items only this app has, audited against the app repo. The
+   * policy template appends them, so an app without them reads exactly as before.
+   */
+  privacy?: {
+    /** Month the policy text last changed, when later than the shared template's. */
+    updated: string;
+    collected: { title: string; body: string }[];
+    /** Replaces the reminder-based "Not collected" line. */
+    notCollected: string;
+    /** Extra clause for the "Internet" permission row. */
+    loads: string;
+    /** Lead-in to the permission list, where one is asked without a user action. */
+    permissionsIntro: string;
+    /** Why the pre-Android-10 storage permission exists. */
+    media: string;
+    /** Why the notification permission is asked, and when. */
+    notifications: string;
+    /** Why the app runs at startup. */
+    startup: string;
+    permissions: [string, string][];
+    thirdParties: { name: string; purpose: string; url: string }[];
+    /** What PostHog measures in this app. */
+    posthog: string;
+    uses: string[];
+  };
   /** How a wallpaper gets applied — the target-sheet vs system-chooser split. */
   applyBehaviour: string;
   /** Localisations, spelled out for prose. */
@@ -262,6 +290,7 @@ export const PAKIZA: AppFact = {
   legal: {
     submissions: 'a wallpaper or a ringtone',
     reminders: 'Jummah and Islamic-calendar reminders',
+    referrals: true,
     applyBehaviour:
       'Still wallpapers are applied through the app; live wallpapers hand off to Android’s own wallpaper chooser, which asks you where they should go.',
     languages: 'eleven Indian languages',
@@ -351,7 +380,54 @@ export const ARUL: AppFact = {
   cancelPath: 'Settings → your plan → Cancel',
   legal: {
     submissions: 'a wallpaper',
-    reminders: 'weekly and festival reminders',
+    referrals: false,
+    // Audited against the Arul repo on 2026-11-18: merged manifest, the Worker's
+    // rashifal, geo and push routes, and the analytics docs.
+    privacy: {
+      updated: 'November 2026',
+      collected: [
+        {
+          title: 'Rashifal birth details',
+          body: 'If you use Rashifal: the birth date, birth time (optional) and birth place you enter, the time zone of that place, and the moon sign worked out from them. They are used only to show your daily rashifal, never appear in analytics, and are deleted with your account.',
+        },
+        {
+          title: 'Notifications',
+          body: 'A push-notification token and an app-installation ID from Firebase Cloud Messaging, linked to your account, so we can send you devotional updates and offers. You can switch notifications off in Android settings at any time.',
+        },
+        {
+          title: 'Approximate region',
+          body: 'Your country and state, worked out from your IP address when the app first opens. It picks the artwork you see first and is read in aggregate analytics. Never your city, coordinates or postcode.',
+        },
+      ],
+      notCollected:
+        'No precise location — the app never requests the location permission. No phone number, no contacts. Jaap counts are not stored on our servers.',
+      loads: 'Loading wallpapers, ringtones, status clips, jaap chants, your rashifal and your account.',
+      permissionsIntro:
+        'Notifications are asked once, after you first sign in. Every other permission is requested when you choose an action that needs it. None is asked at launch:',
+      media:
+        'Registering a ringtone you set, saving a status clip to your gallery, and picking a file when you submit a wallpaper. Unused on Android 10 and newer.',
+      notifications:
+        'Devotional updates and offers we send, the Quick Access shortcut bar, and the playback control while a jaap chant plays. Asked once, after you first sign in, never at launch.',
+      startup: 'Putting the Quick Access shortcut bar back after a restart.',
+      permissions: [
+        [
+          'Foreground service (media playback)',
+          'Keeping a jaap chant you started playing, with its notification control, after you leave the app. It stops when the chant stops.',
+        ],
+      ],
+      thirdParties: [
+        {
+          name: 'Google Firebase — Cloud Messaging',
+          purpose: 'Delivering push notifications.',
+          url: 'https://firebase.google.com/support/privacy',
+        },
+      ],
+      posthog: 'Product analytics for sign-in, the free trial and the main features.',
+      uses: [
+        'Showing your daily rashifal from the birth details you give.',
+        'Sending notifications about new content and offers.',
+      ],
+    },
     applyBehaviour:
       'Still wallpapers let you pick home screen, lock screen or both before you apply; live wallpapers hand off to Android’s own wallpaper chooser, which asks you there.',
     languages: 'six Indian languages',
