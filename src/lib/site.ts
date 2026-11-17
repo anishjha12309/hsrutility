@@ -126,6 +126,11 @@ export interface AppFact {
   /** Where the in-app cancel route lives. */
   cancelPath: string;
   /**
+   * The app's own 1200x630 share card in public/, used by every page under /<slug>/.
+   * Without it those pages share the studio card (/og.png).
+   */
+  ogImage?: string;
+  /**
    * Only the wallpaper apps have this: it feeds the shared legal templates in
    * src/pages/[app]/. An app without it (AwaazPay, a money app) writes its own
    * legal pages under src/pages/<slug>/. Use `wallpaperApps()` to iterate the
@@ -451,6 +456,7 @@ export const AWAAZPAY: AppFact = {
   },
   deletePath: 'Settings → Need Help → Delete Account',
   cancelPath: 'Settings → Premium → Manage Subscription',
+  ogImage: '/awaazpay-og.png',
   shots: [
     {
       file: 'awaazpay-passbook',

@@ -23,20 +23,25 @@ interface Props {
 const {
   title,
   description = ORG_DESCRIPTION,
-  image = '/og.png',
+  image,
   structuredData = [],
   scope,
 } = Astro.props;
+
+// An app with its own share card uses it on every page of its sub-site.
+const shareImage = image ?? scope?.ogImage ?? '/og.png';
 
 const fullTitle = `${title} | HSR Utility`;
 
 // Astro.site comes from `site` in astro.config.mjs. Both of these resolve to absolute
 // URLs — required for canonical and og:image (a relative og:image is ignored by scrapers).
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImageURL = new URL(image, Astro.site);
+const socialImageURL = new URL(shareImage, Astro.site);
 
 // Named apps in the alt text follow the scope. On /pakiza/* it must not say Arul.
-const imageAlt = scope
+const imageAlt = scope?.ogImage && !image
+  ? `${scope.name}: ${scope.tagline}`
+  : scope
   ? `HSR Utility — the indie Android studio behind ${scope.name}`
   : `HSR Utility — an indie Android studio behind the apps ${appNames()}`;
 ---

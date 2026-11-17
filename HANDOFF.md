@@ -45,6 +45,7 @@ Status:
 
 - [x] Pages built and checked locally (build exit 0, 23 pages; `/awaazpay/` silo grep clean)
 - [x] Owner OK to push (17 Nov 2026, ~22:25 IST), pushed to master (this commit)
+- [x] AwaazPay share card (owner OK 18 Nov 2026): `public/awaazpay-og.png`, new optional AppFact `ogImage`; `Layout.astro` uses `scope.ogImage` on every page of a sub-site that has one (Arul and the studio pages keep `/og.png`)
 
 ## 2. Remove Pakiza — not started
 
@@ -52,5 +53,5 @@ Owner reason: one studio site should not put an Islamic and a Hindu app side by 
 When you do it, keep everything AwaazPay adds above. Remove: `PAKIZA` from `APPS`, its assets,
 its imports in `media.ts`, its schema in `schema.ts`, `app.slug === 'pakiza'` branches, Pakiza
 lines in `support.astro`, `delete-account.astro`, `index.astro` and `llms.txt`, and the
-`/pakiza/` pages from `dist/`. Old Pakiza URLs may still be linked from Play; decide redirects
+`/pakiza/` pages from `dist/`. The studio share card `public/og.png` (made by `scripts/generate-icons.mjs`) still reads "Pakiza · Arul" and "Wallpapers, live wallpapers and ringtones": regenerate it too. Old Pakiza URLs may still be linked from Play; decide redirects
 with the owner.
