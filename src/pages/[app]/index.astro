@@ -4,7 +4,7 @@ import SplitText from '../../components/SplitText.astro';
 import AppIcon from '../../components/AppIcon.astro';
 import Gallery from '../../components/Gallery.astro';
 import StatusPill from '../../components/StatusPill.astro';
-import { APPS, FREEMIUM_LINE, LEGAL_DOCS, legalPath, type AppFact } from '../../lib/site';
+import { APPS, LEGAL_DOCS, legalPath, type AppFact } from '../../lib/site';
 import {
   organizationSchema,
   websiteSchema,
@@ -49,7 +49,7 @@ const structuredData = [
   <section class="hero" data-hero aria-labelledby="app-heading">
     <div class="shell hero-inner">
       <p class="eyebrow reveal-fade">
-        HSR Utility — {app.slug === 'pakiza' ? 'Islamic lifestyle' : 'South Indian wallpapers'}
+        HSR Utility — {app.category}
       </p>
 
       <div class="hero-title">
@@ -133,8 +133,8 @@ const structuredData = [
   <div class="shell">
     <aside class="panel panel-blue closing reveal" aria-label={`${app.name} pricing, account and legal links`}>
       <div class="closing-pricing">
-        <p class="eyebrow">Free to browse, premium to apply</p>
-        <p class="closing-body">{FREEMIUM_LINE}</p>
+        <p class="eyebrow">{app.pricing.heading}</p>
+        <p class="closing-body">{app.pricing.body}</p>
       </div>
 
       <nav class="closing-legal" aria-label={`${app.name} legal and account links`}>

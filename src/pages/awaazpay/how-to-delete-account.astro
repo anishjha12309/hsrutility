@@ -1,0 +1,134 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import Email from '../../components/Email.astro';
+import LegalContact from '../../components/LegalContact.astro';
+import LegalFootLinks from '../../components/LegalFootLinks.astro';
+import '../../styles/doc-steps.css';
+import { AWAAZPAY, SUPPORT_EMAIL, legalPath } from '../../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
+
+/**
+ * The account-deletion URL Google Play asks for. Ported from
+ * `~/AwaazPay/web/src/pages/delete-account.tsx` (rewritten 17 Nov 2026).
+ *
+ * Changes made in the port: support@ instead of admin@; in-app deletion leads and
+ * email follows (the source lists email first; the site's Play-reviewed shape puts
+ * the instant route first, same steps); the LegalContact block and the "Applies
+ * to" row; legalPath() links. The email route only acts on a request sent from the
+ * account's own address — keep that sentence.
+ */
+
+const app = AWAAZPAY;
+const subject = `Delete my ${app.name} account`;
+
+const description = `How to delete your ${app.name} account and its data — in the app (${app.deletePath}), or by email without the app.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: app.name, path: `/${app.slug}` }, { name: 'Delete Your Account' }]),
+  webPageSchema({
+    path: legalPath(app, 'how-to-delete-account'),
+    name: `How to Delete Your Account — ${app.name} | HSR Utility`,
+    description,
+  }),
+];
+
+const inAppSteps = [
+  `Open ${app.name}, go to <strong>Settings</strong> and open the <strong>“Need Help?”</strong> section.`,
+  'Tap <strong>Delete Account</strong> and confirm.',
+];
+
+const emailSteps = [
+  `Write to <!--email_off--><a href="mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}">${SUPPORT_EMAIL}</a><!--/email_off--> from the email address of the Google account you signed in with.`,
+  `Use the subject <span class="mono-inline">${subject}</span>.`,
+];
+
+const deleted = [
+  'Your account and profile: name, email and Google account ID.',
+  'Your device records and sign-in sessions.',
+  'Every masked bank-message copy you shared.',
+];
+---
+
+<DocLayout
+  title={`How to Delete Your Account — ${app.name}`}
+  heading={`Delete your ${app.name} account`}
+  eyebrow={`${app.name} — account & data`}
+  description={description}
+  intro="You can delete your account and its data in the app, or by email without the app."
+  structuredData={structuredData}
+  scope={app}
+>
+  <section>
+    <p class="applies">
+      <span class="applies-label">Applies to</span>
+      <span class="applies-chip">{app.name}</span>
+      <span class="applies-chip">{app.packageId}</span>
+    </p>
+  </section>
+
+  {/* ── Primary path: in-app ─────────────────────────────────────────────── */}
+  <section>
+    <p class="method-flag">Fastest</p>
+    <h2 id="in-app">In the app</h2>
+
+    <ol class="steps">
+      {inAppSteps.map((step) => (
+        <li>
+          <span class="step-num accent" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+
+    <p style="margin-top:1rem">It is erased straight away and cannot be undone.</p>
+  </section>
+
+  {/* ── Without the app: email ───────────────────────────────────────────── */}
+  <section>
+    <h2 id="by-email">By email, without the app</h2>
+
+    <ol class="steps">
+      {emailSteps.map((step) => (
+        <li>
+          <span class="step-num" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+
+    <p style="margin-top:1rem">
+      We delete the account and its data within 7 days and reply to confirm. We only act on a request
+      sent from the account’s own email address.
+    </p>
+
+    <p style="margin-top:1.75rem">
+      <Email label="Email to delete" subject={subject} class="btn btn-primary" arrow />
+    </p>
+  </section>
+
+  {/* ── What goes ────────────────────────────────────────────────────────── */}
+  <section>
+    <h2 id="what-happens">What is deleted</h2>
+    <ul>{deleted.map((item) => <li>{item}</li>)}</ul>
+    <p>
+      Your bank messages and history on the phone are not touched; remove the app to clear them.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="shared-messages">Only the shared messages</h2>
+    <p>
+      Sharing masked bank messages comes with sign-in and has no switch. They are erased only with your
+      account, as above. See the <a href={legalPath(app, 'privacy-policy')}>privacy policy</a>.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">Need help?</h2>
+    <LegalContact app={app} intro="Trouble deleting, or a question about what happens to your data:" />
+  </section>
+
+  <LegalFootLinks app={app} current="how-to-delete-account" />
+</DocLayout>

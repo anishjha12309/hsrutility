@@ -12,6 +12,9 @@ import {
   PAYMENT_PROVIDER,
   legalPath,
   allAppsPhrase,
+  appNames,
+  otherApps,
+  wallpaperApps,
 } from '../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
 
@@ -23,7 +26,14 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * This page exists so there is one URL that states the position for the studio as a
  * whole, and so nobody has to infer from one app's policy what another app does.
  * Strict no-refund, set by the owner on 2026-08-20.
+ *
+ * AwaazPay (17 Nov 2026) holds the same position on payments already taken, but it
+ * is not free to browse: a plan is required. Sentences about the wallpaper premium
+ * tier are scoped to the wallpaper apps, and each other app's own pricing and
+ * cancel route follow from `app.pricing` / `app.cancelPath`.
  */
+const wallpapers = wallpaperApps();
+const wallpaperNames = appNames(wallpapers);
 const lastUpdated = 'August 2026';
 
 const description = `Refund and cancellation policy for HSR Utility apps: how to cancel a premium subscription, and our no-refund position on payments already taken.`;
@@ -79,9 +89,13 @@ const noRefundFor = [
   <section>
     <h2 id="how-billing-works">1. How Billing Works</h2>
     <p>
-      Browsing and previewing stay free in every app. Premium unlocks applying and sharing wallpapers
-      and setting ringtones, at <strong>{MONTHLY_PRICE} per month</strong>, renewing until cancelled.
+      In {wallpaperNames}, browsing and previewing stay free. Premium unlocks applying and sharing
+      wallpapers and setting ringtones, at <strong>{MONTHLY_PRICE} per month</strong>, renewing until
+      cancelled.
     </p>
+    {otherApps().map((app) => (
+      <p><strong>{app.name}:</strong> {app.pricing.body}</p>
+    ))}
     <div class="doc-card">
       <p class="doc-card-title">UPI Autopay, not the Google Play Store</p>
       <p>
@@ -103,8 +117,10 @@ const noRefundFor = [
   <section>
     <h2 id="cancel">2. Cancelling</h2>
     <p>
-      Settings → your plan → Cancel. It takes effect at once and needs no reason. A mandate can also be
-      paused or revoked from the UPI app you approved it in.
+      In {wallpaperNames}: {wallpapers[0].cancelPath}.
+      {otherApps().map((app) => <>In {app.name}: {app.cancelPath}. </>)}
+      It takes effect at once and needs no reason. A mandate can also be paused or revoked from the UPI
+      app you approved it in.
     </p>
     <p>
       Cancelling stops future charges and leaves premium running to the end of the period already paid
@@ -120,8 +136,10 @@ const noRefundFor = [
     </p>
     <ul>{noRefundFor.map((item) => <li>{item}</li>)}</ul>
     <p>
-      Subscribing acknowledges this. Browsing and previewing are free, and the trial is free once per
-      person, precisely so the app can be judged before any money moves.
+      Subscribing acknowledges this. In {wallpaperNames}, browsing and previewing are free and the
+      trial is free once per person; in {appNames(otherApps())}, the one-day trial's
+      {MANDATE_VERIFY_AMOUNT} is refunded and given once per Google account — precisely so the app can
+      be judged before any money moves.
     </p>
     <p>
       Nothing in this policy removes a right you hold under Indian consumer law that cannot be given

@@ -8,6 +8,10 @@ import {
   LEGAL_NAME,
   ADDRESS_LINES,
   APPS,
+  AWAAZPAY,
+  appNames,
+  appNamesOr,
+  wallpaperApps,
 } from '../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../lib/schema';
 
@@ -16,10 +20,15 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * compliance and is preserved exactly: in-app instant deletion leads, email is the
  * fallback, and the deleted/retained split is stated with its real retention periods.
  * Nothing here was softened or re-promised.
+ *
+ * AwaazPay added 17 Nov 2026. The steps and lists below were written for the
+ * wallpaper apps and are now labelled as theirs; AwaazPay's own route and lists
+ * follow each one, taken from its how-to-delete-account and privacy pages.
  */
+const wallpaperNames = appNames(wallpaperApps());
 
 const description =
-  'How to permanently delete your Pakiza or Arul account and data — instantly in the app (Settings → Delete account), or by email as a fallback.';
+  `How to permanently delete your ${appNamesOr()} account and data — instantly in the app, or by email as a fallback.`;
 
 const structuredData = [
   organizationSchema,
@@ -27,7 +36,7 @@ const structuredData = [
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Delete My Account' }]),
   webPageSchema({
     path: '/delete-account',
-    name: 'Delete Your Account & Data — Pakiza & Arul | HSR Utility',
+    name: `Delete Your Account & Data — ${appNames()} | HSR Utility`,
     description,
   }),
 ];
@@ -38,10 +47,15 @@ const inAppSteps = [
   'Confirm. Your account and data are deleted <strong>immediately</strong>, your subscription and its UPI mandate are cancelled, and you are signed out. If we cannot reach the payment provider to cancel the mandate, the deletion is refused outright rather than half-applied — nothing is deleted and you can try again.',
 ];
 
+const awaazpayInAppSteps = [
+  `Open ${AWAAZPAY.name}, go to <strong>Settings</strong> and open the <strong>“Need Help?”</strong> section.`,
+  'Tap <strong>Delete Account</strong> and confirm. Your plan is cancelled first, then your account is erased straight away. It cannot be undone.',
+];
+
 const emailSteps = [
-  `Send an email to <!--email_off--><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><!--/email_off--> with the subject line naming the app you use: <span class="mono-inline">Delete my account — Pakiza (or Arul)</span>`,
-  'Include the <strong>Google account email</strong> you used to sign in, so we can locate and verify your data.',
-  'We process it within <strong>7 business days</strong> and email you a confirmation.',
+  `Send an email to <!--email_off--><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><!--/email_off--> with the subject line naming the app you use: <span class="mono-inline">Delete my account — ${appNamesOr()}</span>`,
+  `Include the <strong>Google account email</strong> you used to sign in, so we can locate and verify your data. For ${AWAAZPAY.name}, send the email from that Google account’s own address — we only act on a request sent from it.`,
+  `We process it within <strong>7 business days</strong> (${AWAAZPAY.name}: within 7 days) and email you a confirmation.`,
 ];
 
 /**
@@ -58,6 +72,14 @@ const deleted = [
   'Any content you submitted that has not yet been published',
   'The analytics and advertising identifiers linked to your account on that device',
   'All locally cached app data, upon uninstalling the app',
+];
+
+/** From AwaazPay's how-to-delete-account page. */
+const awaazpayDeleted = [
+  'Your account and profile: name, email and Google account ID',
+  'Your device records and sign-in sessions',
+  'Every masked bank-message copy you shared',
+  'Your subscription records (status, ids, debit count and amounts), erased with the account',
 ];
 
 const retained = [
@@ -86,7 +108,7 @@ const retained = [
 ---
 
 <DocLayout
-  title="Delete Your Account & Data — Pakiza & Arul"
+  title={`Delete Your Account & Data — ${appNames()}`}
   heading="Delete your account &amp; data"
   eyebrow="Account & data"
   description={description}
@@ -105,9 +127,18 @@ const retained = [
     <p class="method-flag">Fastest</p>
     <h2 id="in-app">Delete it in the app</h2>
     <p>Takes effect immediately — no waiting, no email needed.</p>
-
+    <p><strong>{wallpaperNames}:</strong></p>
     <ol class="steps">
       {inAppSteps.map((step) => (
+        <li>
+          <span class="step-num accent" aria-hidden="true"></span>
+          <span set:html={step} />
+        </li>
+      ))}
+    </ol>
+    <p style="margin-top:1.5rem"><strong>{AWAAZPAY.name}</strong> ({AWAAZPAY.deletePath}):</p>
+    <ol class="steps">
+      {awaazpayInAppSteps.map((step) => (
         <li>
           <span class="step-num accent" aria-hidden="true"></span>
           <span set:html={step} />
@@ -159,13 +190,23 @@ const retained = [
   {/* ── What goes, what stays ────────────────────────────────────────────── */}
   <section>
     <h2 id="what-happens">What gets deleted</h2>
+    <p><strong>{wallpaperNames}:</strong></p>
     <ul>
       {deleted.map((item) => <li>{item}</li>)}
     </ul>
+    <p><strong>{AWAAZPAY.name}:</strong></p>
+    <ul>
+      {awaazpayDeleted.map((item) => <li>{item}</li>)}
+    </ul>
+    <p>
+      {AWAAZPAY.name}’s bank messages and history on your phone are not touched; remove the app to
+      clear them.
+    </p>
   </section>
 
   <section>
     <h2 id="retained">What we must retain</h2>
+    <p><strong>{wallpaperNames}:</strong></p>
     <div class="doc-grid">
       {retained.map((item) => (
         <div class="doc-card">
@@ -175,6 +216,12 @@ const retained = [
         </div>
       ))}
     </div>
+    <p style="margin-top:1rem">
+      <strong>{AWAAZPAY.name}:</strong> a one-way code of your sign-in identity is kept after
+      deletion if you had used the free trial, so the trial is not given twice; it cannot be turned
+      back into your identity. Our server deletes the analytics ids it kept; the analytics companies
+      keep what they already received under their own retention rules.
+    </p>
   </section>
 
   <section>
@@ -188,23 +235,38 @@ const retained = [
       To stop future charges while keeping premium to the end of the period, cancel instead — Settings
       → your plan → Cancel — and delete later if you still want to.
     </p>
+    <p>
+      In {AWAAZPAY.name}, deleting your account cancels your plan first, so there are no more debits.
+      Premium ends at once, and the rest of the paid period is lost. To keep it to the end of the
+      period, cancel instead — {AWAAZPAY.cancelPath}.
+    </p>
   </section>
 
   <section>
     <h2 id="per-app">What data our apps store</h2>
     <p>
-      Our apps collect the same categories of personal data, and differ mainly in the content
-      they offer.
+      {wallpaperNames} collect the same categories of personal data, and differ mainly in the
+      content they offer. {AWAAZPAY.name} is a money app and stores different data.
     </p>
     {APPS.map((app) => (
       <div class="doc-card">
         <p class="doc-card-title">{app.name}</p>
-        <p>
-          Google account info from sign-in (name and email), your display name, content you
-          submitted for review, in-app preferences, subscription and referral status, and
-          analytics &amp; advertising identifiers.
-          {app.slug === 'pakiza' && ' Pakiza also accepts ringtone submissions, so an audio file you upload is stored for review.'}
-        </p>
+        {app.legal ? (
+          <p>
+            Google account info from sign-in (name and email), your display name, content you
+            submitted for review, in-app preferences, subscription and referral status, and
+            analytics &amp; advertising identifiers.
+            {app.slug === 'pakiza' && ' Pakiza also accepts ringtone submissions, so an audio file you upload is stored for review.'}
+          </p>
+        ) : (
+          <p>
+            Google account info from sign-in (name, email and Google account ID), device details
+            (maker and model, Android version, app version, language and a hashed install id),
+            masked copies of the bank messages it recognised (shared from sign-in), subscription
+            records, and analytics &amp; advertising identifiers. Your bank messages and payment
+            history stay on your phone.
+          </p>
+        )}
       </div>
     ))}
   </section>

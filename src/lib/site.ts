@@ -29,6 +29,9 @@
  * Facts here are verified against the app repos (`c:\Anish\Pakiza`,
  * `c:\Anish\Arul`). Do not add a capability you have not found in that code —
  * "saved favourites" was on this site for months and neither app has ever had it.
+ * AwaazPay's copy comes ONLY from its Play listing (`~/AwaazPay/docs/play-store/
+ * 03-listing-text.md`, the full description), which lists exactly what the release
+ * build shows, and its legal pages from `~/AwaazPay/web/src/pages/*.tsx`.
  */
 
 export const SITE_URL = 'https://hsrutility.com';
@@ -74,7 +77,7 @@ export const ADDRESS_LINES = [
 /** Canonical descriptor. Reused verbatim in copy and schema — entity resolution
  *  rewards exact repetition, and it keeps the two from drifting. */
 export const ORG_DESCRIPTION =
-  'HSR Utility is an indie Android studio making wallpaper and ringtone apps for specific cultural audiences.';
+  'HSR Utility is an indie Android studio making wallpaper, ringtone and money-management apps for specific audiences.';
 
 export const abs = (path: string) => new URL(path, SITE_URL).href;
 
@@ -91,6 +94,10 @@ export interface Shot {
 
 export interface AppFact {
   slug: string;
+  /** Eyebrow on the app's landing page, after "HSR Utility — ". */
+  category: string;
+  /** schema.org applicationCategory for the app's JSON-LD. */
+  applicationCategory: string;
   name: string;
   /** Android applicationId. Named in the app's own legal pages, the way a Play
    *  reviewer expects a policy to identify which package it governs. */
@@ -112,9 +119,23 @@ export interface AppFact {
   /** Short chips under the hero. Every one must be verifiable in the app repo. */
   chips: string[];
   shots: Shot[];
-  /** The asymmetries the legal pages have to state accurately. See LegalFacts. */
-  legal: LegalFacts;
+  /** The closing slab on the app's landing page: how the app is paid for. */
+  pricing: { heading: string; body: string };
+  /** Where the in-app delete button lives, for the studio pages' per-app lines. */
+  deletePath: string;
+  /** Where the in-app cancel route lives. */
+  cancelPath: string;
+  /**
+   * Only the wallpaper apps have this: it feeds the shared legal templates in
+   * src/pages/[app]/. An app without it (AwaazPay, a money app) writes its own
+   * legal pages under src/pages/<slug>/. Use `wallpaperApps()` to iterate the
+   * apps that have it.
+   */
+  legal?: LegalFacts;
 }
+
+/** An app that renders through the shared wallpaper legal templates. */
+export type WallpaperApp = AppFact & { legal: LegalFacts };
 
 /**
  * The handful of facts where the apps genuinely differ, pulled out so the legal
@@ -144,9 +165,53 @@ export interface LegalFacts {
   catalogue: string;
 }
 
+/* ── Billing ──────────────────────────────────────────────────────────────────
+   Verified against BOTH app repos, 2026-08-20. Do not restate these numbers in a
+   page — every one of them is wrong somewhere the moment it exists twice.
+
+   The subscription is a PhonePe UPI Autopay mandate: `maxAmount: 19900` in
+   `workers/src/lib/phonepe.ts` in each repo, and `TRIAL_DAYS = 1` in
+   `workers/src/routes/payments.ts`. A first-time subscriber goes through a ₹2
+   PENNY_DROP that the bank auto-reverses; someone who has already used their one
+   trial is charged the full amount as a TRANSACTION instead, with no trial.
+
+   Pakiza's `db/seed.sql` carried ₹49/₹499 until 2026-08-20 — stale values that
+   never matched the Worker's real debit, and that nothing in the app read (its
+   own fallback was already ₹199). Corrected in the repo, not worked around here.
+
+   AwaazPay (added 17 Nov 2026) bills the same way at the same numbers: a ₹2
+   one-day trial by UPI AutoPay that is reversed, then ₹199 a month on a PhonePe
+   mandate capped at ₹199 (its terms.tsx and refund.tsx). If it ever diverges, give
+   it its own constants rather than editing these. */
+
+export const MONTHLY_PRICE = '₹199';
+export const TRIAL_DAYS = 1;
+
+/** The mandate-setup debit. Named on every page that mentions the trial: the user
+ *  SEES ₹2 leave the account on a screen that said "free", and an unexplained
+ *  debit reads as a scam however well the rest of the page is written. */
+export const MANDATE_VERIFY_AMOUNT = '₹2';
+
+export const PAYMENT_PROVIDER = 'PhonePe';
+
+/**
+ * The freemium line, worded identically wherever it appears.
+ *
+ * Two words are load-bearing. "Sharing" is scoped to wallpapers because ringtone
+ * sharing is not a gated action — it does not exist. And it says "new accounts get
+ * a free trial" rather than "after a free trial", because the trial is once per
+ * user: someone who subscribed before is charged straight away with no trial.
+ */
+export const FREEMIUM_LINE =
+  `Browsing and previewing is always free. Applying wallpapers, sharing them and setting ringtones are premium — ${MONTHLY_PRICE} a month, billed through UPI Autopay. New accounts get a free trial; setting up the mandate takes a ${MANDATE_VERIFY_AMOUNT} verification debit that is reversed automatically.`;
+
+export const FREEMIUM_SHORT = 'Free to browse, premium to apply.';
+
 export const PAKIZA: AppFact = {
   slug: 'pakiza',
   name: 'Pakiza',
+  category: 'Islamic lifestyle',
+  applicationCategory: 'LifestyleApplication',
   packageId: 'com.hsrutility.pakiza',
   tagline: 'Where every unlock feels considered',
   description:
@@ -186,6 +251,9 @@ export const PAKIZA: AppFact = {
       body: 'Found something worth sharing? Submit a wallpaper or a ringtone from inside the app. Every submission is reviewed by hand before it can appear.',
     },
   ],
+  pricing: { heading: 'Free to browse, premium to apply', body: FREEMIUM_LINE },
+  deletePath: 'Settings → Delete account',
+  cancelPath: 'Settings → your plan → Cancel',
   legal: {
     submissions: 'a wallpaper or a ringtone',
     reminders: 'Jummah and Islamic-calendar reminders',
@@ -227,6 +295,8 @@ export const PAKIZA: AppFact = {
 export const ARUL: AppFact = {
   slug: 'arul',
   name: 'Arul',
+  category: 'South Indian wallpapers',
+  applicationCategory: 'LifestyleApplication',
   packageId: 'com.hsrutility.arul',
   tagline: 'Six collections, endlessly scrollable',
   description:
@@ -271,6 +341,9 @@ export const ARUL: AppFact = {
       body: 'Localised into six Indian languages, so the app speaks the language the art belongs to.',
     },
   ],
+  pricing: { heading: 'Free to browse, premium to apply', body: FREEMIUM_LINE },
+  deletePath: 'Settings → Delete account',
+  cancelPath: 'Settings → your plan → Cancel',
   legal: {
     submissions: 'a wallpaper',
     reminders: 'weekly and festival reminders',
@@ -319,7 +392,100 @@ export const ARUL: AppFact = {
   ],
 };
 
-export const APPS: AppFact[] = [PAKIZA, ARUL];
+
+export const AWAAZPAY: AppFact = {
+  slug: 'awaazpay',
+  name: 'AwaazPay',
+  category: 'Money management',
+  applicationCategory: 'FinanceApplication',
+  packageId: 'app.awaazpay.android',
+  // Every word below comes from the Play listing's full description. It is
+  // SMS-based money management: never call it an "SMS reader", "SMS alerts" or
+  // "text to voice" (Play's SMS policy). The release build hides the widget,
+  // export, summaries, categories, backup and Refer & Earn — do not mention them.
+  tagline: 'Your money, tracked without typing',
+  description:
+    'AwaazPay is an Android app that builds a passbook of your bank debits and credits from the transaction messages on your phone, tracks your UPI autopays and EMIs, and reminds you before each one is due.',
+  status: 'live',
+  statusLabel: 'Live on Google Play',
+  playUrl: 'https://play.google.com/store/apps/details?id=app.awaazpay.android',
+  icon: 'awaazpay.png',
+  iconAlt:
+    'AwaazPay app icon — a white speech bubble holding a green rupee sign, with sound waves and a small calendar check mark, on deep green',
+  hue: '22 128 61',
+  featuresHeading: 'Every payment, accounted for.',
+  chips: ['10 languages', 'No ads', 'History stays on your phone'],
+  features: [
+    {
+      title: 'One passbook',
+      body: 'Every debit and credit from your bank messages, grouped by account, with search and dates. Nothing to type in.',
+    },
+    {
+      title: 'Autopays and EMIs',
+      body: 'Your UPI autopay mandates, EMIs and subscriptions in one place, each with its due date.',
+    },
+    {
+      title: 'Reminders before every due date',
+      body: 'Alerts before autopay, EMI and bill due dates, including the reminder messages your bank sends — so a payment never surprises you.',
+    },
+    {
+      title: 'Hear every debit and credit',
+      body: 'Each debit or credit is announced as it happens, in your chosen voice language. It works even when your phone is on Do Not Disturb, and you can turn it off.',
+    },
+    {
+      title: 'Alerts you can rely on',
+      body: 'A settings page that checks your phone is set up so alerts are not missed.',
+    },
+    {
+      title: 'Ten languages',
+      body: 'English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam and Punjabi.',
+    },
+    {
+      title: 'Your history stays on your phone',
+      body: 'Reading, parsing and your payment history stay on your phone, and the app has no ads. Personal messages are ignored, and one-time passcode messages are never sent.',
+    },
+  ],
+  pricing: {
+    heading: 'A plan, from day one',
+    body: `A plan is required to use the app, and you sign in with Google. Start with a ${TRIAL_DAYS}-day trial for ${MANDATE_VERIFY_AMOUNT} — the ${MANDATE_VERIFY_AMOUNT} is refunded — then ${MONTHLY_PRICE} a month by UPI AutoPay through ${PAYMENT_PROVIDER}. Cancel any time in the app.`,
+  },
+  deletePath: 'Settings → Need Help → Delete Account',
+  cancelPath: 'Settings → Premium → Manage Subscription',
+  shots: [
+    {
+      file: 'awaazpay-passbook',
+      caption: 'One passbook',
+      alt: 'AwaazPay screenshot: "Every payment in one passbook — Debits and credits from your bank messages, by account", showing the Passbook screen with total credits and debits, account chips and a list of transactions.',
+    },
+    {
+      file: 'awaazpay-autopays',
+      caption: 'Autopays and EMIs',
+      alt: 'AwaazPay screenshot: "All your autopays in one place — UPI mandates, EMIs and subscriptions with due dates", showing the Your Autopays screen with a monthly total, an upcoming-payments banner and each autopay with its due date.',
+    },
+    {
+      file: 'awaazpay-transaction',
+      caption: 'Full details',
+      alt: 'AwaazPay screenshot: "Full details for every payment — Amount, balance, reference and date in one tap", showing a Transaction Details dialog over the passbook.',
+    },
+    {
+      file: 'awaazpay-upcoming',
+      caption: 'Reminders before dues',
+      alt: 'AwaazPay screenshot: "Reminders before every due date — No autopay, EMI or bill takes you by surprise", showing the Upcoming Payments screen with due dates, days left, and Dismiss and Mark Paid buttons.',
+    },
+    {
+      file: 'awaazpay-voice',
+      caption: 'Spoken alerts',
+      alt: 'AwaazPay screenshot: "Hear every debit and credit — Spoken alerts in your chosen voice language", showing the Voice settings sheet with switches for credit, debit and upcoming-payment announcements and a voice language picker.',
+    },
+    {
+      file: 'awaazpay-reliability',
+      caption: 'Alert reliability',
+      alt: 'AwaazPay screenshot: "Alerts you can rely on — A quick check that your phone is set up right", showing the Make alerts reliable screen with notifications and voice checks all passing.',
+    },
+  ],
+};
+
+export const APPS: AppFact[] = [PAKIZA, ARUL, AWAAZPAY];
 
 /* ── Copy helpers ─────────────────────────────────────────────────────────────
    Everything that would otherwise bake the app count into a sentence. */
@@ -348,43 +514,16 @@ export const appsLegalPhrase = (apps: AppFact[] = APPS) =>
 export const liveApps = () => APPS.filter((a) => a.status === 'live');
 export const upcomingApps = () => APPS.filter((a) => a.status === 'coming-soon');
 
-/**
-/* ── Billing ──────────────────────────────────────────────────────────────────
-   Verified against BOTH app repos, 2026-08-20. Do not restate these numbers in a
-   page — every one of them is wrong somewhere the moment it exists twice.
+/** The apps that render through the shared wallpaper legal templates in src/pages/[app]/. */
+export const wallpaperApps = (): WallpaperApp[] =>
+  APPS.filter((a): a is WallpaperApp => a.legal !== undefined);
 
-   The subscription is a PhonePe UPI Autopay mandate: `maxAmount: 19900` in
-   `workers/src/lib/phonepe.ts` in each repo, and `TRIAL_DAYS = 1` in
-   `workers/src/routes/payments.ts`. A first-time subscriber goes through a ₹2
-   PENNY_DROP that the bank auto-reverses; someone who has already used their one
-   trial is charged the full amount as a TRANSACTION instead, with no trial.
+/** The apps that do not — each writes its own legal pages under src/pages/<slug>/. */
+export const otherApps = () => APPS.filter((a) => a.legal === undefined);
 
-   Pakiza's `db/seed.sql` carried ₹49/₹499 until 2026-08-20 — stale values that
-   never matched the Worker's real debit, and that nothing in the app read (its
-   own fallback was already ₹199). Corrected in the repo, not worked around here. */
-
-export const MONTHLY_PRICE = '₹199';
-export const TRIAL_DAYS = 1;
-
-/** The mandate-setup debit. Named on every page that mentions the trial: the user
- *  SEES ₹2 leave the account on a screen that said "free", and an unexplained
- *  debit reads as a scam however well the rest of the page is written. */
-export const MANDATE_VERIFY_AMOUNT = '₹2';
-
-export const PAYMENT_PROVIDER = 'PhonePe';
-
-/**
- * The freemium line, worded identically wherever it appears.
- *
- * Two words are load-bearing. "Sharing" is scoped to wallpapers because ringtone
- * sharing is not a gated action — it does not exist. And it says "new accounts get
- * a free trial" rather than "after a free trial", because the trial is once per
- * user: someone who subscribed before is charged straight away with no trial.
- */
-export const FREEMIUM_LINE =
-  `Browsing and previewing is always free. Applying wallpapers, sharing them and setting ringtones are premium — ${MONTHLY_PRICE} a month, billed through UPI Autopay. New accounts get a free trial; setting up the mandate takes a ${MANDATE_VERIFY_AMOUNT} verification debit that is reversed automatically.`;
-
-export const FREEMIUM_SHORT = 'Free to browse, premium to apply.';
+/** "Pakiza or Arul" · with three: "Pakiza, Arul, or AwaazPay". */
+export const appNamesOr = (apps: AppFact[] = APPS) =>
+  new Intl.ListFormat('en', { style: 'long', type: 'disjunction' }).format(apps.map((a) => a.name));
 
 /* ── Per-app legal pages ──────────────────────────────────────────────────────
    Each app is a self-contained sub-site: /<slug> plus the five documents below.

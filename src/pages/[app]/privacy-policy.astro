@@ -3,7 +3,7 @@ import DocLayout from '../../layouts/DocLayout.astro';
 import Email from '../../components/Email.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
-import { APPS, LEGAL_NAME, legalPath, type AppFact } from '../../lib/site';
+import { wallpaperApps, LEGAL_NAME, legalPath, type WallpaperApp } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
 /**
@@ -27,12 +27,14 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * that page is studio-level and names every app, so a link there is a single click
  * from this app's policy to the other app's name.
  */
+// Wallpaper apps only: an app without `legal` (AwaazPay) has its own page under
+// src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
-  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+  return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));
 }
 
 interface Props {
-  app: AppFact;
+  app: WallpaperApp;
 }
 
 const { app } = Astro.props;

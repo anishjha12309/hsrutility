@@ -1,0 +1,125 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import Email from '../../components/Email.astro';
+import LegalContact from '../../components/LegalContact.astro';
+import LegalFootLinks from '../../components/LegalFootLinks.astro';
+import { AWAAZPAY, LEGAL_NAME, legalPath } from '../../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
+
+/**
+ * AwaazPay's refund policy, ported from `~/AwaazPay/web/src/pages/refund.tsx`
+ * (rewritten 17 Nov 2026; the in-app text policy_refund_body matches it).
+ *
+ * Same position as the studio's: payments already taken are not refunded, and the
+ * ₹2 is a bank verification that is reversed. Unlike the wallpaper apps' page it
+ * says outright that failed, duplicate or wrong debits ARE refunded — that is the
+ * AwaazPay text, keep it. Changes made in the port: support@ instead of admin@, the
+ * LegalContact block, the package line, legalPath() links.
+ */
+
+const app = AWAAZPAY;
+const lastUpdated = 'November 2026';
+
+const description = `Refund policy for ${app.name}: the plan, the ₹2 trial, how to cancel, no refunds for payments already taken, and what happens with failed, duplicate or wrong debits.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: app.name, path: `/${app.slug}` }, { name: 'Refund Policy' }]),
+  webPageSchema({
+    path: legalPath(app, 'refund-policy'),
+    name: `Refund Policy — ${app.name} | HSR Utility`,
+    description,
+  }),
+];
+---
+
+<DocLayout
+  title={`Refund Policy — ${app.name}`}
+  heading="Refund Policy"
+  eyebrow={`${app.name} — legal`}
+  description={description}
+  lastUpdated={lastUpdated}
+  structuredData={structuredData}
+  scope={app}
+>
+  <section>
+    <p>
+      <strong>{app.name}</strong> (package <code>{app.packageId}</code>) is run by
+      <strong>{LEGAL_NAME}</strong> — HSR UTILITY APPS PVT LTD, the name you see in your UPI app.
+      Please read this before you start the trial.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="plan">1. The Plan</h2>
+    <p>
+      {app.name} needs an active plan. You sign in with Google and start with a one-day trial. After
+      the trial the plan is <strong>₹199 a month</strong> and renews until you cancel. You pay by a UPI
+      AutoPay mandate that you approve in your own UPI app, set up through PhonePe. The mandate allows
+      up to ₹199 a month.
+    </p>
+    <div class="doc-card">
+      <p class="doc-card-title">UPI AutoPay, not the Google Play Store</p>
+      <p>It is not a Google Play purchase.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="trial">2. The ₹2 Trial</h2>
+    <div class="doc-card">
+      <p class="doc-card-title">The ₹2 is a bank verification, not a charge</p>
+      <p>
+        The trial starts with a ₹2 debit. It is a bank verification, not a charge. The ₹2 is reversed
+        (refunded). If it has not come back after a few working days, email us at <Email />. There is
+        one trial for each Google account.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="cancel">3. How to Cancel</h2>
+    <p>
+      Cancel any time. In the app, go to Settings → Premium → Manage Subscription, or Need Help →
+      Manage Subscription. Or cancel in your UPI app under AutoPay or Mandates. Cancel before the trial
+      ends and ₹199 is never taken. After you cancel there are no more debits. Your access continues
+      to the end of the period you have already paid for.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="no-refunds">4. No Refunds for Payments Already Taken</h2>
+    <p>
+      <strong>A ₹199 payment that has been taken is not refunded.</strong> There is no refund for a
+      month that has started, for part of a month, or for forgetting to cancel before a renewal.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="errors">5. Failed, Duplicate or Wrong Debits</h2>
+    <p>
+      If a debit failed but money left your account, or you were charged twice, charged after you
+      cancelled, or charged a different amount, we refund it. Email <Email /> with the date and the
+      amount. We will fix anything that was our error.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="delete">6. Deleting Your Account</h2>
+    <p>
+      Deleting your account in the app cancels your plan first, so there are no more debits. Premium
+      ends at once, and the rest of the paid period is lost.
+      <a href={legalPath(app, 'how-to-delete-account')}>How to delete your account</a>.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">7. Contact</h2>
+    <LegalContact app={app} intro="Questions about this policy, a debit, or cancelling:" />
+    <p style="margin-top:1rem">
+      See also the <a href={legalPath(app, 'terms')}>terms of use</a>.
+    </p>
+  </section>
+
+  <LegalFootLinks app={app} current="refund-policy" />
+</DocLayout>

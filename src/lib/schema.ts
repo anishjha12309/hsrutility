@@ -8,6 +8,7 @@
  *     ^-- publisher -- WebSite (#website)
  *     ^-- publisher -- MobileApplication (Pakiza)
  *     ^-- publisher -- MobileApplication (Arul)
+ *     ^-- publisher -- MobileApplication (AwaazPay, FinanceApplication)
  *     ^-- about ------ WebPage (per page)
  *
  * Organization carries legalName and address: HSR Utility Apps Private Limited
@@ -35,6 +36,7 @@ import {
   abs,
   PAKIZA,
   ARUL,
+  AWAAZPAY,
   type AppFact,
 } from './site';
 
@@ -76,8 +78,9 @@ export const websiteSchema = {
  * Results Test — that needs offers + aggregateRating, which we only add with honest
  * Play Store numbers. The value is an unambiguous "what is Pakiza" / "what is Arul".
  *
- * `offers` is safe to state: both apps are free to download, and that is a fact
- * independent of the premium tier inside them.
+ * `offers` is safe to state: every app is free to download, and that is a fact
+ * independent of the premium tier or plan inside it. `applicationCategory` comes
+ * from the app's own fact: Lifestyle for the wallpaper apps, Finance for AwaazPay.
  */
 export const appSchema = (app: AppFact) => ({
   '@context': 'https://schema.org',
@@ -86,7 +89,7 @@ export const appSchema = (app: AppFact) => ({
   name: app.name,
   url: abs(`/${app.slug}`),
   description: app.description,
-  applicationCategory: 'LifestyleApplication',
+  applicationCategory: app.applicationCategory,
   operatingSystem: 'ANDROID',
   publisher: { '@id': ORG_ID },
   author: { '@id': ORG_ID },
@@ -100,6 +103,7 @@ export const appSchema = (app: AppFact) => ({
 
 export const pakizaAppSchema = appSchema(PAKIZA);
 export const arulAppSchema = appSchema(ARUL);
+export const awaazpayAppSchema = appSchema(AWAAZPAY);
 
 type Crumb = { name: string; path?: string };
 

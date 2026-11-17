@@ -4,7 +4,7 @@ import Email from '../../components/Email.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
 import '../../styles/doc-steps.css';
-import { APPS, SUPPORT_EMAIL, legalPath, type AppFact } from '../../lib/site';
+import { wallpaperApps, SUPPORT_EMAIL, legalPath, type WallpaperApp } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
 /**
@@ -21,12 +21,14 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * favourites" (no app has ever had a favourites feature) and the Google profile
  * photo (sign-in only ever returns name, email and account id). Do not put them back.
  */
+// Wallpaper apps only: an app without `legal` (AwaazPay) has its own page under
+// src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
-  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+  return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));
 }
 
 interface Props {
-  app: AppFact;
+  app: WallpaperApp;
 }
 
 const { app } = Astro.props;

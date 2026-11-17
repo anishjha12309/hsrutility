@@ -3,13 +3,13 @@ import DocLayout from '../../layouts/DocLayout.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
 import {
-  APPS,
+  wallpaperApps,
   LEGAL_NAME,
   MONTHLY_PRICE,
   MANDATE_VERIFY_AMOUNT,
   PAYMENT_PROVIDER,
   legalPath,
-  type AppFact,
+  type WallpaperApp,
 } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
@@ -30,12 +30,14 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * The refund position is strictly no-refund, set by the owner on 2026-08-20,
  * replacing an earlier "generally non-refundable, contact us within 7 days".
  */
+// Wallpaper apps only: an app without `legal` (AwaazPay) has its own page under
+// src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
-  return APPS.map((app) => ({ params: { app: app.slug }, props: { app } }));
+  return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));
 }
 
 interface Props {
-  app: AppFact;
+  app: WallpaperApp;
 }
 
 const { app } = Astro.props;

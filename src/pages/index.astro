@@ -2,32 +2,38 @@
 import Layout from '../layouts/Layout.astro';
 import SplitText from '../components/SplitText.astro';
 import AppIcon from '../components/AppIcon.astro';
-import { APPS, FREEMIUM_LINE, FREEMIUM_SHORT } from '../lib/site';
-import {
-  organizationSchema,
-  websiteSchema,
-  pakizaAppSchema,
-  arulAppSchema,
-  webPageSchema,
-} from '../lib/schema';
+import { APPS, appNames } from '../lib/site';
+import { organizationSchema, websiteSchema, appSchema, webPageSchema } from '../lib/schema';
 
 const description =
-  'HSR Utility is an indie Android studio making wallpaper and ringtone apps for specific cultural audiences — still and live wallpapers, curated ringtones, free to browse.';
+  'HSR Utility is an indie Android studio making wallpaper, ringtone and money-management apps for specific audiences — still and live wallpapers, curated ringtones, and a passbook of your bank payments with autopay and EMI reminders.';
 
 const structuredData = [
   organizationSchema,
   websiteSchema,
-  pakizaAppSchema,
-  arulAppSchema,
+  ...APPS.map(appSchema),
   webPageSchema({
     path: '/',
-    name: 'HSR Utility — indie Android studio behind Pakiza and Arul',
+    name: `HSR Utility — indie Android studio behind ${appNames()}`,
     description,
   }),
 ];
 
 /** What the studio actually ships, as hero chips. */
-const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline reminders'];
+const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Money tracking', 'Payment reminders'];
+
+/**
+ * Pricing differs by app, so the trust strip states each app's own line, grouped
+ * where apps share one (the wallpaper apps share FREEMIUM_LINE). Read from
+ * `app.pricing` — never write a price into this page.
+ */
+const pricingGroups = APPS.reduce<{ names: string[]; body: string }[]>((groups, app) => {
+  const match = groups.find((g) => g.body === app.pricing.body);
+  if (match) match.names.push(app.name);
+  else groups.push({ names: [app.name], body: app.pricing.body });
+  return groups;
+}, []);
+const listFormat = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
 
 /**
  * NO APP ARTWORK ON THIS PAGE. Every screenshot and store graphic belongs to the
@@ -62,7 +68,8 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
         <div class="hero-tail" data-hero-tail style="--ti:0">
           <p class="lede hero-lede">
             Wallpaper and ringtone apps for people whose faith and culture deserve better
-            than whatever shipped on the phone. Curated by hand, free to browse.
+            than whatever shipped on the phone, curated by hand — and a money app that keeps
+            every bank payment in one passbook.
           </p>
 
           <div class="hero-actions">
@@ -148,14 +155,18 @@ const heroChips = ['Wallpapers', 'Live wallpapers', 'Ringtones', 'Offline remind
   <div class="shell strip-section">
     <dl class="strip reveal">
       <div class="strip-item">
-        <dt class="strip-title">{FREEMIUM_SHORT}</dt>
-        <dd class="strip-body">{FREEMIUM_LINE}</dd>
+        <dt class="strip-title">Priced in the open.</dt>
+        <dd class="strip-body">
+          {pricingGroups.map((group, i) => (
+            <>{i > 0 && ' '}<strong>{listFormat.format(group.names)}:</strong> {group.body}</>
+          ))}
+        </dd>
       </div>
       <div class="strip-item">
         <dt class="strip-title">No analytics. No cookies.</dt>
         <dd class="strip-body">
-          This site makes no third-party requests of any kind, and the reminders in the
-          apps run fully offline.
+          This site makes no third-party requests of any kind, and the apps’ reminders are
+          worked out on your phone.
         </dd>
       </div>
       <div class="strip-item">

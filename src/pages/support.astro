@@ -2,7 +2,16 @@
 import DocLayout from '../layouts/DocLayout.astro';
 import Email from '../components/Email.astro';
 import { fenceEmail } from '../lib/email';
-import { SUPPORT_EMAIL, SUPPORT_PHONE, LEGAL_NAME, ADDRESS_LINES } from '../lib/site';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  LEGAL_NAME,
+  ADDRESS_LINES,
+  AWAAZPAY,
+  appNames,
+  appNamesOr,
+  wallpaperApps,
+} from '../lib/site';
 import {
   organizationSchema,
   websiteSchema,
@@ -19,25 +28,36 @@ import {
  *     Both app READMEs say sharing; saving was never the gated action.
  *   - The invented legal entity is gone, and "nasheeds" is now "ringtones".
  * Everything else is unchanged.
+ *
+ * AwaazPay added 17 Nov 2026: answers that described wallpaper features or the
+ * wallpaper premium tier as true of every app are scoped to the wallpaper apps, and
+ * AwaazPay's own line follows (facts from its Play listing and policies).
  */
+
+const wallpaperNames = appNames(wallpaperApps());
 
 const faqs = [
   {
     q: 'What is HSR Utility?',
-    a: 'HSR Utility is an indie Android studio. It builds wallpaper and ringtone apps for specific cultural audiences: Pakiza, an Islamic lifestyle app, and Arul, South Indian wallpapers. The studio itself has no religious affiliation.',
+    a: `HSR Utility is an indie Android studio. It builds apps for specific audiences: Pakiza, an Islamic lifestyle app; Arul, South Indian wallpapers; and ${AWAAZPAY.name}, a passbook of your bank payments with autopay and EMI reminders. The studio itself has no religious affiliation.`,
   },
   {
     q: 'What are Pakiza and Arul?',
     a: 'Pakiza pairs a shorts-style feed of Islamic wallpapers — still images and live video — with a curated ringtone library and offline Jummah and Islamic-calendar reminders, in eleven Indian languages. Arul offers South Indian devotional wallpapers and ringtones in the same shorts-style feed, browsable across six collections (Amman, Ayyappan, Murugan, Perumal, Sivan and Temples), in six Indian languages. Both apps let you submit your own content from inside the app, and both have offline reminders. They are Android apps built by the same team.',
   },
   {
+    q: `What is ${AWAAZPAY.name}?`,
+    a: `${AWAAZPAY.name} keeps track of your money without typing anything. It builds a passbook of your bank debits and credits from the transaction messages on your phone, finds your UPI autopays, EMIs, subscriptions and bills, and reminds you before each one is due. It can also announce each debit or credit aloud in your chosen voice language. It is available in English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam and Punjabi. It is not a bank, does not move money and does not give financial advice.`,
+    link: { label: `Get ${AWAAZPAY.name} on Google Play`, href: AWAAZPAY.playUrl as string, external: true },
+  },
+  {
     q: 'Are the apps on the Google Play Store?',
-    a: `Arul is live on Google Play now. Pakiza is coming soon — email us at ${SUPPORT_EMAIL} and we will let you know when it goes live.`,
+    a: `Arul and ${AWAAZPAY.name} are live on Google Play now. Pakiza is coming soon — email us at ${SUPPORT_EMAIL} and we will let you know when it goes live.`,
     link: { label: 'Get Arul on Google Play', href: 'https://play.google.com/store/apps/details?id=com.hsrutility.arul', external: true },
   },
   {
     q: 'Are the apps free?',
-    a: 'Yes — browsing and previewing every wallpaper and ringtone is completely free. An optional premium plan unlocks applying and sharing wallpapers, and setting ringtones. Setting up the UPI AutoPay mandate involves a small verification debit (currently ₹2) that is reversed automatically.',
+    a: `${wallpaperNames}: yes — browsing and previewing every wallpaper and ringtone is completely free. An optional premium plan unlocks applying and sharing wallpapers, and setting ringtones. Setting up the UPI AutoPay mandate involves a small verification debit (currently ₹2) that is reversed automatically. ${AWAAZPAY.name}: ${AWAAZPAY.pricing.body}`,
   },
   {
     q: 'How do I sign in?',
@@ -45,21 +65,21 @@ const faqs = [
   },
   {
     q: 'How do I report a bug or request a feature?',
-    a: `Email us at ${SUPPORT_EMAIL} and mention which app (Pakiza or Arul). We read every email and reply within 48 hours.`,
+    a: `Email us at ${SUPPORT_EMAIL} and mention which app (${appNamesOr()}). We read every email and reply within 48 hours.`,
   },
   {
     q: 'How do I delete my account and data?',
-    a: 'You can delete your account and data instantly from inside either app (Settings → Delete account), or request it by email if you have already uninstalled. Our Delete My Account page has the full steps.',
+    a: `You can delete your account and data instantly from inside any of our apps (${wallpaperNames}: ${wallpaperApps()[0].deletePath}; ${AWAAZPAY.name}: ${AWAAZPAY.deletePath}), or request it by email if you have already uninstalled. Our Delete My Account page has the full steps.`,
     link: { label: 'Go to Delete My Account', href: '/delete-account' },
   },
   {
     q: 'Which Android versions are supported?',
-    a: 'Both apps support Android 7.0 (Nougat) and above. We recommend keeping your device updated for the best experience.',
+    a: `${wallpaperNames} support Android 7.0 (Nougat) and above; ${AWAAZPAY.name} needs Android 8.0 (Oreo) or newer. We recommend keeping your device updated for the best experience.`,
   },
 ];
 
 const description =
-  'Answers to common questions about Pakiza and Arul — wallpapers, ringtones, sign-in, and account help — plus how to contact HSR Utility support. We reply within 48 hours.';
+  `Answers to common questions about ${appNames()} — wallpapers, ringtones, payment tracking, sign-in, and account help — plus how to contact HSR Utility support. We reply within 48 hours.`;
 
 const structuredData = [
   organizationSchema,
@@ -67,7 +87,7 @@ const structuredData = [
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Support' }]),
   webPageSchema({
     path: '/support',
-    name: 'Support & FAQ — Pakiza & Arul | HSR Utility',
+    name: `Support & FAQ — ${appNames()} | HSR Utility`,
     description,
   }),
   // Mirrors the visible Q&A above, verbatim — same array, so they cannot drift.
@@ -76,7 +96,7 @@ const structuredData = [
 ---
 
 <DocLayout
-  title="Support & FAQ — Pakiza & Arul"
+  title={`Support & FAQ — ${appNames()}`}
   heading="Help &amp; Support"
   eyebrow="Support"
   description={description}
@@ -87,7 +107,7 @@ const structuredData = [
     <div class="doc-card support-cta">
       <div>
         <p class="doc-card-title">Request account &amp; data deletion</p>
-        <p>Permanently delete your Pakiza or Arul account and associated data at any time.</p>
+        <p>Permanently delete your {appNamesOr()} account and associated data at any time.</p>
       </div>
       <a href="/delete-account" class="btn btn-ghost">
         Delete account

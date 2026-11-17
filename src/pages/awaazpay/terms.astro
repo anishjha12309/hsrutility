@@ -1,0 +1,134 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import LegalContact from '../../components/LegalContact.astro';
+import LegalFootLinks from '../../components/LegalFootLinks.astro';
+import { AWAAZPAY, LEGAL_NAME, legalPath } from '../../lib/site';
+import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
+
+/**
+ * AwaazPay's terms of use, ported from `~/AwaazPay/web/src/pages/terms.tsx`
+ * (rewritten 17 Nov 2026; the in-app text policy_terms_body matches it). Not the
+ * shared wallpaper template: the plan, the trial and the cancel route differ.
+ *
+ * "HSR UTILITY APPS PVT LTD, the name you see in your UPI app" stays word for word:
+ * it is the debit name users see, and naming it is what stops a ₹2 debit reading
+ * as a stranger's. Changes made in the port: support@ instead of admin@, the
+ * LegalContact block, the package line, legalPath() links.
+ */
+
+const app = AWAAZPAY;
+const lastUpdated = 'November 2026';
+
+const description = `Terms of use for ${app.name}: what the app does, sign-in, the plan, the ₹2 trial and the ₹199 monthly plan, cancelling, your account, shared logs, and how to contact us.`;
+
+const structuredData = [
+  organizationSchema,
+  websiteSchema,
+  breadcrumbSchema([{ name: app.name, path: `/${app.slug}` }, { name: 'Terms & Conditions' }]),
+  webPageSchema({
+    path: legalPath(app, 'terms'),
+    name: `Terms & Conditions — ${app.name} | HSR Utility`,
+    description,
+  }),
+];
+
+/** The trial and the plan. Every line governs money; cut words, never rows. */
+const planPoints = [
+  'The trial lasts one day. It starts with a ₹2 debit by UPI AutoPay. The ₹2 is reversed (refunded).',
+  'There is one trial for each Google account.',
+  'After the trial the plan is ₹199 a month. It is charged by a UPI AutoPay mandate that you set up through PhonePe. The mandate allows up to ₹199 a month.',
+  'The plan renews every month until you cancel.',
+];
+---
+
+<DocLayout
+  title={`Terms & Conditions — ${app.name}`}
+  heading="Terms of Use"
+  eyebrow={`${app.name} — legal`}
+  description={description}
+  lastUpdated={lastUpdated}
+  structuredData={structuredData}
+  scope={app}
+>
+  <section>
+    <p>
+      These terms are about using <strong>{app.name}</strong> (package
+      <code>{app.packageId}</code>). The operator is <strong>{LEGAL_NAME}</strong> — HSR UTILITY
+      APPS PVT LTD, the name you see in your UPI app.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="service">1. What {app.name} Does</h2>
+    <p>
+      {app.name} reads your bank SMS on your phone. It shows your payments, speaks them aloud and
+      reminds you before autopay, EMI and bill due dates.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="sign-in">2. Sign-in Is Required</h2>
+    <p>You must sign in with Google to use {app.name}.</p>
+  </section>
+
+  <section>
+    <h2 id="plan-required">3. You Need an Active Plan</h2>
+    <p>
+      {app.name} needs an active plan: a running trial or a paid plan. Without one, the app’s features
+      do not work. Voice alerts, reminders and the history screens stay off. Bank messages that arrive
+      meanwhile are still read and kept on your phone. They show once a plan starts.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="plan">4. The Trial and the Plan</h2>
+    {planPoints.map((point) => (
+      <div class="doc-card">
+        <p>{point}</p>
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2 id="cancel">5. Cancelling</h2>
+    <p>
+      You can cancel any time. In the app, go to Settings → Premium → Manage Subscription, or Need
+      Help → Manage Subscription. You can also cancel in your UPI app. Your access continues to the end
+      of the period you have already paid for. There are no more debits after you cancel. The
+      <a href={legalPath(app, 'refund-policy')}>refund policy</a> has the details.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="check">6. Check With Your Bank</h2>
+    <p>
+      The app can read a message wrongly or miss one. Always check your bank for the real figures.
+      {app.name} gives no financial advice.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="account">7. Your Account</h2>
+    <p>
+      To delete your account, go to Settings → Need Help → Delete Account. Deleting your account
+      cancels your plan first. See the <a href={legalPath(app, 'privacy-policy')}>privacy policy</a>
+      for what is erased, and <a href={legalPath(app, 'how-to-delete-account')}>how to delete your
+      account</a> without the app.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="shared-logs">8. Shared Logs</h2>
+    <p>
+      Signing in means you agree that the app shares masked bank messages with the developer to help
+      fix mistakes. Deleting your account stops this and erases what was shared.
+    </p>
+  </section>
+
+  <section>
+    <h2 id="contact">9. Contact</h2>
+    <LegalContact app={app} intro="Questions about these terms:" />
+  </section>
+
+  <LegalFootLinks app={app} current="terms" />
+</DocLayout>

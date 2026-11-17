@@ -12,6 +12,7 @@
 
 import pakizaIcon from '../../assets/Pakiza.png';
 import arulIcon from '../../assets/arul.png';
+import awaazpayIcon from '../../assets/awaazpay.png';
 
 import pakizaSacred from '../../assets/pakiza-sacred-islamic-wallpapers.png';
 import pakizaLive from '../../assets/pakiza-dynamic-live-wallpapers.png';
@@ -27,9 +28,17 @@ import arulPreview from '../../assets/arul-wallpaper-preview-and-apply.png';
 import arulRingtones from '../../assets/arul-sacred-ringtones.png';
 import arulLanguages from '../../assets/arul-language-and-community-uploads.png';
 
+import awaazpayPassbook from '../../assets/awaazpay-passbook.png';
+import awaazpayAutopays from '../../assets/awaazpay-autopays.png';
+import awaazpayTransaction from '../../assets/awaazpay-transaction.png';
+import awaazpayUpcoming from '../../assets/awaazpay-upcoming.png';
+import awaazpayVoice from '../../assets/awaazpay-voice.png';
+import awaazpayReliability from '../../assets/awaazpay-reliability.png';
+
 export const APP_ICONS: Record<string, ImageMetadata> = {
   pakiza: pakizaIcon,
   arul: arulIcon,
+  awaazpay: awaazpayIcon,
 };
 
 const SHOTS: Record<string, ImageMetadata> = {
@@ -45,6 +54,12 @@ const SHOTS: Record<string, ImageMetadata> = {
   'arul-wallpaper-preview-and-apply': arulPreview,
   'arul-sacred-ringtones': arulRingtones,
   'arul-language-and-community-uploads': arulLanguages,
+  'awaazpay-passbook': awaazpayPassbook,
+  'awaazpay-autopays': awaazpayAutopays,
+  'awaazpay-transaction': awaazpayTransaction,
+  'awaazpay-upcoming': awaazpayUpcoming,
+  'awaazpay-voice': awaazpayVoice,
+  'awaazpay-reliability': awaazpayReliability,
 };
 
 export function shotImage(file: string): ImageMetadata {
