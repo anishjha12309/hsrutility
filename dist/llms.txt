@@ -1,9 +1,8 @@
 # HSR Utility
 
 > HSR Utility is an indie Android studio building carefully crafted wallpaper,
-> ringtone and money-management apps for specific audiences. Its apps are Pakiza (an
-> Islamic lifestyle app, coming soon to Google Play), Arul (South Indian wallpapers,
-> live on Google Play) and AwaazPay (a passbook of bank payments with autopay and EMI
+> ringtone and money-management apps for specific audiences. Its apps are Arul (South
+> Indian wallpapers, live on Google Play) and AwaazPay (a passbook of bank payments with autopay and EMI
 > reminders, live on Google Play). The studio itself has no religious affiliation.
 
 ## Key facts
@@ -12,12 +11,7 @@
   name; the registered company behind it is **HSR Utility Apps Private Limited**, A3002,
   Adonia Hiranandani, Garden, South AvenuePowai, Mumbai, Mumbai, Mumbai, Maharashtra,
   400076, India.
-- **Apps** — all Android-only (Pakiza and Arul built with Flutter, AwaazPay native Kotlin):
-  - **Pakiza** — Islamic lifestyle app. Shorts-style vertical feed of static and live
-    (video) wallpapers with one-tap apply, a curated Islamic ringtone library, and
-    offline Jummah + Islamic-calendar reminders (fully local — no location, no push).
-    Localized into 11 Indian languages. Light/dark/system theming.
-    **Status: coming soon to Google Play.**
+- **Apps** — all Android-only (Arul built with Flutter, AwaazPay native Kotlin):
   - **Arul** — South Indian wallpapers. Shorts-style feed of static and live wallpapers,
     category browse, ringtones, and upload-your-own-wallpaper submissions.
     **Status: live on Google Play** —
@@ -32,7 +26,7 @@
     money, gives no financial advice.
     **Status: live on Google Play** —
     https://play.google.com/store/apps/details?id=app.awaazpay.android
-- **Model (Pakiza and Arul):** browsing and previewing is always free. Applying wallpapers, setting
+- **Model (Arul):** browsing and previewing is always free. Applying wallpapers, setting
   ringtones and sharing are premium — ₹199/month, billed via a PhonePe UPI Autopay
   mandate rather than Google Play billing. New accounts get a one-day free trial;
   approving the mandate takes a ₹2 verification debit that the bank reverses
@@ -43,7 +37,7 @@
   account. Cancel any time in the app (Settings → Premium → Manage Subscription).
   Payments already taken are not refunded; failed, duplicate or wrong debits are.
 - **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
-- **Account deletion:** instant from inside any app (Pakiza and Arul: Settings → Delete
+- **Account deletion:** instant from inside any app (Arul: Settings → Delete
   account; AwaazPay: Settings → Need Help → Delete Account); email
   support@hsrutility.com as a fallback if the app is already uninstalled (for AwaazPay,
   from the account's own Google email address).
@@ -67,14 +61,6 @@ the apps are listed together.
 - [Terms & Conditions](https://hsrutility.com/terms/): Permitted use, intellectual property, third-party links, liability.
 - [Cookie Policy](https://hsrutility.com/cookie-policy/): No cookies are set; one local-storage key holds the theme preference.
 - [Refund Policy](https://hsrutility.com/refund-policy/): The studio-wide no-refund position and how to cancel.
-
-### Pakiza
-
-- [Pakiza](https://hsrutility.com/pakiza): Features, screens and availability for the Islamic lifestyle app.
-- [Privacy Policy](https://hsrutility.com/pakiza/privacy-policy/)
-- [Terms & Conditions](https://hsrutility.com/pakiza/terms/)
-- [Refund Policy](https://hsrutility.com/pakiza/refund-policy/)
-- [How to Delete Your Account](https://hsrutility.com/pakiza/how-to-delete-account/)
 
 ### Arul
 

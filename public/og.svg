@@ -39,8 +39,6 @@
   <text x="84" y="462" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#C9D4FF">Wallpapers, live wallpapers and ringtones for specific cultural audiences.</text>
 
   <!-- Footer row -->
-  <text x="84" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">Pakiza</text>
-  <text x="176" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#C9D4FF">·</text>
-  <text x="200" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">Arul</text>
+  <text x="84" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">Arul</text>
   <text x="1116" y="556" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#C9D4FF">hsrutility.com</text>
 </svg>

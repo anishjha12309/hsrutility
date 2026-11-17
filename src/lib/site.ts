@@ -240,92 +240,6 @@ export const FREEMIUM_LINE =
 
 export const FREEMIUM_SHORT = 'Free to browse, premium to apply.';
 
-export const PAKIZA: AppFact = {
-  slug: 'pakiza',
-  name: 'Pakiza',
-  category: 'Islamic lifestyle',
-  applicationCategory: 'LifestyleApplication',
-  packageId: 'com.hsrutility.pakiza',
-  tagline: 'Where every unlock feels considered',
-  description:
-    'Pakiza is an Islamic lifestyle app for Android — a shorts-style feed of still and live wallpapers, a curated ringtone library, and offline Jummah and Islamic-calendar reminders.',
-  status: 'coming-soon',
-  statusLabel: 'Coming soon to Google Play',
-  icon: 'Pakiza.png',
-  iconAlt: 'Pakiza app icon — a white mosque with gold calligraphy on royal blue',
-  hue: '38 78 168',
-  featuresHeading: 'Everything, one scroll away.',
-  chips: ['11 Indian languages', 'Light · Dark · System', 'Free to browse'],
-  features: [
-    {
-      title: 'A feed, not a grid',
-      body: 'Wallpapers arrive the way you already scroll — a vertical feed of stills and live video. See one you like, apply it in a tap.',
-    },
-    {
-      title: 'Live wallpapers that move',
-      body: 'Video wallpapers sit alongside still ones in the same feed, so there is nothing extra to find and no separate section to learn.',
-    },
-    {
-      title: 'A curated ringtone library',
-      body: 'Islamic ringtones, chosen rather than dumped. Browse, preview in place, and set the one you want.',
-    },
-    {
-      title: 'Reminders that stay on your device',
-      body: 'Jummah and Islamic-calendar reminders run fully offline. No location, no push service — nothing leaves the phone to make them work.',
-    },
-    {
-      title: 'Reads in your language',
-      body: 'Localised into eleven Indian languages, with light, dark and system theming that follows whatever your phone is already doing.',
-    },
-    {
-      // Pakiza's upload screen has two tabs — wallpaper AND ringtone audio.
-      // Arul's is wallpaper-only, and that asymmetry is deliberate in the apps.
-      title: 'Send one in',
-      body: 'Found something worth sharing? Submit a wallpaper or a ringtone from inside the app. Every submission is reviewed by hand before it can appear.',
-    },
-  ],
-  pricing: { heading: 'Free to browse, premium to apply', body: FREEMIUM_LINE },
-  deletePath: 'Settings → Delete account',
-  cancelPath: 'Settings → your plan → Cancel',
-  legal: {
-    submissions: 'a wallpaper or a ringtone',
-    reminders: 'Jummah and Islamic-calendar reminders',
-    referrals: true,
-    applyBehaviour:
-      'Still wallpapers are applied through the app; live wallpapers hand off to Android’s own wallpaper chooser, which asks you where they should go.',
-    languages: 'eleven Indian languages',
-    googleFontsCdn: true,
-    catalogue: 'Islamic wallpapers, live video wallpapers and ringtones',
-  },
-  shots: [
-    {
-      file: 'pakiza-sacred-islamic-wallpapers',
-      caption: 'Sacred wallpapers',
-      alt: 'Pakiza promotional graphic: "Set Sacred Islamic Wallpapers from Medina & Medina Shareef", showing three phones displaying mosque wallpapers among gold lanterns and a crescent.',
-    },
-    {
-      file: 'pakiza-dynamic-live-wallpapers',
-      caption: 'Live wallpapers',
-      alt: 'Pakiza promotional graphic for dynamic live wallpapers, showing phones playing moving video wallpapers.',
-    },
-    {
-      file: 'pakiza-spiritual-ringtones',
-      caption: 'Ringtone library',
-      alt: 'Pakiza promotional graphic for its curated Islamic ringtone library, showing the browse-and-preview screen.',
-    },
-    {
-      file: 'pakiza-language-selection',
-      caption: 'Eleven languages',
-      alt: 'Pakiza promotional graphic for language selection, showing the app localised into several Indian languages.',
-    },
-    {
-      file: 'pakiza-community-content-upload',
-      caption: 'Community uploads',
-      alt: 'Pakiza promotional graphic for community content upload, showing the in-app wallpaper submission screen.',
-    },
-  ],
-};
-
 export const ARUL: AppFact = {
   slug: 'arul',
   name: 'Arul',
@@ -567,7 +481,7 @@ export const AWAAZPAY: AppFact = {
   ],
 };
 
-export const APPS: AppFact[] = [PAKIZA, ARUL, AWAAZPAY];
+export const APPS: AppFact[] = [ARUL, AWAAZPAY];
 
 /* ── Copy helpers ─────────────────────────────────────────────────────────────
    Everything that would otherwise bake the app count into a sentence. */

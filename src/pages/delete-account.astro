@@ -245,8 +245,14 @@ const retained = [
   <section>
     <h2 id="per-app">What data our apps store</h2>
     <p>
-      {wallpaperNames} collect the same categories of personal data, and differ mainly in the
-      content they offer. {AWAAZPAY.name} is a money app and stores different data.
+      {wallpaperApps().length === 1 ? (
+        <>{AWAAZPAY.name} is a money app and stores different data from {wallpaperNames}.</>
+      ) : (
+        <>
+          {wallpaperNames} collect the same categories of personal data, and differ mainly in the
+          content they offer. {AWAAZPAY.name} is a money app and stores different data.
+        </>
+      )}
     </p>
     {APPS.map((app) => (
       <div class="doc-card">
@@ -256,7 +262,6 @@ const retained = [
             Google account info from sign-in (name and email), your display name, content you
             submitted for review, in-app preferences, subscription and referral status, and
             analytics &amp; advertising identifiers.
-            {app.slug === 'pakiza' && ' Pakiza also accepts ringtone submissions, so an audio file you upload is stored for review.'}
           </p>
         ) : (
           <p>

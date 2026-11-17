@@ -39,11 +39,11 @@ const wallpaperNames = appNames(wallpaperApps());
 const faqs = [
   {
     q: 'What is HSR Utility?',
-    a: `HSR Utility is an indie Android studio. It builds apps for specific audiences: Pakiza, an Islamic lifestyle app; Arul, South Indian wallpapers; and ${AWAAZPAY.name}, a passbook of your bank payments with autopay and EMI reminders. The studio itself has no religious affiliation.`,
+    a: `HSR Utility is an indie Android studio. It builds apps for specific audiences: Arul, South Indian wallpapers; and ${AWAAZPAY.name}, a passbook of your bank payments with autopay and EMI reminders. The studio itself has no religious affiliation.`,
   },
   {
-    q: 'What are Pakiza and Arul?',
-    a: 'Pakiza pairs a shorts-style feed of Islamic wallpapers — still images and live video — with a curated ringtone library and offline Jummah and Islamic-calendar reminders, in eleven Indian languages. Arul offers South Indian devotional wallpapers and ringtones in the same shorts-style feed, browsable across six collections (Amman, Ayyappan, Murugan, Perumal, Sivan and Temples), in six Indian languages. Both apps let you submit your own content from inside the app, and both have offline reminders. They are Android apps built by the same team.',
+    q: 'What is Arul?',
+    a: 'Arul offers South Indian devotional wallpapers and ringtones in a shorts-style feed, browsable across six collections (Amman, Ayyappan, Murugan, Perumal, Sivan and Temples), in six Indian languages. You can submit your own wallpaper from inside the app.',
   },
   {
     q: `What is ${AWAAZPAY.name}?`,
@@ -52,7 +52,7 @@ const faqs = [
   },
   {
     q: 'Are the apps on the Google Play Store?',
-    a: `Arul and ${AWAAZPAY.name} are live on Google Play now. Pakiza is coming soon — email us at ${SUPPORT_EMAIL} and we will let you know when it goes live.`,
+    a: `Arul and ${AWAAZPAY.name} are live on Google Play now.`,
     link: { label: 'Get Arul on Google Play', href: 'https://play.google.com/store/apps/details?id=com.hsrutility.arul', external: true },
   },
   {
@@ -74,7 +74,7 @@ const faqs = [
   },
   {
     q: 'Which Android versions are supported?',
-    a: `${wallpaperNames} support Android 7.0 (Nougat) and above; ${AWAAZPAY.name} needs Android 8.0 (Oreo) or newer. We recommend keeping your device updated for the best experience.`,
+    a: `${wallpaperNames} ${wallpaperApps().length === 1 ? 'supports' : 'support'} Android 7.0 (Nougat) and above; ${AWAAZPAY.name} needs Android 8.0 (Oreo) or newer. We recommend keeping your device updated for the best experience.`,
   },
 ];
 

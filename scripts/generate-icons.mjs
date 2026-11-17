@@ -79,9 +79,7 @@ const OG_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630
   <text x="84" y="462" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="${MUTED}">Wallpapers, live wallpapers and ringtones for specific cultural audiences.</text>
 
   <!-- Footer row -->
-  <text x="84" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="${WHITE}">Pakiza</text>
-  <text x="176" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="${MUTED}">·</text>
-  <text x="200" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="${WHITE}">Arul</text>
+  <text x="84" y="556" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="${WHITE}">Arul</text>
   <text x="1116" y="556" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="${MUTED}">hsrutility.com</text>
 </svg>`;
 

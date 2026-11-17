@@ -6,7 +6,7 @@
  * below the threshold, so it works as a check as well as a report.
  *
  *   npm run lh                 # default pages
- *   npm run lh -- /pakiza /terms
+ *   npm run lh -- /arul /terms
  */
 
 import { execFileSync } from 'node:child_process';

@@ -34,7 +34,6 @@ import {
   ADDRESS,
   ORG_DESCRIPTION,
   abs,
-  PAKIZA,
   ARUL,
   AWAAZPAY,
   type AppFact,
@@ -101,7 +100,6 @@ export const appSchema = (app: AppFact) => ({
   ...(app.playUrl ? { installUrl: app.playUrl, downloadUrl: app.playUrl } : {}),
 });
 
-export const pakizaAppSchema = appSchema(PAKIZA);
 export const arulAppSchema = appSchema(ARUL);
 export const awaazpayAppSchema = appSchema(AWAAZPAY);
 

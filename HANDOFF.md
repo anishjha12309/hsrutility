@@ -47,7 +47,11 @@ Status:
 - [x] Owner OK to push (17 Nov 2026, ~22:25 IST), pushed to master (this commit)
 - [x] AwaazPay share card (owner OK 18 Nov 2026): `public/awaazpay-og.png`, new optional AppFact `ogImage`; `Layout.astro` uses `scope.ogImage` on every page of a sub-site that has one (Arul and the studio pages keep `/og.png`)
 
-## 2. Remove Pakiza — not started
+## 2. Remove Pakiza — done 18 Nov 2026 (owner: off Google Play, not endorsed)
+
+Done by the Claude session in `~/Anish/Arul`. Removed from `APPS`, assets, `media.ts`, `schema.ts`, the support FAQ, `delete-account.astro`, `llms.txt`, the share card and `dist/`. No redirects were added: old `/pakiza/` URLs return the 404 page (owner has not decided otherwise). Left as is: the share card's sub-line still reads "Wallpapers, live wallpapers and ringtones"; code comments that mention Pakiza as history.
+
+Original note:
 
 Owner reason: one studio site should not put an Islamic and a Hindu app side by side.
 When you do it, keep everything AwaazPay adds above. Remove: `PAKIZA` from `APPS`, its assets,
