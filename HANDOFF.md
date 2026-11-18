@@ -3,6 +3,20 @@
 Read this before editing. Two pieces of work touch the same files. Update your row when you
 start, finish, or change a shared file. Delete this file once both rows say "done".
 
+## 0. AwaazPay renamed to AlertPaisa (owner, 18 Nov 2026, final name) — done
+
+Done by the Claude session in `~/AwaazPay` (the folder becomes `~/AlertPaisa`). Sections 1 and 2
+below are history and keep the old name.
+
+- The sub-site moved from `/awaazpay/` to `/alertpaisa/`; `astro.config.mjs` redirects every old
+  address (the landing page and the four legal pages), because builds up to versionCode 11, the
+  Play listing and the Google sign-in screen link the old ones. Never remove those redirects.
+- `src/lib/site.ts`: `ALERTPAISA` (slug `alertpaisa`, name `AlertPaisa`). `packageId` and the
+  Play URL stay `app.awaazpay.android`: a published app ID never changes.
+- Files renamed: `src/pages/alertpaisa/`, `assets/alertpaisa*.png`, `public/alertpaisa-og.png`
+  (the share card redrawn with the new wordmark; the six screenshots show no name and are the
+  same pictures).
+
 ## 1. Add AwaazPay (owner OK 17 Nov 2026) — done, pushed to master
 
 Done by the Claude session in `~/AwaazPay`. Owner decisions:

@@ -4,12 +4,12 @@ import Email from '../../components/Email.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
 import '../../styles/doc-steps.css';
-import { AWAAZPAY, SUPPORT_EMAIL, legalPath } from '../../lib/site';
+import { ALERTPAISA, SUPPORT_EMAIL, legalPath } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
 /**
  * The account-deletion URL Google Play asks for. Ported from
- * `~/AwaazPay/web/src/pages/delete-account.tsx` (rewritten 17 Nov 2026).
+ * `~/AlertPaisa/web/src/pages/delete-account.tsx` (rewritten 17 Nov 2026).
  *
  * Changes made in the port: support@ instead of admin@; in-app deletion leads and
  * email follows (the source lists email first; the site's Play-reviewed shape puts
@@ -18,7 +18,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * account's own address — keep that sentence.
  */
 
-const app = AWAAZPAY;
+const app = ALERTPAISA;
 const subject = `Delete my ${app.name} account`;
 
 const description = `How to delete your ${app.name} account and its data — in the app (${app.deletePath}), or by email without the app.`;

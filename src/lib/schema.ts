@@ -8,7 +8,7 @@
  *     ^-- publisher -- WebSite (#website)
  *     ^-- publisher -- MobileApplication (Pakiza)
  *     ^-- publisher -- MobileApplication (Arul)
- *     ^-- publisher -- MobileApplication (AwaazPay, FinanceApplication)
+ *     ^-- publisher -- MobileApplication (AlertPaisa, FinanceApplication)
  *     ^-- about ------ WebPage (per page)
  *
  * Organization carries legalName and address: HSR Utility Apps Private Limited
@@ -35,7 +35,7 @@ import {
   ORG_DESCRIPTION,
   abs,
   ARUL,
-  AWAAZPAY,
+  ALERTPAISA,
   type AppFact,
 } from './site';
 
@@ -79,7 +79,7 @@ export const websiteSchema = {
  *
  * `offers` is safe to state: every app is free to download, and that is a fact
  * independent of the premium tier or plan inside it. `applicationCategory` comes
- * from the app's own fact: Lifestyle for the wallpaper apps, Finance for AwaazPay.
+ * from the app's own fact: Lifestyle for the wallpaper apps, Finance for AlertPaisa.
  */
 export const appSchema = (app: AppFact) => ({
   '@context': 'https://schema.org',
@@ -101,7 +101,7 @@ export const appSchema = (app: AppFact) => ({
 });
 
 export const arulAppSchema = appSchema(ARUL);
-export const awaazpayAppSchema = appSchema(AWAAZPAY);
+export const alertpaisaAppSchema = appSchema(ALERTPAISA);
 
 type Crumb = { name: string; path?: string };
 

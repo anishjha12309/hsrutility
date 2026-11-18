@@ -15,8 +15,17 @@ export default defineConfig({
   // its in-app reader, so the slug has to keep resolving — a 404 inside a Play
   // reviewer's policy screen is the worst possible way to find this out. Astro emits
   // a static redirect page for it in a static build.
+  //
+  // /awaazpay/ was AlertPaisa's sub-site until the app was renamed on 2026-11-18. Builds up
+  // to versionCode 11 open /awaazpay/privacy-policy/ in the app, and the Play listing and
+  // the Google sign-in screen linked the old pages, so every old address keeps resolving.
   redirects: {
     '/privacy': '/privacy-policy',
+    '/awaazpay': '/alertpaisa/',
+    '/awaazpay/privacy-policy': '/alertpaisa/privacy-policy/',
+    '/awaazpay/terms': '/alertpaisa/terms/',
+    '/awaazpay/refund-policy': '/alertpaisa/refund-policy/',
+    '/awaazpay/how-to-delete-account': '/alertpaisa/how-to-delete-account/',
   },
 
   // Tailwind 4 ships as a Vite plugin; the old @astrojs/tailwind integration is

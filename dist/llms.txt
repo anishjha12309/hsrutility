@@ -2,7 +2,7 @@
 
 > HSR Utility is an indie Android studio building carefully crafted wallpaper,
 > ringtone and money-management apps for specific audiences. Its apps are Arul (South
-> Indian wallpapers, live on Google Play) and AwaazPay (a passbook of bank payments with autopay and EMI
+> Indian wallpapers, live on Google Play) and AlertPaisa (a passbook of bank payments with autopay and EMI
 > reminders, live on Google Play). The studio itself has no religious affiliation.
 
 ## Key facts
@@ -11,12 +11,12 @@
   name; the registered company behind it is **HSR Utility Apps Private Limited**, A3002,
   Adonia Hiranandani, Garden, South AvenuePowai, Mumbai, Mumbai, Mumbai, Maharashtra,
   400076, India.
-- **Apps** — all Android-only (Arul built with Flutter, AwaazPay native Kotlin):
+- **Apps** — all Android-only (Arul built with Flutter, AlertPaisa native Kotlin):
   - **Arul** — South Indian wallpapers. Shorts-style feed of static and live wallpapers,
     category browse, ringtones, and upload-your-own-wallpaper submissions.
     **Status: live on Google Play** —
     https://play.google.com/store/apps/details?id=com.hsrutility.arul
-  - **AwaazPay** — SMS-based money management. Builds a passbook of bank debits and
+  - **AlertPaisa** — SMS-based money management. Builds a passbook of bank debits and
     credits from the transaction messages on the phone, tracks UPI autopays, EMIs,
     subscriptions and bills with their due dates, reminds before each is due, and can
     announce each debit or credit aloud in a chosen voice language (even on Do Not
@@ -32,14 +32,14 @@
   approving the mandate takes a ₹2 verification debit that the bank reverses
   automatically. **Payments already taken are strictly non-refundable**; cancelling
   is instant from inside the app and stops all future charges.
-- **Model (AwaazPay):** a plan is required. ₹2 for a one-day trial (the ₹2 is refunded),
+- **Model (AlertPaisa):** a plan is required. ₹2 for a one-day trial (the ₹2 is refunded),
   then ₹199/month by PhonePe UPI AutoPay, not Google Play billing. One trial per Google
   account. Cancel any time in the app (Settings → Premium → Manage Subscription).
   Payments already taken are not refunded; failed, duplicate or wrong debits are.
 - **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
 - **Account deletion:** instant from inside any app (Arul: Settings → Delete
-  account; AwaazPay: Settings → Need Help → Delete Account); email
-  support@hsrutility.com as a fallback if the app is already uninstalled (for AwaazPay,
+  account; AlertPaisa: Settings → Need Help → Delete Account); email
+  support@hsrutility.com as a fallback if the app is already uninstalled (for AlertPaisa,
   from the account's own Google email address).
 - **Contact:** support@hsrutility.com — replies within 48 hours. Support is email-only.
 - **This website:** no analytics, no cookies, no third-party requests of any kind.
@@ -70,10 +70,10 @@ the apps are listed together.
 - [Refund Policy](https://hsrutility.com/arul/refund-policy/)
 - [How to Delete Your Account](https://hsrutility.com/arul/how-to-delete-account/)
 
-### AwaazPay
+### AlertPaisa
 
-- [AwaazPay](https://hsrutility.com/awaazpay): Features, screens, pricing and Google Play link for the money-management app.
-- [Privacy Policy](https://hsrutility.com/awaazpay/privacy-policy/)
-- [Terms & Conditions](https://hsrutility.com/awaazpay/terms/)
-- [Refund Policy](https://hsrutility.com/awaazpay/refund-policy/)
-- [How to Delete Your Account](https://hsrutility.com/awaazpay/how-to-delete-account/)
+- [AlertPaisa](https://hsrutility.com/alertpaisa): Features, screens, pricing and Google Play link for the money-management app.
+- [Privacy Policy](https://hsrutility.com/alertpaisa/privacy-policy/)
+- [Terms & Conditions](https://hsrutility.com/alertpaisa/terms/)
+- [Refund Policy](https://hsrutility.com/alertpaisa/refund-policy/)
+- [How to Delete Your Account](https://hsrutility.com/alertpaisa/how-to-delete-account/)

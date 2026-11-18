@@ -11,7 +11,7 @@
  */
 
 import arulIcon from '../../assets/arul.png';
-import awaazpayIcon from '../../assets/awaazpay.png';
+import alertpaisaIcon from '../../assets/alertpaisa.png';
 
 
 import arulCollections from '../../assets/arul-sacred-wallpaper-collections.png';
@@ -22,16 +22,16 @@ import arulPreview from '../../assets/arul-wallpaper-preview-and-apply.png';
 import arulRingtones from '../../assets/arul-sacred-ringtones.png';
 import arulLanguages from '../../assets/arul-language-and-community-uploads.png';
 
-import awaazpayPassbook from '../../assets/awaazpay-passbook.png';
-import awaazpayAutopays from '../../assets/awaazpay-autopays.png';
-import awaazpayTransaction from '../../assets/awaazpay-transaction.png';
-import awaazpayUpcoming from '../../assets/awaazpay-upcoming.png';
-import awaazpayVoice from '../../assets/awaazpay-voice.png';
-import awaazpayReliability from '../../assets/awaazpay-reliability.png';
+import alertpaisaPassbook from '../../assets/alertpaisa-passbook.png';
+import alertpaisaAutopays from '../../assets/alertpaisa-autopays.png';
+import alertpaisaTransaction from '../../assets/alertpaisa-transaction.png';
+import alertpaisaUpcoming from '../../assets/alertpaisa-upcoming.png';
+import alertpaisaVoice from '../../assets/alertpaisa-voice.png';
+import alertpaisaReliability from '../../assets/alertpaisa-reliability.png';
 
 export const APP_ICONS: Record<string, ImageMetadata> = {
   arul: arulIcon,
-  awaazpay: awaazpayIcon,
+  alertpaisa: alertpaisaIcon,
 };
 
 const SHOTS: Record<string, ImageMetadata> = {
@@ -42,12 +42,12 @@ const SHOTS: Record<string, ImageMetadata> = {
   'arul-wallpaper-preview-and-apply': arulPreview,
   'arul-sacred-ringtones': arulRingtones,
   'arul-language-and-community-uploads': arulLanguages,
-  'awaazpay-passbook': awaazpayPassbook,
-  'awaazpay-autopays': awaazpayAutopays,
-  'awaazpay-transaction': awaazpayTransaction,
-  'awaazpay-upcoming': awaazpayUpcoming,
-  'awaazpay-voice': awaazpayVoice,
-  'awaazpay-reliability': awaazpayReliability,
+  'alertpaisa-passbook': alertpaisaPassbook,
+  'alertpaisa-autopays': alertpaisaAutopays,
+  'alertpaisa-transaction': alertpaisaTransaction,
+  'alertpaisa-upcoming': alertpaisaUpcoming,
+  'alertpaisa-voice': alertpaisaVoice,
+  'alertpaisa-reliability': alertpaisaReliability,
 };
 
 export function shotImage(file: string): ImageMetadata {

@@ -2,11 +2,11 @@
 import DocLayout from '../../layouts/DocLayout.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
-import { AWAAZPAY, LEGAL_NAME, legalPath } from '../../lib/site';
+import { ALERTPAISA, LEGAL_NAME, legalPath } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
 /**
- * AwaazPay's terms of use, ported from `~/AwaazPay/web/src/pages/terms.tsx`
+ * AlertPaisa's terms of use, ported from `~/AlertPaisa/web/src/pages/terms.tsx`
  * (rewritten 17 Nov 2026; the in-app text policy_terms_body matches it). Not the
  * shared wallpaper template: the plan, the trial and the cancel route differ.
  *
@@ -16,7 +16,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * LegalContact block, the package line, legalPath() links.
  */
 
-const app = AWAAZPAY;
+const app = ALERTPAISA;
 const lastUpdated = 'November 2026';
 
 const description = `Terms of use for ${app.name}: what the app does, sign-in, the plan, the ₹2 trial and the ₹199 monthly plan, cancelling, your account, shared logs, and how to contact us.`;

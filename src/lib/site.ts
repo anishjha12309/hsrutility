@@ -29,9 +29,9 @@
  * Facts here are verified against the app repos (`c:\Anish\Pakiza`,
  * `c:\Anish\Arul`). Do not add a capability you have not found in that code —
  * "saved favourites" was on this site for months and neither app has ever had it.
- * AwaazPay's copy comes ONLY from its Play listing (`~/AwaazPay/docs/play-store/
+ * AlertPaisa's copy comes ONLY from its Play listing (`~/AlertPaisa/docs/play-store/
  * 03-listing-text.md`, the full description), which lists exactly what the release
- * build shows, and its legal pages from `~/AwaazPay/web/src/pages/*.tsx`.
+ * build shows, and its legal pages from `~/AlertPaisa/web/src/pages/*.tsx`.
  */
 
 export const SITE_URL = 'https://hsrutility.com';
@@ -132,7 +132,7 @@ export interface AppFact {
   ogImage?: string;
   /**
    * Only the wallpaper apps have this: it feeds the shared legal templates in
-   * src/pages/[app]/. An app without it (AwaazPay, a money app) writes its own
+   * src/pages/[app]/. An app without it (AlertPaisa, a money app) writes its own
    * legal pages under src/pages/<slug>/. Use `wallpaperApps()` to iterate the
    * apps that have it.
    */
@@ -212,7 +212,7 @@ export interface LegalFacts {
    never matched the Worker's real debit, and that nothing in the app read (its
    own fallback was already ₹199). Corrected in the repo, not worked around here.
 
-   AwaazPay (added 17 Nov 2026) bills the same way at the same numbers: a ₹2
+   AlertPaisa (added 17 Nov 2026) bills the same way at the same numbers: a ₹2
    one-day trial by UPI AutoPay that is reversed, then ₹199 a month on a PhonePe
    mandate capped at ₹199 (its terms.tsx and refund.tsx). If it ever diverges, give
    it its own constants rather than editing these. */
@@ -388,9 +388,9 @@ export const ARUL: AppFact = {
 };
 
 
-export const AWAAZPAY: AppFact = {
-  slug: 'awaazpay',
-  name: 'AwaazPay',
+export const ALERTPAISA: AppFact = {
+  slug: 'alertpaisa',
+  name: 'AlertPaisa',
   category: 'Money management',
   applicationCategory: 'FinanceApplication',
   packageId: 'app.awaazpay.android',
@@ -400,13 +400,13 @@ export const AWAAZPAY: AppFact = {
   // export, summaries, categories, backup and Refer & Earn — do not mention them.
   tagline: 'Your money, tracked without typing',
   description:
-    'AwaazPay is an Android app that builds a passbook of your bank debits and credits from the transaction messages on your phone, tracks your UPI autopays and EMIs, and reminds you before each one is due.',
+    'AlertPaisa is an Android app that builds a passbook of your bank debits and credits from the transaction messages on your phone, tracks your UPI autopays and EMIs, and reminds you before each one is due.',
   status: 'live',
   statusLabel: 'Live on Google Play',
   playUrl: 'https://play.google.com/store/apps/details?id=app.awaazpay.android',
-  icon: 'awaazpay.png',
+  icon: 'alertpaisa.png',
   iconAlt:
-    'AwaazPay app icon — a white speech bubble holding a green rupee sign, with sound waves and a small calendar check mark, on deep green',
+    'AlertPaisa app icon — a white speech bubble holding a green rupee sign, with sound waves and a small calendar check mark, on deep green',
   hue: '22 128 61',
   featuresHeading: 'Every payment, accounted for.',
   chips: ['10 languages', 'No ads', 'History stays on your phone'],
@@ -446,42 +446,42 @@ export const AWAAZPAY: AppFact = {
   },
   deletePath: 'Settings → Need Help → Delete Account',
   cancelPath: 'Settings → Premium → Manage Subscription',
-  ogImage: '/awaazpay-og.png',
+  ogImage: '/alertpaisa-og.png',
   shots: [
     {
-      file: 'awaazpay-passbook',
+      file: 'alertpaisa-passbook',
       caption: 'One passbook',
-      alt: 'AwaazPay screenshot: "Every payment in one passbook — Debits and credits from your bank messages, by account", showing the Passbook screen with total credits and debits, account chips and a list of transactions.',
+      alt: 'AlertPaisa screenshot: "Every payment in one passbook — Debits and credits from your bank messages, by account", showing the Passbook screen with total credits and debits, account chips and a list of transactions.',
     },
     {
-      file: 'awaazpay-autopays',
+      file: 'alertpaisa-autopays',
       caption: 'Autopays and EMIs',
-      alt: 'AwaazPay screenshot: "All your autopays in one place — UPI mandates, EMIs and subscriptions with due dates", showing the Your Autopays screen with a monthly total, an upcoming-payments banner and each autopay with its due date.',
+      alt: 'AlertPaisa screenshot: "All your autopays in one place — UPI mandates, EMIs and subscriptions with due dates", showing the Your Autopays screen with a monthly total, an upcoming-payments banner and each autopay with its due date.',
     },
     {
-      file: 'awaazpay-transaction',
+      file: 'alertpaisa-transaction',
       caption: 'Full details',
-      alt: 'AwaazPay screenshot: "Full details for every payment — Amount, balance, reference and date in one tap", showing a Transaction Details dialog over the passbook.',
+      alt: 'AlertPaisa screenshot: "Full details for every payment — Amount, balance, reference and date in one tap", showing a Transaction Details dialog over the passbook.',
     },
     {
-      file: 'awaazpay-upcoming',
+      file: 'alertpaisa-upcoming',
       caption: 'Reminders before dues',
-      alt: 'AwaazPay screenshot: "Reminders before every due date — No autopay, EMI or bill takes you by surprise", showing the Upcoming Payments screen with due dates, days left, and Dismiss and Mark Paid buttons.',
+      alt: 'AlertPaisa screenshot: "Reminders before every due date — No autopay, EMI or bill takes you by surprise", showing the Upcoming Payments screen with due dates, days left, and Dismiss and Mark Paid buttons.',
     },
     {
-      file: 'awaazpay-voice',
+      file: 'alertpaisa-voice',
       caption: 'Spoken alerts',
-      alt: 'AwaazPay screenshot: "Hear every debit and credit — Spoken alerts in your chosen voice language", showing the Voice settings sheet with switches for credit, debit and upcoming-payment announcements and a voice language picker.',
+      alt: 'AlertPaisa screenshot: "Hear every debit and credit — Spoken alerts in your chosen voice language", showing the Voice settings sheet with switches for credit, debit and upcoming-payment announcements and a voice language picker.',
     },
     {
-      file: 'awaazpay-reliability',
+      file: 'alertpaisa-reliability',
       caption: 'Alert reliability',
-      alt: 'AwaazPay screenshot: "Alerts you can rely on — A quick check that your phone is set up right", showing the Make alerts reliable screen with notifications and voice checks all passing.',
+      alt: 'AlertPaisa screenshot: "Alerts you can rely on — A quick check that your phone is set up right", showing the Make alerts reliable screen with notifications and voice checks all passing.',
     },
   ],
 };
 
-export const APPS: AppFact[] = [ARUL, AWAAZPAY];
+export const APPS: AppFact[] = [ARUL, ALERTPAISA];
 
 /* ── Copy helpers ─────────────────────────────────────────────────────────────
    Everything that would otherwise bake the app count into a sentence. */
@@ -517,7 +517,7 @@ export const wallpaperApps = (): WallpaperApp[] =>
 /** The apps that do not — each writes its own legal pages under src/pages/<slug>/. */
 export const otherApps = () => APPS.filter((a) => a.legal === undefined);
 
-/** "Pakiza or Arul" · with three: "Pakiza, Arul, or AwaazPay". */
+/** "Pakiza or Arul" · with three: "Pakiza, Arul, or AlertPaisa". */
 export const appNamesOr = (apps: AppFact[] = APPS) =>
   new Intl.ListFormat('en', { style: 'long', type: 'disjunction' }).format(apps.map((a) => a.name));
 

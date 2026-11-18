@@ -31,7 +31,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * billing will hunt for a Play refund button, fail to find one, and file a
  * chargeback — so the page says so outright.
  */
-// Wallpaper apps only: an app without `legal` (AwaazPay) has its own page under
+// Wallpaper apps only: an app without `legal` (AlertPaisa) has its own page under
 // src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
   return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));
