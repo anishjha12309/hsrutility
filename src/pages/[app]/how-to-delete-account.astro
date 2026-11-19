@@ -21,7 +21,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * favourites" (no app has ever had a favourites feature) and the Google profile
  * photo (sign-in only ever returns name, email and account id). Do not put them back.
  */
-// Wallpaper apps only: an app without `legal` (AlertPaisa) has its own page under
+// Wallpaper apps only: an app without `legal` (Daily Passbook) has its own page under
 // src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
   return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));

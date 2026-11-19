@@ -660,3 +660,113 @@
     overflow: visible !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DAILY PASSBOOK SUB-SITE — the app's own palette and font, scoped by
+   `data-app` on <html> (set by Layout from the page's `scope`). Source:
+   ~/AlertPaisa/docs/reference/daily-passbook-spec.md. Cyan #26C6DA is the brand
+   colour; as TEXT on white it is only 1.9:1, so light mode uses the app's darker
+   cyan #0097A7 (3.7:1, large text and links with underline) for accent text and keeps
+   #26C6DA for fills, always under navy #1A1B2E text (7.6:1).
+   Nothing outside /dailypassbook/ changes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root[data-app='dailypassbook'] {
+  --font-display: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+
+  /* dark: navy ground */
+  --bg: #1a1b2e;
+  --surface: #232640;
+  --surface-2: #2a2d4a;
+  --text: #f8f9fc;
+  --muted: #aeb1c8;
+  --accent: #26c6da;
+  --accent-2: #26c6da;
+  --line: rgb(248 249 252 / 0.13);
+  --line-strong: rgb(248 249 252 / 0.26);
+  --accent-soft: rgb(38 198 218 / 0.38);
+  --accent-wash: rgb(38 198 218 / 0.09);
+  --accent-2-wash: rgb(38 198 218 / 0.28);
+  --btn-bg: #26c6da;
+  --btn-fg: #1a1b2e;
+  --btn-bg-hover: #4dd3e3;
+  --nav-bg: rgb(26 27 46 / 0.6);
+  --nav-bg-condensed: rgb(26 27 46 / 0.82);
+  --panel-ink-bg: #2a2d4a;
+  --panel-blue-bg: linear-gradient(90deg, #1a1b2e, #2a2d4a);
+}
+
+:root[data-app='dailypassbook'][data-theme='light'] {
+  --bg: #f8f9fc;
+  --surface: #ffffff;
+  --surface-2: #f3f4f6;
+  --text: #111827;
+  --muted: #5f6675;
+  --accent: #0097a7;
+  --accent-2: #0097a7;
+  --line: rgb(17 24 39 / 0.12);
+  --line-strong: rgb(17 24 39 / 0.24);
+  --accent-soft: rgb(0 151 167 / 0.3);
+  --accent-wash: rgb(38 198 218 / 0.12);
+  --accent-2-wash: rgb(38 198 218 / 0.22);
+  --btn-bg: #26c6da;
+  --btn-fg: #1a1b2e;
+  --btn-bg-hover: #4dd3e3;
+  --nav-bg: rgb(248 249 252 / 0.65);
+  --nav-bg-condensed: rgb(248 249 252 / 0.88);
+  --panel-ink-bg: #1a1b2e;
+}
+
+/* Inter has one upright style and real weights: bold headlines, no serif italic. */
+:root[data-app='dailypassbook'] :is(h1, h2, h3, h4) {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+:root[data-app='dailypassbook'] :is(.is-accent, .hero-tagline, em) {
+  font-style: normal;
+}
+:root[data-app='dailypassbook'] .hero-tagline {
+  font-weight: 600;
+}
+
+:root[data-app='dailypassbook'] .panel-ink {
+  --text: #f8f9fc;
+  --muted: #b9bccf;
+  --line: rgb(248 249 252 / 0.15);
+  --line-strong: rgb(248 249 252 / 0.3);
+  --accent: #26c6da;
+  --accent-soft: rgb(38 198 218 / 0.4);
+  --accent-wash: rgb(248 249 252 / 0.07);
+  --surface: #2a2d4a;
+  --btn-bg: #26c6da;
+  --btn-fg: #1a1b2e;
+  --btn-bg-hover: #4dd3e3;
+}
+:root[data-app='dailypassbook'] .panel-blue {
+  --text: #ffffff;
+  --muted: #c3c6d8;
+  --accent: #26c6da;
+  --accent-soft: rgb(38 198 218 / 0.45);
+  --accent-wash: rgb(255 255 255 / 0.08);
+  --line: rgb(255 255 255 / 0.2);
+  --line-strong: rgb(255 255 255 / 0.38);
+  --surface: #2a2d4a;
+  --btn-bg: #26c6da;
+  --btn-fg: #1a1b2e;
+  --btn-bg-hover: #4dd3e3;
+}
+
+/* Inter runs wider than Instrument Serif: step the display sizes down so
+   "Daily Passbook" fits a 360px phone beside the icon. */
+:root[data-app='dailypassbook'] .display-1 {
+  font-size: clamp(2.25rem, 0.9rem + 5.4vw, 5.5rem);
+  line-height: 1.05;
+  font-weight: 700;
+}
+:root[data-app='dailypassbook'] .display-2 {
+  font-size: clamp(1.9rem, 1.1rem + 3.4vw, 3.75rem);
+  line-height: 1.1;
+  font-weight: 700;
+}

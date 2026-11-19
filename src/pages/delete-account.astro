@@ -8,7 +8,7 @@ import {
   LEGAL_NAME,
   ADDRESS_LINES,
   APPS,
-  ALERTPAISA,
+  DAILYPASSBOOK,
   appNames,
   appNamesOr,
   wallpaperApps,
@@ -21,8 +21,8 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * fallback, and the deleted/retained split is stated with its real retention periods.
  * Nothing here was softened or re-promised.
  *
- * AlertPaisa added 17 Nov 2026. The steps and lists below were written for the
- * wallpaper apps and are now labelled as theirs; AlertPaisa's own route and lists
+ * Daily Passbook added 17 Nov 2026. The steps and lists below were written for the
+ * wallpaper apps and are now labelled as theirs; Daily Passbook's own route and lists
  * follow each one, taken from its how-to-delete-account and privacy pages.
  */
 const wallpaperNames = appNames(wallpaperApps());
@@ -47,15 +47,15 @@ const inAppSteps = [
   'Confirm. Your account and data are deleted <strong>immediately</strong>, your subscription and its UPI mandate are cancelled, and you are signed out. If we cannot reach the payment provider to cancel the mandate, the deletion is refused outright rather than half-applied — nothing is deleted and you can try again.',
 ];
 
-const alertpaisaInAppSteps = [
-  `Open ${ALERTPAISA.name}, go to <strong>Settings</strong> and open the <strong>“Need Help?”</strong> section.`,
+const dailypassbookInAppSteps = [
+  `Open ${DAILYPASSBOOK.name}, go to <strong>Settings</strong> and open the <strong>“Need Help?”</strong> section.`,
   'Tap <strong>Delete Account</strong> and confirm. Your plan is cancelled first, then your account is erased straight away. It cannot be undone.',
 ];
 
 const emailSteps = [
   `Send an email to <!--email_off--><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><!--/email_off--> with the subject line naming the app you use: <span class="mono-inline">Delete my account — ${appNamesOr()}</span>`,
-  `Include the <strong>Google account email</strong> you used to sign in, so we can locate and verify your data. For ${ALERTPAISA.name}, send the email from that Google account’s own address — we only act on a request sent from it.`,
-  `We process it within <strong>7 business days</strong> (${ALERTPAISA.name}: within 7 days) and email you a confirmation.`,
+  `Include the <strong>Google account email</strong> you used to sign in, so we can locate and verify your data. For ${DAILYPASSBOOK.name}, send the email from that Google account’s own address — we only act on a request sent from it.`,
+  `We process it within <strong>7 business days</strong> (${DAILYPASSBOOK.name}: within 7 days) and email you a confirmation.`,
 ];
 
 /**
@@ -74,8 +74,8 @@ const deleted = [
   'All locally cached app data, upon uninstalling the app',
 ];
 
-/** From AlertPaisa's how-to-delete-account page. */
-const alertpaisaDeleted = [
+/** From Daily Passbook's how-to-delete-account page. */
+const dailypassbookDeleted = [
   'Your account and profile: name, email and Google account ID',
   'Your device records and sign-in sessions',
   'Every masked bank-message copy you shared',
@@ -136,9 +136,9 @@ const retained = [
         </li>
       ))}
     </ol>
-    <p style="margin-top:1.5rem"><strong>{ALERTPAISA.name}</strong> ({ALERTPAISA.deletePath}):</p>
+    <p style="margin-top:1.5rem"><strong>{DAILYPASSBOOK.name}</strong> ({DAILYPASSBOOK.deletePath}):</p>
     <ol class="steps">
-      {alertpaisaInAppSteps.map((step) => (
+      {dailypassbookInAppSteps.map((step) => (
         <li>
           <span class="step-num accent" aria-hidden="true"></span>
           <span set:html={step} />
@@ -194,12 +194,12 @@ const retained = [
     <ul>
       {deleted.map((item) => <li>{item}</li>)}
     </ul>
-    <p><strong>{ALERTPAISA.name}:</strong></p>
+    <p><strong>{DAILYPASSBOOK.name}:</strong></p>
     <ul>
-      {alertpaisaDeleted.map((item) => <li>{item}</li>)}
+      {dailypassbookDeleted.map((item) => <li>{item}</li>)}
     </ul>
     <p>
-      {ALERTPAISA.name}’s bank messages and history on your phone are not touched; remove the app to
+      {DAILYPASSBOOK.name}’s bank messages and history on your phone are not touched; remove the app to
       clear them.
     </p>
   </section>
@@ -217,7 +217,7 @@ const retained = [
       ))}
     </div>
     <p style="margin-top:1rem">
-      <strong>{ALERTPAISA.name}:</strong> a one-way code of your sign-in identity is kept after
+      <strong>{DAILYPASSBOOK.name}:</strong> a one-way code of your sign-in identity is kept after
       deletion if you had used the free trial, so the trial is not given twice; it cannot be turned
       back into your identity. Our server deletes the analytics ids it kept; the analytics companies
       keep what they already received under their own retention rules.
@@ -236,9 +236,9 @@ const retained = [
       → your plan → Cancel — and delete later if you still want to.
     </p>
     <p>
-      In {ALERTPAISA.name}, deleting your account cancels your plan first, so there are no more debits.
+      In {DAILYPASSBOOK.name}, deleting your account cancels your plan first, so there are no more debits.
       Premium ends at once, and the rest of the paid period is lost. To keep it to the end of the
-      period, cancel instead — {ALERTPAISA.cancelPath}.
+      period, cancel instead — {DAILYPASSBOOK.cancelPath}.
     </p>
   </section>
 
@@ -246,11 +246,11 @@ const retained = [
     <h2 id="per-app">What data our apps store</h2>
     <p>
       {wallpaperApps().length === 1 ? (
-        <>{ALERTPAISA.name} is a money app and stores different data from {wallpaperNames}.</>
+        <>{DAILYPASSBOOK.name} is a money app and stores different data from {wallpaperNames}.</>
       ) : (
         <>
           {wallpaperNames} collect the same categories of personal data, and differ mainly in the
-          content they offer. {ALERTPAISA.name} is a money app and stores different data.
+          content they offer. {DAILYPASSBOOK.name} is a money app and stores different data.
         </>
       )}
     </p>

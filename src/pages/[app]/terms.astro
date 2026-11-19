@@ -30,7 +30,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * The refund position is strictly no-refund, set by the owner on 2026-08-20,
  * replacing an earlier "generally non-refundable, contact us within 7 days".
  */
-// Wallpaper apps only: an app without `legal` (AlertPaisa) has its own page under
+// Wallpaper apps only: an app without `legal` (Daily Passbook) has its own page under
 // src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
   return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));

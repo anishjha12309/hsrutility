@@ -7,7 +7,7 @@ import {
   SUPPORT_PHONE,
   LEGAL_NAME,
   ADDRESS_LINES,
-  ALERTPAISA,
+  DAILYPASSBOOK,
   appNames,
   appNamesOr,
   wallpaperApps,
@@ -29,9 +29,9 @@ import {
  *   - The invented legal entity is gone, and "nasheeds" is now "ringtones".
  * Everything else is unchanged.
  *
- * AlertPaisa added 17 Nov 2026: answers that described wallpaper features or the
+ * Daily Passbook added 17 Nov 2026: answers that described wallpaper features or the
  * wallpaper premium tier as true of every app are scoped to the wallpaper apps, and
- * AlertPaisa's own line follows (facts from its Play listing and policies).
+ * Daily Passbook's own line follows (facts from its Play listing and policies).
  */
 
 const wallpaperNames = appNames(wallpaperApps());
@@ -39,25 +39,25 @@ const wallpaperNames = appNames(wallpaperApps());
 const faqs = [
   {
     q: 'What is HSR Utility?',
-    a: `HSR Utility is an indie Android studio. It builds apps for specific audiences: Arul, South Indian wallpapers; and ${ALERTPAISA.name}, a passbook of your bank payments with autopay and EMI reminders. The studio itself has no religious affiliation.`,
+    a: `HSR Utility is an indie Android studio. It builds apps for specific audiences: Arul, South Indian wallpapers; and ${DAILYPASSBOOK.name}, a passbook of your bank payments with autopay and EMI reminders. The studio itself has no religious affiliation.`,
   },
   {
     q: 'What is Arul?',
     a: 'Arul offers South Indian devotional wallpapers and ringtones in a shorts-style feed, browsable across six collections (Amman, Ayyappan, Murugan, Perumal, Sivan and Temples), in six Indian languages. You can submit your own wallpaper from inside the app.',
   },
   {
-    q: `What is ${ALERTPAISA.name}?`,
-    a: `${ALERTPAISA.name} keeps track of your money without typing anything. It builds a passbook of your bank debits and credits from the transaction messages on your phone, finds your UPI autopays, EMIs, subscriptions and bills, and reminds you before each one is due. It can also announce each debit or credit aloud in your chosen voice language. It is available in English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam and Punjabi. It is not a bank, does not move money and does not give financial advice.`,
-    link: { label: `Get ${ALERTPAISA.name} on Google Play`, href: ALERTPAISA.playUrl as string, external: true },
+    q: `What is ${DAILYPASSBOOK.name}?`,
+    a: `${DAILYPASSBOOK.name} keeps track of your money without typing anything. It builds a passbook of your bank debits and credits from the transaction messages on your phone, finds your UPI autopays, EMIs, subscriptions and bills, and reminds you before each one is due. It can also announce each debit or credit aloud in your chosen voice language. It is available in English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam and Punjabi. It is not a bank, does not move money and does not give financial advice.`,
+    link: { label: `Get ${DAILYPASSBOOK.name} on Google Play`, href: DAILYPASSBOOK.playUrl as string, external: true },
   },
   {
     q: 'Are the apps on the Google Play Store?',
-    a: `Arul and ${ALERTPAISA.name} are live on Google Play now.`,
+    a: `Arul and ${DAILYPASSBOOK.name} are live on Google Play now.`,
     link: { label: 'Get Arul on Google Play', href: 'https://play.google.com/store/apps/details?id=com.hsrutility.arul', external: true },
   },
   {
     q: 'Are the apps free?',
-    a: `${wallpaperNames}: yes — browsing and previewing every wallpaper and ringtone is completely free. An optional premium plan unlocks applying and sharing wallpapers, and setting ringtones. Setting up the UPI AutoPay mandate involves a small verification debit (currently ₹2) that is reversed automatically. ${ALERTPAISA.name}: ${ALERTPAISA.pricing.body}`,
+    a: `${wallpaperNames}: yes — browsing and previewing every wallpaper and ringtone is completely free. An optional premium plan unlocks applying and sharing wallpapers, and setting ringtones. Setting up the UPI AutoPay mandate involves a small verification debit (currently ₹2) that is reversed automatically. ${DAILYPASSBOOK.name}: ${DAILYPASSBOOK.pricing.body}`,
   },
   {
     q: 'How do I sign in?',
@@ -69,12 +69,12 @@ const faqs = [
   },
   {
     q: 'How do I delete my account and data?',
-    a: `You can delete your account and data instantly from inside any of our apps (${wallpaperNames}: ${wallpaperApps()[0].deletePath}; ${ALERTPAISA.name}: ${ALERTPAISA.deletePath}), or request it by email if you have already uninstalled. Our Delete My Account page has the full steps.`,
+    a: `You can delete your account and data instantly from inside any of our apps (${wallpaperNames}: ${wallpaperApps()[0].deletePath}; ${DAILYPASSBOOK.name}: ${DAILYPASSBOOK.deletePath}), or request it by email if you have already uninstalled. Our Delete My Account page has the full steps.`,
     link: { label: 'Go to Delete My Account', href: '/delete-account' },
   },
   {
     q: 'Which Android versions are supported?',
-    a: `${wallpaperNames} ${wallpaperApps().length === 1 ? 'supports' : 'support'} Android 7.0 (Nougat) and above; ${ALERTPAISA.name} needs Android 8.0 (Oreo) or newer. We recommend keeping your device updated for the best experience.`,
+    a: `${wallpaperNames} ${wallpaperApps().length === 1 ? 'supports' : 'support'} Android 7.0 (Nougat) and above; ${DAILYPASSBOOK.name} needs Android 8.0 (Oreo) or newer. We recommend keeping your device updated for the best experience.`,
   },
 ];
 

@@ -3,19 +3,22 @@
 Read this before editing. Two pieces of work touch the same files. Update your row when you
 start, finish, or change a shared file. Delete this file once both rows say "done".
 
-## 0. AwaazPay renamed to AlertPaisa (owner, 18 Nov 2026, final name) — done
+## 0. Names (owner, 20 Nov 2026)
 
-Done by the Claude session in `~/AwaazPay` (the folder becomes `~/AlertPaisa`). Sections 1 and 2
-below are history and keep the old name.
-
-- The sub-site moved from `/awaazpay/` to `/alertpaisa/`; `astro.config.mjs` redirects every old
-  address (the landing page and the four legal pages), because builds up to versionCode 11, the
-  Play listing and the Google sign-in screen link the old ones. Never remove those redirects.
-- `src/lib/site.ts`: `ALERTPAISA` (slug `alertpaisa`, name `AlertPaisa`). `packageId` and the
-  Play URL stay `app.awaazpay.android`: a published app ID never changes.
-- Files renamed: `src/pages/alertpaisa/`, `assets/alertpaisa*.png`, `public/alertpaisa-og.png`
-  (the share card redrawn with the new wordmark; the six screenshots show no name and are the
-  same pictures).
+- Current name **Daily Passbook**, slug `dailypassbook`, sub-site `/dailypassbook/` (landing plus
+  privacy-policy, terms, refund-policy, how-to-delete-account). `src/lib/site.ts`: `DAILYPASSBOOK`.
+  `packageId` and the Play URL stay `app.awaazpay.android`: a published app ID never changes.
+- Old slugs: `awaazpay` (to 18 Nov), `alertpaisa` (18-20 Nov). Installed builds, the Play listing,
+  Truecaller and Meta still link them. Every old address (landing and the four legal pages, with
+  and without trailing slash) answers 301 straight to `/dailypassbook/…` from `public/_redirects`,
+  with a fallback in `astro.config.mjs`. **Never remove a redirect.** On the next rename, repoint
+  every old line to the new slug (no chains) and add the current slug's lines.
+- Sub-site look: `[data-app='dailypassbook']` block at the end of `src/styles/global.css`
+  (cyan #26C6DA, navy #1A1B2E, Inter from `public/fonts/inter-*-latin.woff`). Share card
+  `public/dailypassbook-og.png`; icon `assets/dailypassbook.png` (from the app's launcher layers).
+- Swap when the new app screenshots arrive: `assets/dailypassbook-{passbook,autopays,transaction,
+  upcoming,voice,reliability}.png` still show the old AlertPaisa app (same filenames, same size).
+  Check `featuresHeading` and the gallery alt text in `src/lib/site.ts` too.
 
 ## 1. Add AwaazPay (owner OK 17 Nov 2026) — done, pushed to master
 

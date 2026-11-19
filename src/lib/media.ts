@@ -11,7 +11,7 @@
  */
 
 import arulIcon from '../../assets/arul.png';
-import alertpaisaIcon from '../../assets/alertpaisa.png';
+import dailypassbookIcon from '../../assets/dailypassbook.png';
 
 
 import arulCollections from '../../assets/arul-sacred-wallpaper-collections.png';
@@ -22,16 +22,16 @@ import arulPreview from '../../assets/arul-wallpaper-preview-and-apply.png';
 import arulRingtones from '../../assets/arul-sacred-ringtones.png';
 import arulLanguages from '../../assets/arul-language-and-community-uploads.png';
 
-import alertpaisaPassbook from '../../assets/alertpaisa-passbook.png';
-import alertpaisaAutopays from '../../assets/alertpaisa-autopays.png';
-import alertpaisaTransaction from '../../assets/alertpaisa-transaction.png';
-import alertpaisaUpcoming from '../../assets/alertpaisa-upcoming.png';
-import alertpaisaVoice from '../../assets/alertpaisa-voice.png';
-import alertpaisaReliability from '../../assets/alertpaisa-reliability.png';
+import dailypassbookPassbook from '../../assets/dailypassbook-passbook.png';
+import dailypassbookAutopays from '../../assets/dailypassbook-autopays.png';
+import dailypassbookTransaction from '../../assets/dailypassbook-transaction.png';
+import dailypassbookUpcoming from '../../assets/dailypassbook-upcoming.png';
+import dailypassbookVoice from '../../assets/dailypassbook-voice.png';
+import dailypassbookReliability from '../../assets/dailypassbook-reliability.png';
 
 export const APP_ICONS: Record<string, ImageMetadata> = {
   arul: arulIcon,
-  alertpaisa: alertpaisaIcon,
+  dailypassbook: dailypassbookIcon,
 };
 
 const SHOTS: Record<string, ImageMetadata> = {
@@ -42,12 +42,12 @@ const SHOTS: Record<string, ImageMetadata> = {
   'arul-wallpaper-preview-and-apply': arulPreview,
   'arul-sacred-ringtones': arulRingtones,
   'arul-language-and-community-uploads': arulLanguages,
-  'alertpaisa-passbook': alertpaisaPassbook,
-  'alertpaisa-autopays': alertpaisaAutopays,
-  'alertpaisa-transaction': alertpaisaTransaction,
-  'alertpaisa-upcoming': alertpaisaUpcoming,
-  'alertpaisa-voice': alertpaisaVoice,
-  'alertpaisa-reliability': alertpaisaReliability,
+  'dailypassbook-passbook': dailypassbookPassbook,
+  'dailypassbook-autopays': dailypassbookAutopays,
+  'dailypassbook-transaction': dailypassbookTransaction,
+  'dailypassbook-upcoming': dailypassbookUpcoming,
+  'dailypassbook-voice': dailypassbookVoice,
+  'dailypassbook-reliability': dailypassbookReliability,
 };
 
 export function shotImage(file: string): ImageMetadata {

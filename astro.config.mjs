@@ -16,21 +16,28 @@ export default defineConfig({
   // reviewer's policy screen is the worst possible way to find this out. Astro emits
   // a static redirect page for it in a static build.
   //
-  // /awaazpay/ was AlertPaisa's sub-site until the app was renamed on 2026-11-18. Builds up
-  // to versionCode 11 open /awaazpay/privacy-policy/ in the app, and the Play listing and
-  // the Google sign-in screen linked the old pages, so every old address keeps resolving.
+  // The app's sub-site was /awaazpay/ (until 2026-11-18), then /alertpaisa/ (until
+  // 2026-11-20), now /dailypassbook/. Installed builds, the Play listing, Truecaller and
+  // Meta link the old pages, so every old address keeps resolving, straight to the
+  // current page. Never remove one.
   //
   // In production `public/_redirects` answers these with a real 301 before any file is
   // served; the meta-refresh pages Astro builds from this list are only a fallback (local
   // preview, another host). Add a new old address to both.
   redirects: {
     '/privacy': '/privacy-policy',
-    '/awaazpay': '/alertpaisa/',
-    '/awaazpay/privacy-policy': '/alertpaisa/privacy-policy/',
-    '/awaazpay/terms': '/alertpaisa/terms/',
-    '/awaazpay/refund-policy': '/alertpaisa/refund-policy/',
-    '/awaazpay/how-to-delete-account': '/alertpaisa/how-to-delete-account/',
+    '/awaazpay': '/dailypassbook/',
+    '/awaazpay/privacy-policy': '/dailypassbook/privacy-policy/',
+    '/awaazpay/terms': '/dailypassbook/terms/',
+    '/awaazpay/refund-policy': '/dailypassbook/refund-policy/',
+    '/awaazpay/how-to-delete-account': '/dailypassbook/how-to-delete-account/',
+    '/alertpaisa': '/dailypassbook/',
+    '/alertpaisa/privacy-policy': '/dailypassbook/privacy-policy/',
+    '/alertpaisa/terms': '/dailypassbook/terms/',
+    '/alertpaisa/refund-policy': '/dailypassbook/refund-policy/',
+    '/alertpaisa/how-to-delete-account': '/dailypassbook/how-to-delete-account/',
   },
+
 
   // Tailwind 4 ships as a Vite plugin; the old @astrojs/tailwind integration is
   // deprecated and was removed in the rebuild.

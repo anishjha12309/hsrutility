@@ -27,7 +27,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * that page is studio-level and names every app, so a link there is a single click
  * from this app's policy to the other app's name.
  */
-// Wallpaper apps only: an app without `legal` (AlertPaisa) has its own page under
+// Wallpaper apps only: an app without `legal` (Daily Passbook) has its own page under
 // src/pages/<slug>/, and this template's wording would be wrong for it.
 export function getStaticPaths() {
   return wallpaperApps().map((app) => ({ params: { app: app.slug }, props: { app } }));

@@ -3,12 +3,12 @@ import DocLayout from '../../layouts/DocLayout.astro';
 import Email from '../../components/Email.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
-import { ALERTPAISA, LEGAL_NAME, legalPath } from '../../lib/site';
+import { DAILYPASSBOOK, LEGAL_NAME, legalPath } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
 /**
- * AlertPaisa's privacy policy. NOT the shared wallpaper template in src/pages/[app]/:
- * AlertPaisa is a money app and its data is different (masked bank messages, device
+ * Daily Passbook's privacy policy. NOT the shared wallpaper template in src/pages/[app]/:
+ * Daily Passbook is a money app and its data is different (masked bank messages, device
  * details, PhonePe mandate records, three analytics companies).
  *
  * Ported from `~/AlertPaisa/web/src/pages/privacy.tsx` (rewritten 17 Nov 2026; the
@@ -20,7 +20,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * close the page, and the retention paragraph is laid out as cards (same facts).
  */
 
-const app = ALERTPAISA;
+const app = DAILYPASSBOOK;
 const lastUpdated = 'November 2026';
 
 const description = `Privacy policy for ${app.name}: what stays on your phone, what the app sends to our server, payments, analytics, masking, how long data is kept, and how to delete your account.`;
@@ -80,7 +80,7 @@ const analyticsData = [
   'For a purchase: its value (for example ₹199), the currency and the order id.',
   'Three ids: the Firebase app instance id, Meta’s install id, and your phone’s advertising ID. The advertising ID is never sent if you limited ad tracking on your phone.',
   'Device details: phone model, Android version, app version and app language (to Meta, with purchase events).',
-  'PostHog also gets your AlertPaisa account id.',
+  'PostHog also gets your Daily Passbook account id.',
 ];
 
 const retention = [

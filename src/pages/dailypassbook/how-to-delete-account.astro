@@ -4,7 +4,7 @@ import Email from '../../components/Email.astro';
 import LegalContact from '../../components/LegalContact.astro';
 import LegalFootLinks from '../../components/LegalFootLinks.astro';
 import '../../styles/doc-steps.css';
-import { ALERTPAISA, SUPPORT_EMAIL, legalPath } from '../../lib/site';
+import { DAILYPASSBOOK, SUPPORT_EMAIL, legalPath } from '../../lib/site';
 import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } from '../../lib/schema';
 
 /**
@@ -18,7 +18,7 @@ import { organizationSchema, websiteSchema, breadcrumbSchema, webPageSchema } fr
  * account's own address — keep that sentence.
  */
 
-const app = ALERTPAISA;
+const app = DAILYPASSBOOK;
 const subject = `Delete my ${app.name} account`;
 
 const description = `How to delete your ${app.name} account and its data — in the app (${app.deletePath}), or by email without the app.`;

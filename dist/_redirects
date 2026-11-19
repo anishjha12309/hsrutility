@@ -2,16 +2,30 @@
 # meta-refresh pages that answer 200; these rules run before any static file, so the
 # old addresses get a permanent redirect that search engines and link checkers see.
 # Pages matches the exact path, so each one is listed with and without the slash.
+# Every old address goes straight to the current page (no chains). NEVER remove a line:
+# installed app builds, the Play listing, Truecaller and Meta still link them.
 
 /privacy                              /privacy-policy/                      301
 /privacy/                             /privacy-policy/                      301
-/awaazpay                             /alertpaisa/                          301
-/awaazpay/                            /alertpaisa/                          301
-/awaazpay/privacy-policy              /alertpaisa/privacy-policy/           301
-/awaazpay/privacy-policy/             /alertpaisa/privacy-policy/           301
-/awaazpay/terms                       /alertpaisa/terms/                    301
-/awaazpay/terms/                      /alertpaisa/terms/                    301
-/awaazpay/refund-policy               /alertpaisa/refund-policy/            301
-/awaazpay/refund-policy/              /alertpaisa/refund-policy/            301
-/awaazpay/how-to-delete-account       /alertpaisa/how-to-delete-account/    301
-/awaazpay/how-to-delete-account/      /alertpaisa/how-to-delete-account/    301
+
+/awaazpay                                     /dailypassbook/                          301
+/awaazpay/                                    /dailypassbook/                          301
+/awaazpay/privacy-policy                      /dailypassbook/privacy-policy/           301
+/awaazpay/privacy-policy/                     /dailypassbook/privacy-policy/           301
+/awaazpay/terms                               /dailypassbook/terms/                    301
+/awaazpay/terms/                              /dailypassbook/terms/                    301
+/awaazpay/refund-policy                       /dailypassbook/refund-policy/            301
+/awaazpay/refund-policy/                      /dailypassbook/refund-policy/            301
+/awaazpay/how-to-delete-account               /dailypassbook/how-to-delete-account/    301
+/awaazpay/how-to-delete-account/              /dailypassbook/how-to-delete-account/    301
+
+/alertpaisa                                   /dailypassbook/                          301
+/alertpaisa/                                  /dailypassbook/                          301
+/alertpaisa/privacy-policy                    /dailypassbook/privacy-policy/           301
+/alertpaisa/privacy-policy/                   /dailypassbook/privacy-policy/           301
+/alertpaisa/terms                             /dailypassbook/terms/                    301
+/alertpaisa/terms/                            /dailypassbook/terms/                    301
+/alertpaisa/refund-policy                     /dailypassbook/refund-policy/            301
+/alertpaisa/refund-policy/                    /dailypassbook/refund-policy/            301
+/alertpaisa/how-to-delete-account             /dailypassbook/how-to-delete-account/    301
+/alertpaisa/how-to-delete-account/            /dailypassbook/how-to-delete-account/    301

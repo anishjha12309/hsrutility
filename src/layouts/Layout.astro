@@ -47,7 +47,7 @@ const imageAlt = scope?.ogImage && !image
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app={scope?.slug}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -90,8 +90,8 @@ const imageAlt = scope?.ogImage && !image
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#161613" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#F0EFE3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content={scope?.slug === 'dailypassbook' ? '#1A1B2E' : '#161613'} media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content={scope?.slug === 'dailypassbook' ? '#F8F9FC' : '#F0EFE3'} media="(prefers-color-scheme: light)" />
 
     {/*
       Only the faces that paint above the fold: the serif headline is the LCP
@@ -100,20 +100,29 @@ const imageAlt = scope?.ogImage && !image
       throttled connection (the italic accent word swaps in a frame later,
       metric-matched, so nothing moves).
     */}
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="/fonts/instrument-serif-latin-400-normal.woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="/fonts/instrument-sans-var-latin.woff2"
-      crossorigin
-    />
+    {scope?.slug === 'dailypassbook' ? (
+      <>
+        <link rel="preload" as="font" type="font/woff" href="/fonts/inter-700-latin.woff" crossorigin />
+        <link rel="preload" as="font" type="font/woff" href="/fonts/inter-400-latin.woff" crossorigin />
+      </>
+    ) : (
+      <>
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/fonts/instrument-serif-latin-400-normal.woff2"
+          crossorigin
+        />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/fonts/instrument-sans-var-latin.woff2"
+          crossorigin
+        />
+      </>
+    )}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="HSR Utility" />
