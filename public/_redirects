@@ -1,0 +1,17 @@
+# Real 301s on Cloudflare Pages. Astro's `redirects` in astro.config.mjs only emit
+# meta-refresh pages that answer 200; these rules run before any static file, so the
+# old addresses get a permanent redirect that search engines and link checkers see.
+# Pages matches the exact path, so each one is listed with and without the slash.
+
+/privacy                              /privacy-policy/                      301
+/privacy/                             /privacy-policy/                      301
+/awaazpay                             /alertpaisa/                          301
+/awaazpay/                            /alertpaisa/                          301
+/awaazpay/privacy-policy              /alertpaisa/privacy-policy/           301
+/awaazpay/privacy-policy/             /alertpaisa/privacy-policy/           301
+/awaazpay/terms                       /alertpaisa/terms/                    301
+/awaazpay/terms/                      /alertpaisa/terms/                    301
+/awaazpay/refund-policy               /alertpaisa/refund-policy/            301
+/awaazpay/refund-policy/              /alertpaisa/refund-policy/            301
+/awaazpay/how-to-delete-account       /alertpaisa/how-to-delete-account/    301
+/awaazpay/how-to-delete-account/      /alertpaisa/how-to-delete-account/    301

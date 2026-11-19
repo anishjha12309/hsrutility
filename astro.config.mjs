@@ -19,6 +19,10 @@ export default defineConfig({
   // /awaazpay/ was AlertPaisa's sub-site until the app was renamed on 2026-11-18. Builds up
   // to versionCode 11 open /awaazpay/privacy-policy/ in the app, and the Play listing and
   // the Google sign-in screen linked the old pages, so every old address keeps resolving.
+  //
+  // In production `public/_redirects` answers these with a real 301 before any file is
+  // served; the meta-refresh pages Astro builds from this list are only a fallback (local
+  // preview, another host). Add a new old address to both.
   redirects: {
     '/privacy': '/privacy-policy',
     '/awaazpay': '/alertpaisa/',
