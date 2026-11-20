@@ -1,18 +1,8 @@
-# HSR Utility
+@AGENTS.md
 
-Astro 5 static site for hsrutility.com (apps: Pakiza, Arul, Daily Passbook). Studio and app facts
-live in `src/lib/site.ts` — every page, `src/lib/schema.ts` and `public/llms.txt`
-read from it, so change a fact there, never in a page. To ship: `/deploy` skill.
+# CLAUDE.md — HSR Utility, Claude-only
 
-**The app sub-sites are siloed.** Everything under `/pakiza/`, `/arul/` and `/dailypassbook/` carries
-that app's own nav, footer and legal links and links to nothing else — one app serves
-an Islamic audience and the other a Hindu one, and a page putting them one click apart
-invites a reading neither is asking for. The studio home and `llms.txt` are the only
-places the app names appear together. `Layout`'s `scope` prop enforces it; adding a
-cross-link from an app page, however useful, undoes it. Daily Passbook is a money app with
-no `legal` facts: its legal pages live in `src/pages/dailypassbook/`, not `[app]/`.
+## Claude Code
 
-## Authoring skills and hooks
-
+- To ship: `/deploy` skill.
 - Files under `.claude/` stay under 80 lines, frontmatter included. Past it, cut or split into a reference file.
-- `/terms` 308s to `/terms/`: without `curl -L`, every grep silently finds nothing.
