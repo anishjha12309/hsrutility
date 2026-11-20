@@ -14,15 +14,5 @@ no `legal` facts: its legal pages live in `src/pages/dailypassbook/`, not `[app]
 
 ## Authoring skills and hooks
 
-Everything under `.claude/` is a prompt read by Claude Opus 5. Follow the
-[Opus 5 prompting guide][guide] religiously; it carries the rules on scope,
-delegation, length, cadence and corrections. Repo-specific additions:
-
-- **80 lines, hard cap, frontmatter included.** Past it, cut to what a competent
-  agent would not already know, or split the overflow into a reference file.
-- **No verification scaffolding.** Opus 5 self-verifies, so "double-check" and
-  "verify before reporting" only buy over-verification. Facts about how a system
-  misbehaves are the exception: "always verify the deploy" goes, "`/terms` 308s to
-  `/terms/`, so without `curl -L` every grep silently finds nothing" stays.
-
-[guide]: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5
+- Files under `.claude/` stay under 80 lines, frontmatter included. Past it, cut or split into a reference file.
+- `/terms` 308s to `/terms/`: without `curl -L`, every grep silently finds nothing.
