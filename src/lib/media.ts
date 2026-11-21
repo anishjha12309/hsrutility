@@ -27,7 +27,7 @@ import dailypassbookAutopays from '../../assets/dailypassbook-autopays.png';
 import dailypassbookTransaction from '../../assets/dailypassbook-transaction.png';
 import dailypassbookUpcoming from '../../assets/dailypassbook-upcoming.png';
 import dailypassbookVoice from '../../assets/dailypassbook-voice.png';
-import dailypassbookReliability from '../../assets/dailypassbook-reliability.png';
+import dailypassbookLanguages from '../../assets/dailypassbook-languages.png';
 
 export const APP_ICONS: Record<string, ImageMetadata> = {
   arul: arulIcon,
@@ -47,7 +47,7 @@ const SHOTS: Record<string, ImageMetadata> = {
   'dailypassbook-transaction': dailypassbookTransaction,
   'dailypassbook-upcoming': dailypassbookUpcoming,
   'dailypassbook-voice': dailypassbookVoice,
-  'dailypassbook-reliability': dailypassbookReliability,
+  'dailypassbook-languages': dailypassbookLanguages,
 };
 
 export function shotImage(file: string): ImageMetadata {

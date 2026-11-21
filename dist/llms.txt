@@ -20,7 +20,7 @@
     credits from the transaction messages on the phone, tracks UPI autopays, EMIs,
     subscriptions and bills with their due dates, reminds before each is due, and can
     announce each debit or credit aloud in a chosen voice language (even on Do Not
-    Disturb). Alert reliability check. 10 languages (English, Hindi, Bengali, Tamil,
+    Disturb). CSV export of the passbook, Refer & Earn. 10 languages (English, Hindi, Bengali, Tamil,
     Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi). No ads; reading, parsing
     and payment history stay on the phone. Made by UtilityVerse; not a bank, moves no
     money, gives no financial advice.
@@ -33,14 +33,15 @@
   automatically. **Payments already taken are strictly non-refundable**; cancelling
   is instant from inside the app and stops all future charges.
 - **Model (Daily Passbook):** a plan is required. ₹2 for a one-day trial (the ₹2 is refunded),
-  then ₹199/month by PhonePe UPI AutoPay, not Google Play billing. One trial per Google
-  account. Cancel any time in the app (Settings → Premium → Manage Subscription).
+  then ₹199/month by PhonePe UPI AutoPay, not Google Play billing. One trial per phone
+  number. Cancel any time in the app (Settings → Premium → Cancel Plan).
   Payments already taken are not refunded; failed, duplicate or wrong debits are.
-- **Sign-in:** Google Sign-In (name, email, profile photo). No phone number, no password.
+- **Sign-in:** Arul uses Google Sign-In (name, email, profile photo). Daily Passbook uses
+  Truecaller, or a phone number and a one-time code. No password in either app.
 - **Account deletion:** instant from inside any app (Arul: Settings → Delete
   account; Daily Passbook: Settings → Need Help → Delete Account); email
   support@hsrutility.com as a fallback if the app is already uninstalled (for Daily Passbook,
-  from the account's own Google email address).
+  with the phone number the account signed in with).
 - **Contact:** support@hsrutility.com — replies within 48 hours. Support is email-only.
 - **This website:** no analytics, no cookies, no third-party requests of any kind.
 

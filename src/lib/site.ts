@@ -397,7 +397,7 @@ export const DAILYPASSBOOK: AppFact = {
   // Every word below comes from the Play listing's full description. It is
   // SMS-based money management: never call it an "SMS reader", "SMS alerts" or
   // "text to voice" (Play's SMS policy). The release build hides the widget,
-  // export, summaries, categories, backup and Refer & Earn — do not mention them.
+  // summaries, categories, backup and Alert Reliability — do not mention them.
   tagline: 'Your money, tracked without typing',
   description:
     'Daily Passbook is an Android app that builds a passbook of your bank debits and credits from the transaction messages on your phone, tracks your UPI autopays and EMIs, and reminds you before each one is due.',
@@ -406,7 +406,7 @@ export const DAILYPASSBOOK: AppFact = {
   playUrl: 'https://play.google.com/store/apps/details?id=app.awaazpay.android',
   icon: 'dailypassbook.png',
   iconAlt:
-    'Daily Passbook app icon — a blue passbook with a green rupee note and gold coins, on pale blue',
+    'Daily Passbook app icon — a white chat bubble with a cyan rupee sign, sound waves and a calendar check, on navy',
   hue: '38 198 218',
   featuresHeading: 'Every payment, accounted for.',
   chips: ['10 languages', 'No ads', 'History stays on your phone'],
@@ -428,8 +428,12 @@ export const DAILYPASSBOOK: AppFact = {
       body: 'Each debit or credit is announced as it happens, in your chosen voice language. It works even when your phone is on Do Not Disturb, and you can turn it off.',
     },
     {
-      title: 'Alerts you can rely on',
-      body: 'A settings page that checks your phone is set up so alerts are not missed.',
+      title: 'Export your passbook',
+      body: 'Share your passbook as a PDF or a CSV file whenever you need it.',
+    },
+    {
+      title: 'Refer & Earn',
+      body: 'Invite friends and get 30 days of premium free for each friend who subscribes.',
     },
     {
       title: 'Ten languages',
@@ -442,41 +446,41 @@ export const DAILYPASSBOOK: AppFact = {
   ],
   pricing: {
     heading: 'A plan, from day one',
-    body: `A plan is required to use the app, and you sign in with Google. Start with a ${TRIAL_DAYS}-day trial for ${MANDATE_VERIFY_AMOUNT} — the ${MANDATE_VERIFY_AMOUNT} is refunded — then ${MONTHLY_PRICE} a month by UPI AutoPay through ${PAYMENT_PROVIDER}. Cancel any time in the app.`,
+    body: `A plan is required to use the app, and you sign in with Truecaller or your phone number. Start with a ${TRIAL_DAYS}-day trial for ${MANDATE_VERIFY_AMOUNT} — the ${MANDATE_VERIFY_AMOUNT} is refunded — then ${MONTHLY_PRICE} a month by UPI AutoPay through ${PAYMENT_PROVIDER}. Cancel any time in the app.`,
   },
   deletePath: 'Settings → Need Help → Delete Account',
-  cancelPath: 'Settings → Premium → Manage Subscription',
+  cancelPath: 'Settings → Premium → Cancel Plan',
   ogImage: '/dailypassbook-og.png',
   shots: [
     {
       file: 'dailypassbook-passbook',
       caption: 'One passbook',
-      alt: 'Daily Passbook screenshot: "Every payment in one passbook — Debits and credits from your bank messages, by account", showing the Passbook screen with total credits and debits, account chips and a list of transactions.',
+      alt: 'Daily Passbook screenshot: "A passbook that fills itself — Every debit and credit from your bank messages, by account", showing the Passbook screen with total credits and debits, account cards and a list of transactions.',
     },
     {
       file: 'dailypassbook-autopays',
-      caption: 'Autopays and EMIs',
-      alt: 'Daily Passbook screenshot: "All your autopays in one place — UPI mandates, EMIs and subscriptions with due dates", showing the Your Autopays screen with a monthly total, an upcoming-payments banner and each autopay with its due date.',
+      caption: 'All your autopays',
+      alt: 'Daily Passbook screenshot: "All your AutoPays in one place — UPI mandates and subscriptions with due dates", showing the Your Autopays screen with voice settings, a monthly total, an upcoming-payments banner and each autopay with its due date.',
     },
     {
       file: 'dailypassbook-transaction',
       caption: 'Full details',
-      alt: 'Daily Passbook screenshot: "Full details for every payment — Amount, balance, reference and date in one tap", showing a Transaction Details dialog over the passbook.',
+      alt: 'Daily Passbook screenshot: "Every detail, one tap away — Amount, reference and date for each payment", showing a Transaction Details dialog over the passbook.',
     },
     {
       file: 'dailypassbook-upcoming',
       caption: 'Reminders before dues',
-      alt: 'Daily Passbook screenshot: "Reminders before every due date — No autopay, EMI or bill takes you by surprise", showing the Upcoming Payments screen with due dates, days left, and Dismiss and Mark Paid buttons.',
+      alt: 'Daily Passbook screenshot: "Reminded before every due date — No AutoPay, EMI or bill catches you off guard", showing the Upcoming Payments screen with a total, due dates, days left, and Dismiss and Mark Paid buttons.',
     },
     {
       file: 'dailypassbook-voice',
       caption: 'Spoken alerts',
-      alt: 'Daily Passbook screenshot: "Hear every debit and credit — Spoken alerts in your chosen voice language", showing the Voice settings sheet with switches for credit, debit and upcoming-payment announcements and a voice language picker.',
+      alt: 'Daily Passbook screenshot: "Hear your money move — Each debit and credit spoken in your language", showing the Voice settings sheet with switches for credit, debit and upcoming-payment announcements and a voice language picker.',
     },
     {
-      file: 'dailypassbook-reliability',
-      caption: 'Alert reliability',
-      alt: 'Daily Passbook screenshot: "Alerts you can rely on — A quick check that your phone is set up right", showing the Make alerts reliable screen with notifications and voice checks all passing.',
+      file: 'dailypassbook-languages',
+      caption: '10 languages',
+      alt: 'Daily Passbook screenshot: "In your own language — The app and its voice in 10 Indian languages", showing the Select Language sheet with English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam and Punjabi.',
     },
   ],
 };

@@ -34,10 +34,16 @@ const structuredData = [
 
 /** The trial and the plan. Every line governs money; cut words, never rows. */
 const planPoints = [
-  'The trial lasts one day. It starts with a ₹2 debit by UPI AutoPay. The ₹2 is reversed (refunded).',
-  'There is one trial for each phone number.',
-  'After the trial the plan is ₹199 a month. It is charged by a UPI AutoPay mandate that you set up through PhonePe. The mandate allows up to ₹199 a month.',
-  'The plan renews every month until you cancel.',
+  {
+    title: 'The trial',
+    body: 'The trial lasts one day. It starts with a ₹2 debit by UPI AutoPay. The ₹2 is reversed (refunded).',
+  },
+  { title: 'One per number', body: 'There is one trial for each phone number.' },
+  {
+    title: 'The plan',
+    body: 'After the trial the plan is ₹199 a month. It is charged by a UPI AutoPay mandate that you set up through PhonePe. The mandate allows up to ₹199 a month.',
+  },
+  { title: 'Renewal', body: 'The plan renews every month until you cancel.' },
 ];
 ---
 
@@ -84,7 +90,8 @@ const planPoints = [
     <h2 id="plan">4. The Trial and the Plan</h2>
     {planPoints.map((point) => (
       <div class="doc-card">
-        <p>{point}</p>
+        <p class="doc-card-title">{point.title}</p>
+        <p>{point.body}</p>
       </div>
     ))}
   </section>
@@ -92,8 +99,8 @@ const planPoints = [
   <section>
     <h2 id="cancel">5. Cancelling</h2>
     <p>
-      You can cancel any time. In the app, go to Settings → Premium → Manage Subscription, or Need
-      Help → Manage Subscription. You can also cancel in your UPI app. Your access continues to the end
+      You can cancel any time. In the app, go to Settings → Premium → Cancel Plan, or Settings → Need
+      Help? → Manage Subscription. You can also cancel in your UPI app. Your access continues to the end
       of the period you have already paid for. There are no more debits after you cancel. The
       <a href={legalPath(app, 'refund-policy')}>refund policy</a> has the details.
     </p>
