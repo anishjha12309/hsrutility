@@ -48,7 +48,7 @@ const sent = [
   },
   {
     title: 'Masked bank messages, shared from sign-in',
-    body: 'For each bank message the app recognised, the sender id, a masked copy of the text, what the app understood it to be and whether it was spoken. Also the bank, amount and balance the app read, whether the message came in live or was found by a scan of older messages, your phone’s state when the message came (battery and charging, sound mode and volume, screen on or off, power saver, battery optimisation), and how many milliseconds each step took.',
+    body: 'For each bank message the app recognised, the sender id, a masked copy of the text, what the app understood it to be and whether it was spoken, in which language and when, or why not. Also the bank, amount and balance the app read, the reference number, the account’s last 4 digits and the autopay mandate number when the message has them, whether the message came in live or was found by a scan of older messages, your phone’s maker, model and Android version, its state when the message came (battery and charging, sound mode, media and notification volume, screen on or off, power saver, battery optimisation), and how many milliseconds each step took.',
   },
   {
     title: 'Sharing status',
@@ -99,9 +99,9 @@ const retention = [
     note: 'Status, ids, debit count and amounts. Kept while your account exists and erased with it.',
   },
   {
-    period: 'Until you delete your account',
+    period: '90 days',
     label: 'Shared bank-message copies',
-    note: 'Deleting your account stops sharing and erases them.',
+    note: 'Deleted automatically after 90 days. Deleting your account stops sharing and erases them sooner.',
   },
   {
     period: 'After deletion',
@@ -191,7 +191,9 @@ const retention = [
     <h2 id="masking">6. What Is Masked, and What Is Never Sent</h2>
     <p>
       The phone masks phone numbers, account and reference digits, UPI ids and emails in the text and
-      the sender id before anything is sent, and the server checks again. Names are masked when the
+      the sender id before anything is sent, and the server checks again. The reference number, the
+      account’s last 4 digits and the mandate number the app read are sent beside the masked text, so a
+      message the app read wrongly can be traced. The full account number never leaves the phone. Names are masked when the
       phone can spot them (your name, the payee, and names after words like “to” or “from”), so other
       names can still appear. Amounts, dates and times stay. OTP messages and personal messages are
       never sent.
@@ -229,7 +231,6 @@ const retention = [
         </div>
       ))}
     </div>
-    <p style="margin-top:1rem">There is no other expiry yet: no automatic deletion by age.</p>
   </section>
 
   <section>
