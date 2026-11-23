@@ -25,7 +25,7 @@ disagrees with its source. Astro prints `Complete!` on some non-fatal paths — 
 exit code is the signal:
 
 ```bash
-npm run build 2>&1 | tail -3; echo "EXIT: ${PIPESTATUS[0]}"
+set -o pipefail; npm run build 2>&1 | tail -3; echo "EXIT: $?"
 ```
 
 This tree has repeatedly held uncommitted work from earlier sessions, which
@@ -59,9 +59,8 @@ Four things make a live check report something false:
 ## Previewing
 
 `astro preview` serves the built `dist/`; `astro dev` does not show what deploys.
-`$TMPDIR` is unset in this Git Bash, so `> $TMPDIR/log` fails with `Permission
-denied` and the server never starts — redirect to the session scratchpad. Stop it
-by port with `Get-NetTCPConnection -LocalPort <port> -State Listen`.
+Log the server to the session scratchpad. Stop it by port with
+`lsof -ti tcp:<port> -sTCP:LISTEN | xargs kill`.
 
 ## Rolling back
 
