@@ -48,7 +48,7 @@ const sent = [
   },
   {
     title: 'Masked bank messages, shared from sign-in',
-    body: 'For each bank message the app recognised, the sender id, a masked copy of the text, what the app understood it to be and whether it was spoken, in which language and when, or why not. Also the bank, amount and balance the app read, the reference number, the account’s last 4 digits and the autopay mandate number when the message has them, whether the message came in live or was found by a scan of older messages, your phone’s maker, model and Android version, its state when the message came (battery and charging, sound mode, alarm volume and its maximum, screen on or off, power saver, battery optimisation), and how many milliseconds each step took.',
+    body: 'Masked copies of your bank messages are shared with us, only to improve detection, and never sold. This includes bank messages the app does not show in your passbook, such as a failed payment or a notice, and messages about money from a business sender the app does not know yet. For each message: the sender id, a masked copy of the text, what the app understood it to be and whether it was spoken, in which language and when, or why not. Also the bank, amount and balance the app read, the reference number, the account’s last 4 digits and the autopay mandate number when the message has them, whether the message came in live or was found by a scan of older messages, your phone’s maker, model and Android version, its state when the message came (battery and charging, sound mode, alarm volume and its maximum, screen on or off, power saver, battery optimisation), and how many milliseconds each step took.',
   },
   {
     title: 'Sharing status',
@@ -195,8 +195,8 @@ const retention = [
       account’s last 4 digits and the mandate number the app read are sent beside the masked text, so a
       message the app read wrongly can be traced. The full account number never leaves the phone. Names are masked when the
       phone can spot them (your name, the payee, and names after words like “to” or “from”), so other
-      names can still appear. Amounts, dates and times stay. OTP messages and personal messages are
-      never sent.
+      names can still appear. Amounts, dates and times stay. OTPs and messages from personal phone numbers
+      are never sent. Messages from other businesses are sent only when they are about money.
     </p>
   </section>
 
